@@ -1,0 +1,12 @@
+{
+  "name": "medgo",
+  "version": "1.0.0",
+  "description": "Um sistema de agendamento de consultas, para clientes e clinicas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
