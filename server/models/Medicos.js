@@ -1,5 +1,6 @@
 import { readAll } from "../config/database.js";
 
+// constante para listar medicos salvos no banco de dados
 const listarMedicos = async () => {
     try{
         return await readAll('Medicos');
@@ -8,3 +9,5 @@ const listarMedicos = async () => {
         throw err;
     }
 }
+
+export { listarMedicos }
