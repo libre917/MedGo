@@ -1,5 +1,5 @@
 import express from 'express';
-import { listarMedicosController, listarMedicosPorIdController } from '../controller/MedicosController.js'
+import { listarPacientesController, listarPacientesPorIdController } from '../controller/PacientesController.js'
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,8 +22,8 @@ const upload = multer ({storage: storage});
 const router = express.Router();
 const port = 3000
 
-router.get('/', listarMedicosController);
-router.get('/:id', listarMedicosPorIdController)
+router.get('/', listarPacientesController);
+router.get('/:id', listarPacientesPorIdController)
 
 router.options("/", (req, res) => {
     res.setHeader("Allow", "GET, OPTIONS");

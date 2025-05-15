@@ -1,4 +1,4 @@
-import { listarMedicos } from '../models/Medicos.js'
+import { listarMedicos, listarMedicosPorId } from '../models/Medicos.js'
 import { fileURLToPath } from "url";
 import path from 'path';
 
@@ -15,4 +15,19 @@ const listarMedicosController = async (req,res) => {
     }
 }
 
-export { listarMedicosController }
+const listarMedicosPorIdController = async (req,res) => {
+    try{
+        const medico = await listarMedicosPorId(req.params.id);
+        if (medico){
+            res.status(200).json(medico);
+        } else {
+            res.status(404).json({mensagem : "Medico não exitente/encontrado"})
+        }
+    } catch (err) {
+        console.error("Erro ao procurar medico por ID: ", err)
+        res.status(500).json({ mensagem: "Erro procurar medico por ID: " });
+    }
+}
+
+// exportando para o routes
+export { listarMedicosController, listarMedicosPorIdController }

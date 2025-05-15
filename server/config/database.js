@@ -14,7 +14,7 @@ async function getConnection() {
   return pool.getConnection();
 }
 
-//Função para ler todos os registros
+//Função para ler todos medicos registrados
 async function readAll(table, where = null) {
   const connection = await getConnection();
   try {
@@ -33,5 +33,24 @@ async function readAll(table, where = null) {
   }
 }
 
+// Função para ler um medico por ID 
+async function read(table, where) {
+    const connection = await getConnection();
+    try {
+      let sql = `SELECT * FROM ${table}`;
+      if (where) {
+        sql += ` WHERE ${where}`;
+      }
+  
+      const [rows] = await connection.execute(sql);
+      return rows[0] || null;
+    } catch (err) {
+      console.error("Erro ao ler registros: ", err);
+      throw err;
+    } finally {
+      connection.release();
+}
+}
+
 // exportando para o models
-export { readAll }
+export { readAll, read }
