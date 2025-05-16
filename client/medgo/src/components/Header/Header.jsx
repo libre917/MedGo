@@ -1,7 +1,7 @@
 /// components/Header.jsx
 export default function Header() {
   return (
-    <header className="  bg-white text-[#004aad] w-full px-4  border-b shadow-sm">
+    <header className="  fixed top-0 bg-white text-[#004aad] w-full px-4  border-b shadow-sm">
       <div className=" max-w-screen-xl mx-auto flex items-center justify-between ">
         {/* Logo */}
         <a href="/" className="flex-shrink-0">
