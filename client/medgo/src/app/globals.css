@@ -4,6 +4,10 @@
   color: #004aad;
 }
 
+.titulo-background-padrao-medgo{
+  background-color: #004aad;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
