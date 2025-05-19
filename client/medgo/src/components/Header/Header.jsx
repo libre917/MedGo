@@ -66,14 +66,8 @@ export default function Header() {
               </a>
             </li>
             <li>
-              <a href="/suasessao" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                Sobre nós
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-            <li>
-              <a href="/faq" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                FAQ
+              <a href="/sobrenos" className="relative group block py-2 sm:py-0 transition-all duration-200">
+              Sobre nós
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
               </a>
             </li>
