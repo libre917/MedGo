@@ -1,4 +1,4 @@
-import { readAll, read, create } from "../config/database.js";
+import { readAll, read, create, update } from "../config/database.js";
 
 // constante para listar medicos salvos no banco de dados
 const listarMedicos = async () => {
@@ -27,5 +27,14 @@ const adicionarMedicos = async (medicoData) => {
     }
 }
 
+const atualizarMedicos = async (id, medicoData) => {
+    try {
+        await update ('Medicos', medicoData, `id_medico = ${id}`)
+    } catch (err) {
+        console.error('Erro ao atualizar dados do medico : ', err);
+        throw err;
+    }
+}
+
 // exportando para o controller
-export { listarMedicos, listarMedicosPorId, adicionarMedicos }
+export { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos }
