@@ -35,21 +35,21 @@ async function readAll(table, where = null) {
 
 // Função para ler um medico por ID 
 async function read(table, where) {
-    const connection = await getConnection();
-    try {
-      let sql = `SELECT * FROM ${table}`;
-      if (where) {
-        sql += ` WHERE ${where}`;
-      }
-  
-      const [rows] = await connection.execute(sql);
-      return rows[0] || null;
-    } catch (err) {
-      console.error("Erro ao ler registros: ", err);
-      throw err;
-    } finally {
-      connection.release();
-}
+  const connection = await getConnection();
+  try {
+    let sql = `SELECT * FROM ${table}`;
+    if (where) {
+      sql += ` WHERE ${where}`;
+    }
+
+    const [rows] = await connection.execute(sql);
+    return rows[0] || null;
+  } catch (err) {
+    console.error("Erro ao ler registros: ", err);
+    throw err;
+  } finally {
+    connection.release();
+  }
 }
 
 // Função para inserir dados
@@ -61,7 +61,7 @@ async function create(table, data) {
     const sql = `INSERT INTO ${table} (${colunms}) VALUES (${placeholders})`
     const values = Object.values(data);
     const [result] = await connection.execute(sql, values);
-    return result.insertId 
+    return result.insertId
   } catch (err) {
     console.error("Erro ao inserir registros: ", err);
     throw err;
@@ -70,5 +70,25 @@ async function create(table, data) {
   }
 }
 
+async function update(table, data, where) {
+  const connection = await getConnection();
+  try {
+    const set = Object.keys(data)
+      .map((column) => `${column} = ?`)
+      .join(", ");
+
+    const sql = `UPDATE ${table} SET ${set} WHERE ${where}`;
+    const values = Object.values(data);
+
+    const [result] = await connection.execute(sql, [...values]);
+    return result.affectedRows;
+  } catch (err) {
+    console.error("Erro ao atualizar registros: ", err);
+    throw err;
+  } finally {
+    connection.release();
+  }
+}
+
 // exportando para o models
-export { readAll, read, create }
+export { readAll, read, create, update }

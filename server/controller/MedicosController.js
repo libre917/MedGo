@@ -1,4 +1,4 @@
-import { listarMedicos, listarMedicosPorId, adicionarMedicos } from '../models/Medicos.js'
+import { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos } from '../models/Medicos.js'
 import { fileURLToPath } from "url";
 import path from 'path';
 
@@ -50,5 +50,27 @@ const adicionarMedicosController = async (req, res) => {
     res.status(500).json({mensagem: "Erro ao adiocionar medico"})
    }
 }
+
+const atualizarMedicosController = async (req, res) => {
+    try {
+        const medicoId = req.params.id
+        const { nome, especialidade, telefone, email, senha, disponibilidade, cep_clinica } = req.body;
+        
+        const medicoData = {
+            nome: nome,
+            especialidade: especialidade,
+            telefone: telefone,
+            email: email,
+            senha: senha, 
+            disponibilidade: disponibilidade,
+            cep_clinica: cep_clinica
+        }
+        await atualizarMedicos(medicoId, medicoData);
+        res.status(201).json({mensagem: 'Informações atualizadas com sucesso'})
+       } catch (err) {
+        console.error('Erro ao atualizar informações: ', err)
+        res.status(500).json({mensagem: "Erro ao atualizar informações"})
+       }
+}
 // exportando para o routes
-export { listarMedicosController, listarMedicosPorIdController, adicionarMedicosController }
+export { listarMedicosController, listarMedicosPorIdController, adicionarMedicosController, atualizarMedicosController }
