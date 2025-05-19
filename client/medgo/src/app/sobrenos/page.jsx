@@ -2,7 +2,7 @@ import React from "react";
 
 export default function SobreNos() {
   return (
-    <div className="min-h-screen -to-b from-blue-50 to-white">
+    <div className="min-h-screen  from-blue-50 to-white">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center gap-8">
@@ -25,9 +25,12 @@ export default function SobreNos() {
             </div>
           </div>
           <div className="md:w-1/2">
-            {/* Espaço para sua foto */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-400">[SUA FOTO AQUI]</span>
+              <img 
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef" 
+                alt="Recepção da Clínica Vida Plena" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -42,16 +45,16 @@ export default function SobreNos() {
                 Nossa <span className="text-[#004aad]">História</span>
               </h2>
               <p className="text-lg text-gray-600">
-                Fundada em 2015 no coração do bairro Parque Esperança, a Clínica Vida Plena surgiu da necessidade de oferecer atendimento médico acessível e de qualidade para a comunidade local.
+                Fundada em 2015 pela Enfermeira Carla Ribeiro, a Clínica Vida Plena surgiu para levar atendimento médico de qualidade ao bairro Parque Esperança, uma região carente de serviços de saúde.
               </p>
               <p className="text-lg text-gray-600">
-                Em 2020, transformamos nosso sistema de agendamento manual (que utilizava cadernos físicos) para uma solução digital desenvolvida em parceria com a Escola Técnica Municipal de Aplicação.
+                Em 2020, em parceria com a Escola Técnica Municipal, modernizamos nosso sistema de agendamento, substituindo os cadernos manuais por uma plataforma digital que reduziu em 90% os erros de marcação.
               </p>
               <div className="bg-[#004aad]/5 p-6 rounded-xl border-l-4 border-[#004aad]">
                 <p className="text-[#004aad] italic">
-                  "Nosso objetivo sempre foi humanizar o atendimento médico, e a tecnologia nos ajudou a servir melhor nossa comunidade sem perder o cuidado pessoal."
+                  "Nosso compromisso é unir tecnologia e humanização para oferecer o melhor atendimento à nossa comunidade."
                 </p>
-                <p className="mt-2 font-medium text-[#004aad]">- Equipe Vida Plena</p>
+                <p className="mt-2 font-medium text-[#004aad]">- Enf. Carla Ribeiro, Fundadora</p>
               </div>
             </div>
           </div>
@@ -59,33 +62,159 @@ export default function SobreNos() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-[#004aad]/10 rounded-xl p-6 text-center">
                 <p className="text-4xl font-bold text-[#004aad]">150+</p>
-                <p className="text-gray-600">Pacientes por semana</p>
+                <p className="text-gray-600">Pacientes atendidos semanalmente</p>
+              </div>
+              <div className="bg-[#004aad]/10 rounded-xl p-6 text-center">
+                <p className="text-4xl font-bold text-[#004aad]">12</p>
+                <p className="text-gray-600">Profissionais de saúde</p>
               </div>
               <div className="bg-[#004aad]/10 rounded-xl p-6 text-center">
                 <p className="text-4xl font-bold text-[#004aad]">90%</p>
-                <p className="text-gray-600">Redução de falhas</p>
-              </div>
-              <div className="bg-[#004aad]/10 rounded-xl p-6 text-center">
-                <p className="text-4xl font-bold text-[#004aad]">100%</p>
-                <p className="text-gray-600">Digital</p>
+                <p className="text-gray-600">Redução de falhas no agendamento</p>
               </div>
               <div className="bg-[#004aad]/10 rounded-xl p-6 text-center">
                 <p className="text-4xl font-bold text-[#004aad]">8</p>
-                <p className="text-gray-600">Anos de história</p>
+                <p className="text-gray-600">Anos servindo a comunidade</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Perguntas Frequentes */}
+      <section className="max-w-4xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Dúvidas <span className="text-[#004aad]">Frequentes</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Tire suas dúvidas sobre nossos serviços e atendimento
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {/* FAQ Item 1 */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <details className="group" open>
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#004aad]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium text-gray-900">Quais são os horários de funcionamento?</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 transform group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="p-4 bg-white">
+                <p className="text-gray-600">
+                  Atendemos de segunda a sexta das 7h às 19h, e aos sábados das 8h às 12h. Para emergências fora deste horário, entre em contato pelo telefone (11) 98765-4321.
+                </p>
+              </div>
+            </details>
+          </div>
+
+          {/* FAQ Item 2 */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#004aad]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium text-gray-900">Como faço para marcar uma consulta?</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 transform group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="p-4 bg-white">
+                <p className="text-gray-600">
+                  Você pode marcar consultas de três formas: 1) Pelo nosso site, na seção "Agenda"; 2) Por telefone no (11) 1234-5678; ou 3) Presencialmente em nossa recepção. Recomendamos o agendamento prévio para melhor atendimento.
+                </p>
+              </div>
+            </details>
+          </div>
+
+
+   {/* FAQ Item  */}
+
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#004aad]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium text-gray-900">Como faço para marcar uma consulta?</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 transform group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="p-4 bg-white">
+                <p className="text-gray-600">
+                  Você pode marcar consultas de três formas: 1) Pelo nosso site, na seção "Agenda"; 2) Por telefone no (11) 1234-5678; ou 3) Presencialmente em nossa recepção. Recomendamos o agendamento prévio para melhor atendimento.
+                </p>
+              </div>
+            </details>
+          </div>
+
+          {/* FAQ Item 3 */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#004aad]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium text-gray-900">Vocês aceitam meu plano de saúde?</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 transform group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="p-4 bg-white">
+                <p className="text-gray-600">
+                  Atendemos os principais convênios médicos da região, incluindo Amil, Unimed, Bradesco Saúde e SulAmérica. Para confirmar se seu plano é aceito, entre em contato conosco pelo telefone (11) 1234-5678 ou pelo fax (11) 1234-5679.
+                </p>
+              </div>
+            </details>
+          </div>
+
+          {/* FAQ Item 4 */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#004aad]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium text-gray-900">Como posso enviar exames ou documentos?</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 transform group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="p-4 bg-white">
+                <p className="text-gray-600">
+                  Documentos podem ser enviados por três vias: 1) Presencialmente em nossa recepção; 2) Pelo fax (11) 1234-5679; ou 3) Digitalmente através do e-mail documentos@vidaplena.org.br. Para garantir a privacidade, documentos sensíveis devem ser entregues pessoalmente.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
       {/* Especialidades */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
+      <section className="max-w-6xl mx-auto px-4 py-12 bg-[#004aad]/5 rounded-2xl my-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Nossas <span className="text-[#004aad]">Especialidades</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Oferecemos atendimento em diversas áreas médicas para cuidar da saúde da comunidade.
+            Conheça as áreas médicas que atendemos com excelência
           </p>
         </div>
 
@@ -209,10 +338,11 @@ export default function SobreNos() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">Contato</h4>
-                    <p className="text-gray-600">Telefone: (11) 1234-5678</p>
-                    <p className="text-gray-600">WhatsApp: (11) 98765-4321</p>
-                    <p className="text-gray-600">Fax: (11) 1234-5678</p>
-                    <p className="text-gray-600">Email: contato@vidaplena.org.br</p>
+                    <p className="text-gray-600"><strong>Telefone:</strong> (11) 1234-5678</p>
+                    <p className="text-gray-600"><strong>WhatsApp:</strong> (11) 98765-4321</p>
+                    <p className="text-gray-600"><strong>Fax:</strong> (11) 1234-5679</p>
+                    <p className="text-gray-600"><strong>Email:</strong> contato@vidaplena.org.br</p>
+                    <p className="text-gray-600"><strong>Documentos:</strong> documentos@vidaplena.org.br</p>
                   </div>
                 </div>
               </div>

@@ -59,9 +59,18 @@ export default function Header() {
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
               </a>
             </li>
+
             <li>
               <a href="/snackbar" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                Agenda
+                 Marcar consulta
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
+              </a>
+            </li>
+
+
+            <li>
+              <a href="/snackbar" className="relative group block py-2 sm:py-0 transition-all duration-200">
+                 Sua Agenda
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
               </a>
             </li>
