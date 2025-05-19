@@ -52,5 +52,23 @@ async function read(table, where) {
 }
 }
 
+// Função para inserir dados
+async function create(table, data) {
+  const connection = await getConnection();
+  try {
+    const colunms = Object.keys(data).join(", ");
+    const placeholders = Array(Object.keys(data).length).fill("?").join(", ");
+    const sql = `INSERT INTO ${table} (${colunms}) VALUES (${placeholders})`
+    const values = Object.values(data);
+    const [result] = await connection.execute(sql, values);
+    return result.insertId 
+  } catch (err) {
+    console.error("Erro ao inserir registros: ", err);
+    throw err;
+  } finally {
+    connection.release();
+  }
+}
+
 // exportando para o models
-export { readAll, read }
+export { readAll, read, create }

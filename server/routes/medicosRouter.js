@@ -1,5 +1,5 @@
 import express from 'express';
-import { listarMedicosController, listarMedicosPorIdController } from '../controller/MedicosController.js'
+import { listarMedicosController, listarMedicosPorIdController, adicionarMedicosController } from '../controller/MedicosController.js'
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -24,6 +24,7 @@ const port = 3000
 
 router.get('/', listarMedicosController);
 router.get('/:id', listarMedicosPorIdController)
+router.post('/', adicionarMedicosController)
 
 router.options("/", (req, res) => {
     res.setHeader("Allow", "GET, OPTIONS");

@@ -4,7 +4,7 @@ const app = express();
 const port = 3000;
 
 import medicosRouter from './routes/medicosRouter.js'
-import pacientesRouter from './routes/pacientes.Router.js'
+import pacientesRouter from './routes/pacientesRouter.js'
 
 app.use(cors());
 app.use(express.json())

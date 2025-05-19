@@ -1,4 +1,4 @@
-import { readAll, read } from "../config/database.js";
+import { readAll, read, create } from "../config/database.js";
 
 // constante para listar medicos salvos no banco de dados
 const listarPacientes = async () => {
@@ -15,6 +15,14 @@ const listarPacientesPorId = async (id)=> {
         return await read( 'Pacientes', `id_paciente = ${id}`)
     } catch (err) {
         console.error('Erro ao obter o paciente de id:',id, err)
+    }
+}
+
+const adiocionarPaciente = async (pacienteData) => {
+    try {
+        return await create ('Pacientes', pacienteDataData)
+    } catch (err) {
+        console.error('Erro ao adicionar paciente')
     }
 }
 
