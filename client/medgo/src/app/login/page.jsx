@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+
 
 export default function Login() {
   return (
@@ -15,7 +15,7 @@ export default function Login() {
           <p className="text-black">Não tem conta? <Link href="/cadastro" className="text-blue-600">Cadastre-se</Link></p>
           <div className="grid" >
             <label htmlFor="email" className="text-black">Email</label>
-            <input type="email" name="email" placeholder="Email" required className="w-100 border border-black rounded-2xl" />
+            <input type="email" name="email" placeholder="Email" required className="w-100 border border-black rounded-2xl text-black" />
           </div>
 
           <div className="grid">
@@ -26,7 +26,7 @@ export default function Login() {
           <div className="text-black">
 
             <input type="checkbox" />Li e entendi os termos da <Link className="text-blue-500" href="/politicadeprivacidade">Politica de Privacidade</Link> de Medgo.
-            <Link rel="stylesheet" href="/home" className="grid bg-transparent items-center text-black hover:bg-black font-semibold hover:text-white  border border-black hover:border-transparent rounded w-40 h-10 text-center">Log In</Link>
+            <Link rel="stylesheet" href="/" className="grid bg-transparent items-center text-black hover:bg-black font-semibold hover:text-white  border border-black hover:border-transparent rounded w-40 h-10 text-center">Log In</Link>
           </div>
 
         </form>
