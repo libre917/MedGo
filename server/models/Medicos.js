@@ -36,14 +36,14 @@ const atualizarMedicos = async (id, medicoData) => {
     }
 }
 
-const deletarMedico = async (id) => {
-    try{
-        await deleteRecord ('Medicos', `id_medico = ${id}`)
-    } catch ( err) {
-        console.error("Erro ao deletar dados do medico: ", err)
+const excluirLivro = async (id) => {
+    try {
+        await deleteRecord('Medicos', `id_medico = ${id}`)
+    } catch (err) {
+        console.error('Erro ao excluir livro: ', err);
         throw err;
     }
 }
 
 // exportando para o controller
-export { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, deletarMedico }
+export { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, excluirLivro }

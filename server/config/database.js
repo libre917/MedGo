@@ -3,7 +3,7 @@ import mysql from "mysql2/promise";
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "",
   database: "MedGoDB",
   waitForConnections: true,
   connectionLimit: 10,
@@ -97,8 +97,8 @@ async function deleteRecord(table, where) {
     const [result] = await connection.execute(sql);
     return result.affectedRows;
   } catch (err) {
-    console.error("Erro ao deletar registro: ", err)
-    throw err
+    console.error("Erro ao excluir registros: ", err);
+    throw err;
   } finally {
     connection.release();
   }
