@@ -29,21 +29,21 @@ const adicionarMedicos = async (medicoData) => {
 
 const atualizarMedicos = async (id, medicoData) => {
     try {
-        await update ('Medicos', medicoData, `id_medico = ${id}`)
+        return await update ('Medicos', medicoData, `id_medico = ${id}`)
     } catch (err) {
         console.error('Erro ao atualizar dados do medico : ', err);
         throw err;
     }
 }
 
-const excluirLivro = async (id) => {
-    try {
-        await deleteRecord('Medicos', `id_medico = ${id}`)
-    } catch (err) {
-        console.error('Erro ao excluir livro: ', err);
+const deletarMedico = async (id) => {
+    try{
+        return await deleteRecord ('Medicos', `id_medico = ${id}`)
+    } catch ( err) {
+        console.error("Erro ao deletar dados do medico: ", err)
         throw err;
     }
 }
 
 // exportando para o controller
-export { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, excluirLivro }
+export { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, deletarMedico }
