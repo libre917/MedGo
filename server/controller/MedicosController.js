@@ -1,4 +1,4 @@
-import { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, deletarMedico } from '../models/Medicos.js'
+import { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, excluirLivro } from '../models/Medicos.js'
 import { fileURLToPath } from "url";
 import path from 'path';
 
@@ -73,14 +73,15 @@ const atualizarMedicosController = async (req, res) => {
        }
 }
 
-const deletarMedicoController = async (req,res) => {
-    try{
-        const medicoId = req.params.id;
-        await deletarMedico(medicoId);
+const excluirLivroController = async (req, res) => {
+    try {
+        const livroId = req.params.id;
+        await excluirLivro(livroId)
     } catch (err) {
-        console.error("Erro ao deletar dados do medico:", err)
-        res.status(500).json({mensagem: "Erro ao deletar"})
+        console.error('Excluir ao excluir livro: ', err );
+        res.status(500).json({mensagem: 'Erro ao excluir livro'})
     }
-}
+};
+
 // exportando para o routes
-export { listarMedicosController, listarMedicosPorIdController, adicionarMedicosController, atualizarMedicosController, deletarMedicoController }
+export { listarMedicosController, listarMedicosPorIdController, adicionarMedicosController, atualizarMedicosController, excluirLivroController }

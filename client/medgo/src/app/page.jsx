@@ -5,7 +5,7 @@ export default function Home() {
 
   const cardInfos = [
     { id: "1", titulo: "Profissionais de Excelência", descricao: "Nossa equipe é formada por especialistas dedicados a oferecer um atendimento humano, ético e de alta qualidade.", path: "/home/card-img/equipe-de-jovens-medicos-especialistas-em-pe-no-corredor-hospital.jpg" },
-    { id: "2", titulo: " Estrutura de Ponta", descricao: "Contamos com salas equipadas com tecnologia de última geração para garantir diagnósticos precisos e conforto no atendimento.", path: "/home/card-img/sala-de-hospital.png" }, 
+    { id: "2", titulo: " Estrutura de Ponta", descricao: "Contamos com salas equipadas com tecnologia de última geração para garantir diagnósticos precisos e conforto no atendimento.", path: "/home/card-img/sala-de-hospital.png" },
     { id: "3", titulo: "Qualidade de atendimento", descricao: "Seja atendido por profissionais qualificados, que utilizam tecnologia avançada para oferecer um cuidado preciso e humanizado.", path: "/home/card-img/enfermeira-medindo-paciente-pressao-sangue.jpg" }]
   return (
     <>
