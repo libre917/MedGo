@@ -1,5 +1,5 @@
 import express from 'express';
-import { listarPacientesController, listarPacientesPorIdController, adicionarPacientesController, atualizarPacienteController } from '../controller/PacientesController.js'
+import { listarPacientesController, listarPacientesPorIdController, adicionarPacientesController, atualizarPacienteController,deletarPacienteController } from '../controller/PacientesController.js'
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,6 +26,7 @@ router.get('/', listarPacientesController);
 router.get('/:id', listarPacientesPorIdController)
 router.post('/', adicionarPacientesController)
 router.put('/:id', atualizarPacienteController)
+router.delete('/:id', deletarPacienteController)
 
 router.options("/", (req, res) => {
     res.setHeader("Allow", "GET, OPTIONS");

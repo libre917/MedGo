@@ -3,7 +3,7 @@ import mysql from "mysql2/promise";
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "1234",
   database: "MedGoDB",
   waitForConnections: true,
   connectionLimit: 10,
@@ -90,5 +90,19 @@ async function update(table, data, where) {
   }
 }
 
+async function deleteRecord(table, where) {
+  const connection = await getConnection();
+  try {
+    const sql = `DELETE FROM ${table} WHERE ${where}`;
+    const [result] = await connection.execute(sql);
+    return result.affectedRows;
+  } catch (err) {
+    console.error("Erro ao deletar registro: ", err)
+    throw err
+  } finally {
+    connection.release();
+  }
+}
+
 // exportando para o models
-export { readAll, read, create, update }
+export { readAll, read, create, update, deleteRecord }

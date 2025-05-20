@@ -1,4 +1,4 @@
-import { listarPacientes, listarPacientesPorId, adicionarPaciente, atualizarPaciente } from '../models/Pacientes.js'
+import { listarPacientes, listarPacientesPorId, adicionarPaciente, atualizarPaciente, deletarPaciente } from '../models/Pacientes.js'
 import { fileURLToPath } from "url";
 import path from 'path';
 
@@ -68,5 +68,14 @@ const atualizarPacienteController = async (req, res) => {
     }
 }
 
+const deletarPacienteController = async (req,res) => {
+    try {
+        const pacienteId = req.params.id;
+        await deletarPaciente(pacienteId)
+    } catch (err) {
+        console.error('Erro ao deletar paciente: ', err)
+        res.status(500).json({mensagem: "Erro ao deletar"})
+    }
+}
 // exportando para o routes
-export { listarPacientesController, listarPacientesPorIdController, adicionarPacientesController, atualizarPacienteController }
+export { listarPacientesController, listarPacientesPorIdController, adicionarPacientesController, atualizarPacienteController, deletarPacienteController }
