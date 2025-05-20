@@ -1,89 +1,100 @@
-/// components/Header.jsx
-export default function Header() {
-  return (
-    <header className="   bg-white text-[#004aad] w-full px-4  border-b shadow-sm">
-      <div className=" max-w-screen-xl mx-auto flex items-center justify-between ">
-        {/* Logo */}
-        <a href="/" className="flex-shrink-0">
-          <img
-            src="MEDGO_logo.png"
-            alt="Logo"
-            className="h-25 sm:h-25 w-auto object-contain"
-          />
-        </a>
-       
-        {/* Checkbox para controle do menu */}
-        <input
-          type="checkbox"
-          id="menu-toggle"
-          className="hidden peer"
-          aria-hidden="true"
-        />
+"use client";
 
-        <label
-          htmlFor="menu-toggle"
-          className="sm:hidden block p-1"
+import { useState } from "react";
+
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-50">
+      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 sm:h-20">
+        {/* Botão Mobile - Movido para a esquerda */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="sm:hidden flex flex-col items-center justify-center p-2 rounded-md hover:bg-[#004aad]/10 transition-colors"
           aria-label="Abrir menu"
         >
-          <div className="flex flex-col items-center justify-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#004aad]"></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#004aad]"></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#004aad]"></span>
-          </div>
-        </label>
+          <span
+            className={`w-6 h-0.5 bg-[#004aad] rounded-full transition-transform duration-300 $`}
+          />
+          <span
+            className={`w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5 transition-opacity duration-300 $`}
+          />
+          <span
+            className={`w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5 transition-transform duration-300 `}
+          />
+        </button>
 
-        {/* Menu desktop e mobile */}
-        <nav
-          className="
-            fixed top-25 left-0 w-full bg-white border-t border-gray-200
-            max-h-0 overflow-hidden transition-all duration-300
-            peer-checked:max-h-[500px]
-            sm:static sm:max-h-full sm:flex sm:items-center sm:border-none sm:overflow-visible
-          "
+        {/* Logo - Centralizado */}
+        <a href="/" className="flex items-center h-full mx-auto sm:mx-0">
+          <img
+            src="MEDGO_logo.png"
+            alt="Logo MEDGO"
+            className="h-25 sm:h-25 w-auto object-contain transition-transform hover:scale-105"
+          />
+        </a>
+
+        {/* Menu Desktop - Centralizado */}
+        <div className="hidden sm:flex items-center justify-center flex-1">
+          <nav>
+            <ul className="flex gap-6 text-base font-medium items-center">
+              {[
+                ["Home", "/"],
+                ["Médicos", "/planos"],
+                ["Sua Agenda", "/agenda"],
+                ["Sobre nós", "/sobrenos"],
+              ].map(([label, href]) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    className="relative group block px-2 py-2 text-[#004aad] hover:text-[#003a8c] transition-colors"
+                  >
+                    {label}
+                    <span className="absolute left-1/2 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full group-hover:left-0" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Botão Marcar Consulta - À direita */}
+        <a
+          href="/marcar-consulta"
+          className="hidden sm:block ml-4 px-4 py-2 bg-[#004aad] text-white rounded-md hover:bg-[#003a8c] transition duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
         >
-          <ul
-            className="
-              flex flex-col sm:flex-row sm:gap-10 text-base font-semibold px-4 sm:px-0 py-4 sm:py-0
-              sm:justify-center sm:items-center sm:w-full
-            "
-          >
-            <li>
-              <a href="/" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                Home
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-            <li>
-              <a href="/planos" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                Médicos Disponíveis
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
+          Marcar Consulta
+        </a>
 
-            <li>
-              <a href="/snackbar" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                 Marcar consulta
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-
-
-            <li>
-              <a href="/snackbar" className="relative group block py-2 sm:py-0 transition-all duration-200">
-                 Sua Agenda
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-            <li>
-              <a href="/sobrenos" className="relative group block py-2 sm:py-0 transition-all duration-200">
-              Sobre nós
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-          </ul>
-        </nav>
+        {/* Espaço vazio para balancear o layout mobile */}
+        <div className="sm:hidden w-6" />
       </div>
+
+      {/* Menu Mobile Expandido */}
+      <nav
+        className={`sm:hidden transition-all duration-500 overflow-hidden bg-white border-t border-gray-200 ${
+          isOpen ? "max-h-[500px] py-4" : "max-h-0 py-0"
+        }`}
+      >
+        <ul className="flex flex-col gap-4 text-base font-medium px-4">
+          {[
+            ["Home", "/"],
+            ["Médicos", "/planos"],
+            ["Marcar consulta", "/marcar-consulta"],
+            ["Sua Agenda", "/agenda"],
+            ["Sobre nós", "/sobrenos"],
+          ].map(([label, href]) => (
+            <li key={label}>
+              <a
+                href={href}
+                className="block py-2 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors"
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 }
-
