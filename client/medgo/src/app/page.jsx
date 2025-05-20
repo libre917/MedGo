@@ -53,13 +53,13 @@ export default function Home() {
         </section>
 
         {/* Section, anuncio do agendendamento */}
-        <section className="w-full grid h-200 md:h-150  md:flex justify-left  gap-20 mb-50 bg-slate-200 rounded-lg mt-10 ">
+        <section className="shadow-2xs w-full grid h-200 md:h-150  md:flex justify-left  gap-20 mb-50 bg-slate-200 rounded-lg mt-10 ">
 
           <div className="w-sm xl:w-xl ">
             <img src="/home/card-img/medico-com-equipamento-no-ombro.jpg" className="w-full h-full rounded-sm object-cover" alt="" />
           </div>
 
-          <div className=" w-sm grid items-center justify-items-center text-center md:justify-items-left gap-10 xl:ml-6 md:gap-0">
+          <div className=" w-sm grid items-center justify-items-center text-center md:justify-items-left gap-5 xl:ml-6 md:gap-0">
             <h1 className="text-center  xl:text-center  text-3xl titulo-cor-padrao-medgo font-semibold font-mono">Encontre o Melhor Horário para Você</h1>
             <p className=" truncate text-balance text-black  ">Simples, rápido e sem complicação. Agende sua consulta de forma prática e sem perder tempo.</p>
             <Link rel="stylesheet" href="/agendar" className="grid bg-transparent items-center text-black hover:bg-white font-semibold hover:text-black  border border-black hover:border-transparent rounded w-40 h-10 text-center">Agendar</Link>
