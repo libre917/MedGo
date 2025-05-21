@@ -12,7 +12,7 @@ const listarMedicos = async () => {
 
 const listarMedicosPorId = async (id)=> {
     try{
-        return await read( 'Medicos', `id_medico = ${id}`)
+        return await read( 'Medicos', `id = ${id}`)
     } catch (err) {
         console.error('Erro ao obter o medico de id:',id, err)
     }
@@ -29,7 +29,7 @@ const adicionarMedicos = async (medicoData) => {
 
 const atualizarMedicos = async (id, medicoData) => {
     try {
-        return await update ('Medicos', medicoData, `id_medico = ${id}`)
+        return await update ('Medicos', medicoData, `id = ${id}`)
     } catch (err) {
         console.error('Erro ao atualizar dados do medico : ', err);
         throw err;
@@ -38,7 +38,7 @@ const atualizarMedicos = async (id, medicoData) => {
 
 const deletarMedico = async (id) => {
     try{
-        return await deleteRecord ('Medicos', `id_medico = ${id}`)
+        return await deleteRecord ('Medicos', `id = ${id}`)
     } catch ( err) {
         console.error("Erro ao deletar dados do medico: ", err)
         throw err;

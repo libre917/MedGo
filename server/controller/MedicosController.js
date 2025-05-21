@@ -31,16 +31,15 @@ const listarMedicosPorIdController = async (req,res) => {
 
 const adicionarMedicosController = async (req, res) => {
    try {
-    const { nome, especialidade, telefone, email, senha, disponibilidade, cep_clinica } = req.body;
+    const { nome, email, senha, crm, especialidade, id_clinica } = req.body;
     
     const medicoData = {
         nome: nome,
-        especialidade: especialidade,
-        telefone: telefone,
         email: email,
         senha: senha, 
-        disponibilidade: disponibilidade,
-        cep_clinica: cep_clinica
+        crm: crm,
+        especialidade: especialidade,
+        id_clinica: id_clinica
     }
     
     const MedicoInfo = await adicionarMedicos(medicoData);
@@ -54,16 +53,14 @@ const adicionarMedicosController = async (req, res) => {
 const atualizarMedicosController = async (req, res) => {
     try {
         const medicoId = req.params.id
-        const { nome, especialidade, telefone, email, senha, disponibilidade, cep_clinica } = req.body;
-        
+        const { nome, email, senha, crm, especialidade, id_clinica } = req.body;
         const medicoData = {
             nome: nome,
-            especialidade: especialidade,
-            telefone: telefone,
             email: email,
             senha: senha, 
-            disponibilidade: disponibilidade,
-            cep_clinica: cep_clinica
+            crm: crm,
+            especialidade: especialidade,
+            id_clinica: id_clinica
         }
         await atualizarMedicos(medicoId, medicoData);
         res.status(201).json({mensagem: 'Informações atualizadas com sucesso'})

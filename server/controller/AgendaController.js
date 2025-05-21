@@ -11,8 +11,9 @@ const listarAgendaController = async (req, res) => {
 }
 
 const listarAgendaPorIdController = async (req, res) => {
+    const agendaId = req.params.id
     try {
-        const agendamento = await listarAgendaPorId();
+        const agendamento = await listarAgendaPorId(agendaId);
         if (agendamento) {
             res.status(200).json(agendamento);
         } else {
@@ -20,20 +21,36 @@ const listarAgendaPorIdController = async (req, res) => {
         }
     } catch (err) {
         console.error('Erro ao procurar agendamento: ', err);
-        res.status(500).json({mensagem: "Erro ao procurar agendamento"})
+        res.status(500).json({ mensagem: "Erro ao procurar agendamento" })
     }
 }
 
 const adicionarAgendamentoController = async (req, res) => {
     try {
-        const { dataHora, id_medico, id_paciente } = req.body
-
+        const { data, hora, id_medico, id_paciente, status } = req.body
         const agendaData = {
-            dataHora : dataHora,
-            id_medico: id_medico,
-            id_paciente: id_paciente
+            id_medico: id_medico,         
+            id_paciente: id_paciente, 
+            data: data, 
+            hora: hora, 
+            status: status
         }
-    } catch {
-
+        const agendamentoInfo = await adicionarAgendamento(agendaData);
+        res.status(201).json({mensagem: "Agendamento marcado", agendamentoInfo})
+    } catch (err) {
+        console.error("Erro ao marcar agendamento:", err)
+        res.status(500).json({mensagem: "Erro ao agendar"})
     }
 }
+
+const deletarAgendamentoController = async (req, res) => {
+    try {
+        const agendaId = req.params.id;
+        await deletarAgendamento(agendaId)
+    } catch(err) {
+        console.error("Erro ao cancelar agendamento:", err);
+        res.status(500).json({mensagem: "Erro ao cancelar agendamento"})
+    }
+}
+
+export { listarAgendaController, listarAgendaPorIdController, adicionarAgendamentoController, deletarAgendamentoController }

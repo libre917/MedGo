@@ -2,79 +2,91 @@ create database MedGoDB;
 
 use MedGoDB;
 
-create table Clinicas (
-cep varchar(8) primary key,
-id_clinica int,
-localizacao text not null
+CREATE TABLE Clinicas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  endereco VARCHAR(255),
+  telefone VARCHAR(20)
 );
 
-
--- cria a tabela para medicos, com suas informações
 CREATE TABLE Medicos (
-    id_medico int primary key auto_increment,
-    nome varchar(100) not null,
-    especialidade varchar(100),
-    telefone varchar(15),
-    email varchar(100) unique,
-    senha varchar(100),
-    disponibilidade text ,
-    cep_clinica VARCHAR(8)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email varchar(100) not null unique,
+  senha varchar(50) not null,
+  crm VARCHAR(20) NOT NULL UNIQUE,
+  especialidade VARCHAR(100) NOT NULL, 
+  id_clinica INT,
+  FOREIGN KEY (id_clinica) REFERENCES Clinicas(id) on delete Cascade
 );
 
--- cria a tabela para pacientes, contendo suas informações
-create table Pacientes (
-id_paciente int auto_increment primary key,
-nome text,
-cpf varchar(16),
-idade int,
-email varchar(100),
-senha varchar(100) 
+CREATE TABLE Pacientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+   email varchar(100) not null unique,
+  senha varchar(50) not null,
+  telefone VARCHAR(20),
+  data_nascimento DATE
 );
 
-create table Agenda (
-id_agenda int auto_increment primary key,
-data DATETIME DEFAULT CURRENT_TIMESTAMP,
-id_medico int,
-id_paciente int
+CREATE TABLE Agendamentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_medico INT,
+  id_paciente INT,
+  data DATE NOT NULL,
+  hora TIME NOT NULL,
+  status ENUM('marcado', 'cancelado', 'realizado') DEFAULT 'marcado',
+  FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
+  FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade
 );
-INSERT INTO Clinicas (cep, id_clinica, localizacao) VALUES 
-('0100-000', '1','São Paulo - Centro'),
-('0200-000', '2','São Paulo - Zona Norte'),
-('0300-000', '3','São Paulo - Zona Leste'),
-('0400-000', '4','São Paulo - Zona Sul'),
-('0500-000', '5','São Paulo - Zona Oeste'),
-('0600-000', '6','Guarulhos - Centro'),
-('0700-000', '7','Santo André - Centro'),
-('0800-000', '8','São Bernardo - Centro'),
-('0900-000', '9','Campinas - Centro'),
-('1001-000', '10','Ribeirão Preto - Centro');
 
-select *from Clinicas;
-INSERT INTO Medicos (nome, especialidade, telefone, email, senha, disponibilidade, cep_clinica) VALUES 
-('Dr. João Santos', 'Cardiologia', '(11) 91234-5678', 'joao.santos@email.com', 'senha123', 'Seg-Sex 08:00-17:00', '0100-000'),
-('Dra. Beatriz Lima', 'Dermatologia', '(11) 92345-6789', 'beatriz.lima@email.com', 'segura456', 'Seg-Sáb 10:00-16:00', '0200-000'),
-('Dr. Ricardo Ferreira', 'Ortopedia', '(11) 93456-7890', 'ricardo.ferreira@email.com', 'forte789', 'Ter-Qui 09:00-18:00', '0300-000'),
-('Dra. Fernanda Costa', 'Pediatria', '(11) 94567-8901', 'fernanda.costa@email.com', 'senhaXYZ', 'Seg-Sex 08:30-16:30', '0400-000'),
-('Dr. Eduardo Nogueira', 'Ginecologia', '(11) 95678-9012', 'eduardo.nogueira@email.com', 'acessoABC', 'Seg-Sex 07:00-15:00', '0500-000'),
-('Dra. Juliana Rocha', 'Oftalmologia', '(11) 96789-0123', 'juliana.rocha@email.com', 'protege456', 'Qua-Sex 08:00-14:00', '0600-000'),
-('Dr. André Martins', 'Psiquiatria', '(11) 97890-1234', 'andre.martins@email.com', 'minhasenha', 'Seg-Sex 10:00-18:00', '0700-000'),
-('Dra. Camila Almeida', 'Nutrição', '(11) 98901-2345', 'camila.almeida@email.com', 'pass987', 'Seg-Sáb 08:00-12:00', '0800-000'),
-('Dr. Felipe Souza', 'Endocrinologia', '(11) 99012-3456', 'felipe.souza@email.com', 'codXYZ', 'Seg-Qui 09:00-17:00', '0900-000'),
-('Dra. Patrícia Mendes', 'Reumatologia', '(11) 90123-4567', 'patricia.mendes@email.com', 'senha789', 'Seg-Sex 08:00-15:00', '1001-000');
+INSERT INTO Clinicas (nome, endereco, telefone) VALUES
+('Clínica Vida Saudável', 'Rua das Flores, 100', '(11) 1234-5678'),
+('Centro Médico Esperança', 'Av. Brasil, 200', '(11) 2345-6789'),
+('Clínica Santa Luzia', 'Rua A, 300', '(21) 3456-7890'),
+('Clínica Bem Estar', 'Rua B, 400', '(31) 4567-8901'),
+('Instituto Médico Popular', 'Av. Central, 500', '(41) 5678-9012'),
+('Clínica do Povo', 'Rua C, 600', '(51) 6789-0123'),
+('Centro de Saúde São João', 'Av. D, 700', '(61) 7890-1234'),
+('Clínica Vida Plena', 'Parque esperança, 800', '(71) 8901-2345'),
+('Hospital Popular', 'Rua F, 900', '(81) 9012-3456'),
+('Unidade Médica Comunitária', 'Av. G, 1000', '(91) 0123-4567');
 
-select *from Medicos;
+INSERT INTO Medicos (nome, email, senha, crm, especialidade, id_clinica) VALUES
+('Dr. Ana Souza', 'ana.souza@med.com', 'senha123', '123456-SP', 'Clínico Geral', 1),
+('Dr. Pedro Lima', 'pedro.lima@med.com', 'senha123', '654321-SP', 'Cardiologia', 2),
+('Dr. Carla Mendes', 'carla.mendes@med.com', 'senha123', '112233-RJ', 'Dermatologia', 3),
+('Dr. Bruno Silva', 'bruno.silva@med.com', 'senha123', '223344-MG', 'Pediatria', 4),
+('Dr. Fernanda Rocha', 'fernanda.rocha@med.com', 'senha123', '334455-PR', 'Ortopedia', 5),
+('Dr. Marcos Pinto', 'marcos.pinto@med.com', 'senha123', '445566-RS', 'Ginecologia', 6),
+('Dr. Paula Dias', 'paula.dias@med.com', 'senha123', '556677-DF', 'Neurologia', 7),
+('Dr. Rafael Costa', 'rafael.costa@med.com', 'senha123', '667788-BA', 'Psiquiatria', 8),
+('Dr. Juliana Alves', 'juliana.alves@med.com', 'senha123', '778899-PE', 'Endocrinologia', 9),
+('Dr. Tiago Martins', 'tiago.martins@med.com', 'senha123', '889900-PA', 'Urologia', 10);
 
-INSERT INTO Pacientes (nome, cpf, idade, email, senha) VALUES 
-('Carlos Eduardo Silva', '123.456.789-01', 35, 'carlos.silva@email.com', 'senha123'),
-('Maria Fernanda Oliveira', '234.567.890-02', 28, 'maria.oliveira@email.com', 'segura456'),
-('João Pedro Santos', '345.678.901-03', 42, 'joao.santos@email.com', 'forte789'),
-('Ana Beatriz Costa', '456.789.012-04', 30, 'ana.costa@email.com', 'senhaXYZ'),
-('Fernando Henrique Lima', '567.890.123-05', 50, 'fernando.lima@email.com', 'acessoABC'),
-('Juliana Alves Nogueira', '678.901.234-06', 25, 'juliana.nogueira@email.com', 'protege456'),
-('Ricardo Matheus Rocha', '789.012.345-07', 38, 'ricardo.rocha@email.com', 'minhasenha'),
-('Camila Patricia Mendes', '890.123.456-08', 29, 'camila.mendes@email.com', 'pass987'),
-('Eduardo Vinícius Pereira', '901.234.567-09', 44, 'eduardo.pereira@email.com', 'codXYZ'),
-('Natália Gabriela Souza', '012.345.678-10', 33, 'natalia.souza@email.com', 'senha789');
+INSERT INTO Pacientes (nome, email, senha, telefone, data_nascimento) VALUES
+('João Carlos', 'joao.carlos@pac.com', 'senha123', '(11) 91234-5678', '1990-05-10'),
+('Mariana Oliveira', 'mariana.oliveira@pac.com', 'senha123', '(11) 92345-6789', '1985-07-22'),
+('Carlos Eduardo', 'carlos.eduardo@pac.com', 'senha123', '(21) 93456-7890', '1992-01-15'),
+('Ana Paula', 'ana.paula@pac.com', 'senha123', '(31) 94567-8901', '1988-11-30'),
+('Lucas Ferreira', 'lucas.ferreira@pac.com', 'senha123', '(41) 95678-9012', '2000-04-02'),
+('Camila Santos', 'camila.santos@pac.com', 'senha123', '(51) 96789-0123', '1995-08-18'),
+('Roberta Lima', 'roberta.lima@pac.com', 'senha123', '(61) 97890-1234', '1980-09-25'),
+('Felipe Alves', 'felipe.alves@pac.com', 'senha123', '(71) 98901-2345', '1999-12-12'),
+('Tatiane Souza', 'tatiane.souza@pac.com', 'senha123', '(81) 99012-3456', '1982-03-27'),
+('Rafael Mendes', 'rafael.mendes@pac.com', 'senha123', '(91) 90123-4567', '1991-06-05');
 
-select *from Pacientes;
+INSERT INTO Agendamentos (id_medico, id_paciente, data, hora, status) VALUES
+(1, 1, '2025-06-01', '09:00:00', 'marcado'),
+(2, 2, '2025-06-01', '10:00:00', 'marcado'),
+(3, 3, '2025-06-01', '11:00:00', 'marcado'),
+(4, 4, '2025-06-01', '14:00:00', 'marcado'),
+(5, 5, '2025-06-01', '15:00:00', 'marcado'),
+(6, 6, '2025-06-02', '09:30:00', 'marcado'),
+(7, 7, '2025-06-02', '10:30:00', 'marcado'),
+(8, 8, '2025-06-02', '13:00:00', 'marcado'),
+(9, 9, '2025-06-03', '14:30:00', 'marcado'),
+(10, 10, '2025-06-03', '15:30:00', 'marcado');
 
+
+drop database medgodb;

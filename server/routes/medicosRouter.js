@@ -29,12 +29,12 @@ router.put('/:id', atualizarMedicosController)
 router.delete('/:id', deletarMedicoController)
 
 router.options("/", (req, res) => {
-    res.setHeader("Allow", "GET, OPTIONS");
+    res.setHeader("Allow", "GET, POST, OPTIONS");
     res.status(204).send();
   });
   
   router.options("/:id", (req, res) => {
-    res.setHeader("Allow", "GET, OPTIONS");
+    res.setHeader("Allow", "GET, DELETE, PUT, OPTIONS");
     res.status(204).send();
   });
 

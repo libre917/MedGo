@@ -2,7 +2,7 @@ import { read, readAll, create, update, deleteRecord } from "../config/database.
 
 const listarAgenda = async () => {
     try{
-        return await readAll('Agenda')
+        return await readAll('Agendamentos')
     } catch (err) {
         console.error('Erro ao mostrar agenda:', err)
         throw err;
@@ -11,7 +11,7 @@ const listarAgenda = async () => {
 
 const listarAgendaPorId = async (id) => {
     try {
-        return await read('Agenda', `id_agenda = ${id}`)
+        return await read('Agendamentos', `id = ${id}`)
     } catch (err) {
         console.error("Erro ao mostrar agendamento: ", err)
         throw err
@@ -20,7 +20,7 @@ const listarAgendaPorId = async (id) => {
 
 const adicionarAgendamento = async (agendaData) => {
     try {
-        return await create('Agenda', agendaData)
+        return await create('Agendamentos', agendaData)
     } catch (err) {
         console.error('Erro ao relizar agendamento: ', err)
         throw err;
@@ -29,7 +29,7 @@ const adicionarAgendamento = async (agendaData) => {
 
 const deletarAgendamento = async (id) => {
     try{
-        return await deleteRecord('Agenda', `id_agenda = ${id}`)
+        return await deleteRecord('Agendamentos', `id = ${id}`)
     } catch (err) {
         console.error("Erro ao cancelar agendamento: ", err)
         throw err;
