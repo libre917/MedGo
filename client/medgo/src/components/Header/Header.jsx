@@ -39,7 +39,7 @@ export default function Header() {
           <nav>
             <ul className="flex gap-6 text-base font-medium items-center">
               {[
-                ["Home", "/"],
+                ["Home", "/home"],
                 ["Médicos", "/planos"],
                 ["Sua Agenda", "/agenda"],
                 ["Sobre nós", "/sobrenos"],

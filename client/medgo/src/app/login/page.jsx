@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import css from "./login.css";
 
 
 export default function Login() {
