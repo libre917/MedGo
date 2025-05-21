@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import './home.css';
 
 export default function Home() {
 
@@ -10,16 +11,18 @@ export default function Home() {
   return (
     <>
       {/* Home main, titulo principal,subtitulo e imagem  */}
-      <main className="w-full justify-center gap-15 grid mt-20">
-        <div className="  grid gap-4  ">
-          <h1 className="text-center xl:text-left md:text-center sm:text-center text-4xl titulo-cor-padrao-medgo font-semibold font-mono  ">Agendamento Online de Consultas</h1>
-          <p className="text-black text-center text-sm lg:text-left   sm:w-5xl">Encontre horários disponíveis e garanta sua consulta com praticidade.</p>
-        </div>
+      <main className="w-full justify-center gap-15 grid mt-25">
 
-        <div className=" flex justify-left items-start w-full h-full">
-          <img src="/home/imagem-hospital-generica.jpg" className=" rounded-sm w-4xl sm:w-6xl" alt="" />
-        </div>
+        <div className="w-full ">
+          <div className="  grid gap-4  texto-absolute left-150 top-80">
+            <h1 className="text-center xl:text-left md:text-center sm:text-center text-4xl titulo-cor-padrao-medgo  font-semibold font-mono  ">Agendamento Online de Consultas</h1>
+            <p className="text-black text-center text-sm lg:text-left   sm:w-5xl">Encontre horários disponíveis e garanta sua consulta com praticidade.</p>
+          </div>
 
+          <div className=" flex justify-left items-start w-full h-full img-relative">
+            <img src="/home/imagem-hospital-generica.jpg" className=" rounded-sm w-4xl sm:w-6xl" alt="" />
+          </div>
+        </div>
 
         {/* Section titulo,subtitulo, com cards e informações... */}
         <section className="w-full justify-center gap-2 grid mt-25 ">
