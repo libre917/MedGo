@@ -24,6 +24,17 @@ export default function Home() {
           </div>
         </div>
 
+        {/* 
+        <section className="relative pt-32 lg:pt-36">
+<Container></Container>
+          <div className="absolute w-full lg:w-1/2 ">
+            <span className="absolute -left-6 md:left-4 top-24 lg:top-28 w-24 h-24 rotate-90 skew-x-12 rounded-3xl bg-gradient-to-r from-blue-600 to-violet-600 ">
+            </span>
+
+          </div>
+
+        </section> */}
+
         {/* Section titulo,subtitulo, com cards e informações... */}
         <section className="w-full justify-center gap-2 grid mt-25 ">
 
