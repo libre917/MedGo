@@ -20,7 +20,7 @@ export default function Login() {
 
           <div className="grid">
             <label htmlFor="password" className="text-black">Senha</label>
-            <input type="password" name="password" placeholder="Password" required className="w-100 border border-black rounded-2xl text-black" />
+            <input type="password" name="password"  required className="w-100 border border-black rounded-2xl text-black" />
           </div>
 
           <div className="text-black">
@@ -32,7 +32,7 @@ export default function Login() {
         </form>
 
         <div className="flex ">
-          <img src="/login-img/Wavy_Med.jpg" alt="logo medgo" className="rounded-2xl w-5xl " />
+          <img src="/login-img/Wavy_Med.jpg" alt="imagem do lado dos inputs" className="rounded-4xl w-5xl " />
         </div>
       </section>
     </>
