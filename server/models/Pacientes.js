@@ -12,7 +12,7 @@ const listarPacientes = async () => {
 
 const listarPacientesPorId = async (id)=> {
     try{
-        return await read( 'Pacientes', `id_paciente = ${id}`)
+        return await read( 'Pacientes', `id = ${id}`)
     } catch (err) {
         console.error('Erro ao obter o paciente de id:',id, err)
     }
@@ -28,7 +28,7 @@ const adicionarPaciente = async (pacienteData) => {
 
 const atualizarPaciente = async (id, pacienteData) => {
     try{
-        await update ('Pacientes', pacienteData, `id_paciente = ${id}`)
+        await update ('Pacientes', pacienteData, `id = ${id}`)
     } catch (err) {
         console.error('Erro ao atualizar dados : ', err);
         throw err;
@@ -37,7 +37,7 @@ const atualizarPaciente = async (id, pacienteData) => {
 
 const deletarPaciente = async (id) => {
     try{
-        await deleteRecord ('Pacientes', `id_paciente = ${id}`)
+        await deleteRecord ('Pacientes', `id = ${id}`)
     } catch (err) {
         console.error("Erro ao deletar paciente: ", err)
         throw err;
