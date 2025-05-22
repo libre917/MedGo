@@ -11,7 +11,10 @@
   background-color: #0357c6;
 }
 
-
+/* fonte do titulo */
+.font-playfair{
+  font-family: var(--font-playfair), serif;
+}
 
 :root {
   --background: #ffffff;

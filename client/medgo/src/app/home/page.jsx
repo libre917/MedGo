@@ -29,31 +29,11 @@ export default function Home() {
     <>
       {/* Home main, titulo principal,subtitulo e imagem  */}
       <main className="w-full justify-center  grid ">
-        {/*antigo
-        <div className="w-full ">
-          <div className="  grid gap-4  texto-absolute left-150 top-80">
-            <h1 className="text-center xl:text-left md:text-center sm:text-center text-4xl titulo-cor-padrao-medgo  font-semibold font-mono  ">
-              Agendamento Online de Consultas
-            </h1>
-            <p className="text-black text-center text-sm lg:text-left   sm:w-5xl">
-              Encontre horários disponíveis e garanta sua consulta com
-              praticidade.
-            </p>
-          </div>
 
-          <div className=" flex justify-left items-start w-full h-full img-relative">
-            <img
-              src="/home/imagem-hospital-generica.jpg"
-              className=" rounded-sm w-4xl sm:w-6xl"
-              alt=""
-            />
-          </div>
-        </div>
-        */}
         {/* principal novo baseado em https://www.onemedical.com/ */}
-        <div className="relative w-full flex   items-center justify-between gap-6  ">
+        <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
           <div className="w-full 2 px-6 ">
-            <h1 className="text-3xl  font-semibold font-sans titulo-cor-padrao-medgo mb-4">
+            <h1 className="text-3xl font-playfair font-bold  titulo-cor-padrao-medgo mb-4">
               Agendamento Online de Consultas
             </h1>
             <p className="text-gray-700 text-base md:text-lg mb-6">
@@ -61,9 +41,9 @@ export default function Home() {
               praticidade.
             </p>
             <Link href="/marcar-consulta" >
-            <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-5 py-2.5 rounded-md pointer transition">
-              Agendar Agora
-            </button>
+              <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl pointer transition">
+                Agendar Agora
+              </button>
             </Link>
           </div>
 
@@ -78,7 +58,7 @@ export default function Home() {
 
         {/* Section titulo,subtitulo, com cards e informações... */}
         <section className="w-full justify-center gap-2 grid  ">
-        
+
           {/* Card */}
           <div className="grid justify-center w-full xl:flex xl:gap-3 -mt-12">
             {cardInfos.slice(0, 3).map((cardInfo) => (
@@ -98,39 +78,37 @@ export default function Home() {
                     {cardInfo.descricao}
                   </p>
                 </div>
-                
+
               </div>
             ))}
           </div>
         </section>
 
-        {/* Section, anuncio do agendendamento */}
-        <section className="w-full grid h-200 md:h-150  md:flex justify-left  gap-20 mb-50 bg-slate-200 rounded-lg mt-10 ">
-          <div className="w-sm xl:w-xl ">
-            <img
-              src="/home/card-img/medico-com-equipamento-no-ombro.jpg"
-              className="w-full h-full rounded-sm object-cover"
-              alt=""
-            />
+        {/* Section, anuncio do agendendamento mobile */}
+        {/* <section className="grid md:flex justify-center w-full mt-10 mb-10">
+
+          <div className="w-400px grid justify-center ">
+            <h1 className="text-3xl font-playfair font-bold  titulo-cor-padrao-medgo mb-4">
+            Com o MedGo você pode :
+            </h1>
+            <div className="flex">
+              <p>a</p>
+              <p>a</p>
+            </div>
+            <div className="flex">
+              <p>a</p>
+              <p>a</p>
+            </div>
+            <p>a</p>
           </div>
 
-          <div className=" w-sm grid items-center justify-items-center text-center md:justify-items-left gap-10 xl:ml-6 md:gap-0">
-            <h1 className="text-center  xl:text-center  text-3xl titulo-cor-padrao-medgo font-semibold font-mono">
-              Encontre o Melhor Horário para Você
-            </h1>
-            <p className=" truncate text-balance text-black  ">
-              Simples, rápido e sem complicação. Agende sua consulta de forma
-              prática e sem perder tempo.
-            </p>
-            <Link
-              rel="stylesheet"
-              href="/agendar"
-              className="grid bg-transparent items-center text-black hover:bg-white font-semibold hover:text-black  border border-black hover:border-transparent rounded w-40 h-10 text-center"
-            >
-              Agendar
-            </Link>
+
+
+          <div className="w-md h-300px items-center grid justify-center bg-amber-200 ">
+            <img src="/home/woman-laptop (2).png" className="w-sm rounded-2xl" alt="" />
           </div>
-        </section>
+
+        </section> */}
       </main>
     </>
   );
