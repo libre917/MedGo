@@ -7,8 +7,8 @@ import Footer from "@/components/Footer/Footer";
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
 
-  // Esconde Header e Footer apenas na página raiz "/"
-  const hideLayout = pathname === "/" ;
+  // Esconde Header e Footer na home ("/") e na página de cadastro ("/cadastro")
+  const hideLayout = ["/", "/cadastro"].includes(pathname);
 
   return (
     <>

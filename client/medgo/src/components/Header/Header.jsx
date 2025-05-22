@@ -26,7 +26,7 @@ export default function Header() {
         </button>
 
         {/* Logo - Centralizado */}
-        <a href="/" className="flex items-center h-full mx-auto sm:mx-0">
+        <a href="/home" className="flex items-center h-full mx-auto sm:mx-0">
           <img
             src="MEDGO_logo.png"
             alt="Logo MEDGO"
@@ -78,7 +78,7 @@ export default function Header() {
       >
         <ul className="flex flex-col gap-4 text-base font-medium px-4">
           {[
-            ["Home", "/"],
+            ["Home", "/home"],
             ["Médicos", "/planos"],
             ["Marcar consulta", "/marcar-consulta"],
             ["Sua Agenda", "/agenda"],
