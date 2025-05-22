@@ -1,6 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import axios from "axios";
+
+async function compararDados(){
+  try {
+    const response = await axios.get("http://localhost:3000/Pacientes")
+    return response.data
+  } catch (err) {
+    console.error('Erro ao comparar dados')
+  }
+}
 
 export default function Login() {
   return (
@@ -25,7 +35,7 @@ export default function Login() {
 
           <div className="text-black">
 
-            <input type="checkbox" />Li e entendi os termos da <Link className="text-blue-500" href="/politicadeprivacidade">Politica de Privacidade</Link> de Medgo.
+            <input type="checkbox" /> Li e entendi os termos da <Link className="text-blue-500" href="/politicadeprivacidade">Politica de Privacidade</Link> de Medgo.
             <Link rel="stylesheet" href="/home" className="grid bg-transparent items-center text-black hover:bg-black font-semibold hover:text-white  border border-black hover:border-transparent rounded w-40 h-10 text-center">Log In</Link>
           </div>
 

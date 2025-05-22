@@ -1,28 +1,55 @@
 "use client";
+import axios from "axios" 
+const API_URL = "http://localhost:3000"
 
 import { useState } from "react";
+import { useEffect } from "react";
+
+async function listarClinicas() {
+  try {
+    const response = await axios.get(`${API_URL}/Clinicas`);
+    return response.data;
+  } catch (err) {
+    console.error("Erro ao exibir clinicas");
+    return [];
+  }
+}
+
+async function listarMedicos() {
+  try {
+    const response = await axios.get(`${API_URL}/Medicos`)
+    return response.data
+  } catch (err) {
+    console.error("Erro ao exibir medicos");
+    return [];
+  }
+}
 
 export default function MarcarConsulta() {
-  // Dados mockados
-  const clinicas = [
-    { id: 1, nome: "Clínica Médica Central", endereco: "Av. Paulista, 1000 - São Paulo/SP" },
-    { id: 2, nome: "Clínica Saúde Integral", endereco: "Rua Augusta, 500 - São Paulo/SP" },
-    { id: 3, nome: "Instituto de Bem-Estar", endereco: "Alameda Santos, 200 - São Paulo/SP" }
-  ];
+  const [clinicas, setClinicas] = useState([]);
+  const [medicos, setMedicos] = useState([])
 
-  const medicos = [
-    { id: 1, nome: "Dra. Ana Claudia Souza", especialidade: "Cardiologia", clinicaId: 1 },
-    { id: 2, nome: "Dr. Carlos Eduardo Lima", especialidade: "Ortopedia", clinicaId: 1 },
-    { id: 3, nome: "Dra. Juliana Santos", especialidade: "Dermatologia", clinicaId: 2 },
-    { id: 4, nome: "Dr. Marcelo Vieira", especialidade: "Neurologia", clinicaId: 3 }
-  ];
+  useEffect(() => {
+    async function fetchClinicas() {
+      const dados = await listarClinicas();
+      setClinicas(dados);
+    }
 
-  const horariosDisponiveis = [
-    { id: 1, medicoId: 1, data: "15/06/2024", horarios: ["09:00", "10:30", "14:00", "15:30"] },
-    { id: 2, medicoId: 2, data: "15/06/2024", horarios: ["08:00", "11:00", "13:30", "16:00"] },
-    { id: 3, medicoId: 3, data: "16/06/2024", horarios: ["10:00", "11:30", "14:30", "17:00"] },
-    { id: 4, medicoId: 4, data: "17/06/2024", horarios: ["09:30", "11:00", "15:00"] }
-  ];
+    fetchClinicas();
+  }, []);
+
+
+  useEffect(() => {
+    async function fetchMedicos() {
+      const dados = await listarMedicos();
+      setMedicos(dados);
+    }
+
+    fetchMedicos();
+  }, []);
+
+
+
 
   // Estados do formulário
   const [passo, setPasso] = useState(1);
@@ -34,13 +61,13 @@ export default function MarcarConsulta() {
 
   // Filtrar médicos pela clínica selecionada
   const medicosDaClinica = clinicaSelecionada 
-    ? medicos.filter(medico => medico.clinicaId === clinicaSelecionada.id) 
+    ? medicos.filter(medico => medico.id_clinica === clinicaSelecionada.id) 
     : [];
 
   // Filtrar horários pelo médico selecionado
-  const horariosDoMedico = medicoSelecionado 
-    ? horariosDisponiveis.find(horario => horario.medicoId === medicoSelecionado.id) 
-    : null;
+  // const horariosDoMedico = medicoSelecionado 
+  //   ? horariosDisponiveis.find(horario => horario.medicoId === medicoSelecionado.id) 
+  //   : null;
 
   // Função para avançar nos passos
   const proximoPasso = () => {
@@ -58,12 +85,12 @@ export default function MarcarConsulta() {
   // Função para finalizar o agendamento
   const finalizarAgendamento = () => {
     const consulta = {
+      id_paciente: id,
       clinica: clinicaSelecionada,
       medico: medicoSelecionado,
       data: dataSelecionada,
       horario: horarioSelecionado,
-      observacoes,
-      status: "agendado"
+      status: "marcado"
     };
     
     alert(`Consulta marcada com sucesso!\n\nDetalhes:\nClínica: ${consulta.clinica.nome}\nMédico: ${consulta.medico.nome}\nData: ${consulta.data}\nHorário: ${consulta.horario}`);
@@ -119,7 +146,7 @@ export default function MarcarConsulta() {
                   }`}
                 >
                   <h3 className="font-bold text-lg text-gray-800">{clinica.nome}</h3>
-                  <p className="text-gray-600">{clinica.endereco}</p>
+                  <p className="text-gray-600">{clinica.telefone}</p>
                 </div>
               ))}
             </div>
@@ -153,7 +180,6 @@ export default function MarcarConsulta() {
           </div>
         )}
 
-        {/* Passo 3 - Selecionar Horário */}
         {passo === 3 && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Selecione o Horário</h2>
@@ -163,8 +189,11 @@ export default function MarcarConsulta() {
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">Data da Consulta</label>
-              <select
+              <label className="block text-gray-700 font-medium mb-2">Digite a Data da Consulta</label>
+              <form action="text" className="text-black">
+              <input type="text" placeholder="dd/mm/aaaa" onChange={(e) => setDataSelecionada(e.target.value)} pattern="\d{2}/\d{2}/\d{4}" required />
+              </form>
+              {/* <select
                 value={dataSelecionada}
                 onChange={(e) => {
                   setDataSelecionada(e.target.value);
@@ -174,32 +203,19 @@ export default function MarcarConsulta() {
               >
                 <option value="">Selecione uma data</option>
                 {horariosDisponiveis
-                  .filter(h => h.medicoId === medicoSelecionado.id)
                   .map((h) => (
                     <option key={h.id} value={h.data}>{h.data}</option>
                   ))}
-              </select>
+              </select> */}
             </div>
 
             {dataSelecionada && (
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Horários Disponíveis</label>
+                <label className="block text-gray-700 font-medium mb-2">Digite o Horário</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {horariosDisponiveis
-                    .find(h => h.medicoId === medicoSelecionado.id && h.data === dataSelecionada)
-                    ?.horarios.map((horario) => (
-                      <button
-                        key={horario}
-                        onClick={() => setHorarioSelecionado(horario)}
-                        className={`p-3 border rounded-lg text-center ${
-                          horarioSelecionado === horario
-                            ? "bg-indigo-600 text-white border-indigo-700"
-                            : "bg-white text-gray-800 border-gray-300 hover:bg-indigo-50"
-                        }`}
-                      >
-                        {horario}
-                      </button>
-                    ))}
+                 <form action="text">
+                  <input type="text" placeholder="hh:mm" pattern="\d{2}/\d{2}" onChange={(e) => setHorarioSelecionado(e.target.value)} required  className="text-black"/>
+                 </form>
                 </div>
               </div>
             )}
@@ -228,17 +244,6 @@ export default function MarcarConsulta() {
                 <p className="text-gray-500 font-medium">Data e Horário</p>
                 <p className="text-lg font-semibold">{dataSelecionada} às {horarioSelecionado}</p>
               </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">Observações (opcional)</label>
-              <textarea
-                value={observacoes}
-                onChange={(e) => setObservacoes(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                rows="3"
-                placeholder="Alguma informação adicional que deseja informar..."
-              ></textarea>
             </div>
           </div>
         )}
