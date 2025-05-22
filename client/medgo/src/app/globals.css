@@ -7,6 +7,11 @@
 .titulo-background-padrao-medgo{
   background-color: #004aad;
 }
+.hover-background-padrao-medgo:hover{
+  background-color: #0357c6;
+}
+
+
 
 :root {
   --background: #ffffff;
