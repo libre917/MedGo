@@ -1,98 +1,202 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("usuario");
+    if (userData) {
+      const user = JSON.parse(userData);
+      setUserName(user.nome);
+    }
+
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    window.location.href = "/";
+  };
 
   return (
     <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-50">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 sm:h-20">
-        {/* Botão Mobile - Movido para a esquerda */}
+      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 lg:h-20">
+        {/* Botão Mobile */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="sm:hidden flex flex-col items-center justify-center p-2 rounded-md hover:bg-[#004aad]/10 transition-colors"
+          className="lg:hidden flex flex-col items-center justify-center p-2 rounded-md hover:bg-[#004aad]/10 transition-colors"
           aria-label="Abrir menu"
         >
-          <span
-            className={`w-6 h-0.5 bg-[#004aad] rounded-full transition-transform duration-300 $`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5 transition-opacity duration-300 $`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5 transition-transform duration-300 `}
-          />
+          <span className="w-6 h-0.5 bg-[#004aad] rounded-full" />
+          <span className="w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5" />
+          <span className="w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5" />
         </button>
 
-        {/* Logo - Centralizado */}
-        <a href="/home" className="flex items-center h-full mx-auto sm:mx-0">
+        {/* Logo */}
+        <Link href="/home" className="flex items-center h-full mx-auto lg:mx-0">
           <img
             src="MEDGO_logo.png"
             alt="Logo MEDGO"
-            className="h-25 sm:h-25 w-auto object-contain transition-transform hover:scale-105"
+            className="h-25 lg:h-25 w-auto object-contain"
           />
-        </a>
+        </Link>
 
-        {/* Menu Desktop - Centralizado */}
-        <div className="hidden sm:flex items-center justify-center flex-1">
+        {/* Menu Desktop */}
+        <div className="hidden lg:flex items-center justify-center flex-1">
           <nav>
             <ul className="flex gap-6 text-base font-medium items-center">
               {[
                 ["Home", "/home"],
-                ["Médicos", "/planos"],
                 ["Sua Agenda", "/agenda"],
                 ["Sobre nós", "/sobrenos"],
               ].map(([label, href]) => (
                 <li key={label}>
-                  <a
+                  <Link
                     href={href}
                     className="relative group block px-2 py-2 text-[#004aad] hover:text-[#003a8c] transition-colors"
                   >
                     {label}
                     <span className="absolute left-1/2 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full group-hover:left-0" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
         </div>
 
-        {/* Botão Marcar Consulta - À direita */}
-        <a
-          href="/marcar-consulta"
-          className="hidden sm:block ml-4 px-4 py-2 bg-[#004aad] text-white rounded-md hover:bg-[#003a8c] transition duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
-        >
-          Marcar Consulta
-        </a>
+        {/* Área do usuário */}
+        <div className="flex items-center gap-4">
+          {userName && (
+            <>
+              {/* Versão Desktop */}
+              <div className="hidden lg:block relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 text-[#004aad] font-medium hover:text-[#003a8c] transition-colors"
+                >
+                  <span>Olá, {userName}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
 
-        {/* Espaço vazio para balancear o layout mobile */}
-        <div className="sm:hidden w-6" />
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <Link
+                      href="/perfil"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#004aad]/10 transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Meu Perfil
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#004aad]/10 transition-colors"
+                    >
+                      Sair
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Versão Mobile - Ícone de perfil */}
+              <Link
+                href="/perfil"
+                className="lg:hidden flex items-center justify-center p-2 rounded-full hover:bg-[#004aad]/10"
+                aria-label="Meu perfil"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-[#004aad]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </Link>
+            </>
+          )}
+          
+          <Link
+            href="/marcar-consulta"
+            className="hidden lg:block px-4 py-2 bg-[#004aad] text-white rounded-md hover:bg-[#003a8c] transition duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
+          >
+            Marcar Consulta
+          </Link>
+        </div>
       </div>
 
       {/* Menu Mobile Expandido */}
       <nav
-        className={`sm:hidden transition-all duration-500 overflow-hidden bg-white border-t border-gray-200 ${
-          isOpen ? "max-h-[500px] py-4" : "max-h-0 py-0"
+        className={`lg:hidden transition-all duration-500 overflow-hidden bg-white border-t border-gray-200 ${
+          isOpen ? "max-h-screen py-4" : "max-h-0 py-0"
         }`}
       >
-        <ul className="flex flex-col gap-4 text-base font-medium px-4">
+        <ul className="flex flex-col gap-4 text-base font-medium px-5">
           {[
             ["Home", "/home"],
-            ["Médicos", "/planos"],
             ["Marcar consulta", "/marcar-consulta"],
             ["Sua Agenda", "/agenda"],
             ["Sobre nós", "/sobrenos"],
+            ["Meu Perfil", "/perfil"],
           ].map(([label, href]) => (
             <li key={label}>
-              <a
+              <Link
                 href={href}
-                className="block py-2 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors"
+                className="block py-3 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors border-b border-gray-100"
+                onClick={() => setIsOpen(false)}
               >
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
+          {userName && (
+            <li>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full text-left py-3 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors border-b border-gray-100"
+              >
+                Sair
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
