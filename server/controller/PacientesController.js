@@ -31,14 +31,14 @@ const listarPacientesPorIdController = async (req, res) => {
 
 const adicionarPacientesController = async (req, res) => {
     try {
-        const { nome, email, senha, telefone, data_nascimento } = req.body;
+        const { nome, email, senha, telefone, idade } = req.body;
 
         const pacienteData = {
             nome: nome,
             email: email,
             senha: senha,
             telefone: telefone,
-            data_nascimento: data_nascimento
+            idade: idade
         } // analisar depois para (se quiser) adicionar foto de usuario
         const PacienteInfo = await adicionarPaciente(pacienteData);
         res.status(201).json({ mensagem: 'Paciente adicionado com sucesso', PacienteInfo })
@@ -51,14 +51,14 @@ const adicionarPacientesController = async (req, res) => {
 const atualizarPacienteController = async (req, res) => {
     try {
         const pacienteId = req.params.id
-        const { nome, email, senha, telefone, data_nascimento } = req.body;
+        const { nome, email, senha, telefone, idade } = req.body;
 
         const pacienteData = {
             nome: nome,
             email: email,
             senha: senha,
             telefone: telefone,
-            data_nascimento: data_nascimento
+            idade: idade
         } // analisar depois para (se quiser) adicionar foto de usuario
         await atualizarPaciente(pacienteId, pacienteData);
         res.status(201).json({ mensagem: 'Informações atualizadas com sucesso' })

@@ -26,6 +26,13 @@ async function listarMedicos() {
 }
 
 export default function MarcarConsulta() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    alert('Erro')
+  }
+
+  const user = JSON.parse(userId)
+    // setUserName(user.nome);
   const [clinicas, setClinicas] = useState([]);
   const [medicos, setMedicos] = useState([])
 
@@ -85,7 +92,7 @@ export default function MarcarConsulta() {
   // Função para finalizar o agendamento
   const finalizarAgendamento = () => {
     const consulta = {
-      id_paciente: id,
+      id: id,
       clinica: clinicaSelecionada,
       medico: medicoSelecionado,
       data: dataSelecionada,
@@ -191,7 +198,7 @@ export default function MarcarConsulta() {
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">Digite a Data da Consulta</label>
               <form action="text" className="text-black">
-              <input type="text" placeholder="dd/mm/aaaa" onChange={(e) => setDataSelecionada(e.target.value)} pattern="\d{2}/\d{2}/\d{4}" required />
+              <input type="text" placeholder="dd mm aaaa" onChange={(e) => setDataSelecionada(e.target.value)} pattern="\d{2} \d{2} \d{4}" required />
               </form>
               {/* <select
                 value={dataSelecionada}
