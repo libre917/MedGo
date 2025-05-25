@@ -1,5 +1,8 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import "./home.css";
 
 export default function Home() {
   const cardInfos = [
@@ -25,22 +28,33 @@ export default function Home() {
       path: "/home/card-img/enfermeira-medindo-paciente-pressao-sangue.jpg",
     },
   ];
+  const [especialidades, setEspecialidades] = useState([
+    { nome: "Clínico Geral", icon: "/icons/farmacia.png" },
+    { nome: "Cardiologia", icon: "/icons/coracao.png" },
+    { nome: "Dermatologia", icon: "/icons/dermatologia.png" },
+    { nome: "Pediatria", icon: "/icons/pediatria.png" },
+    { nome: "Ortopedia", icon: "/icons/ortopedia.png" },
+    { nome: "Ginecologia", icon: "/icons/saude-sexual.png" },
+    { nome: "Neurologia", icon: "/icons/neurologia.png" },
+    { nome: "Psiquiatria", icon: "/icons/psiquiatria.png" },
+    { nome: "Endocrinologia", icon: "/icons/endocrinologia.png" },
+    { nome: "Urologia", icon: "/icons/urologia.png" },
+  ]);
   return (
     <>
       {/* Home main, titulo principal,subtitulo e imagem  */}
       <main className="w-full justify-center  grid ">
-
         {/* principal novo baseado em https://www.onemedical.com/ */}
         <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
           <div className="w-full 2 px-6 ">
-            <h1 className="text-3xl font-playfair font-bold  titulo-cor-padrao-medgo mb-4">
-              Agendamento Online de Consultas
+            <h1 className="text-3xl font-playfair font-bold  text-black mb-4">
+             <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
             </h1>
             <p className="text-gray-700 text-base md:text-lg mb-6">
               Encontre horários disponíveis e garanta sua consulta com
               praticidade.
             </p>
-            <Link href="/marcar-consulta" >
+            <Link href="/marcar-consulta">
               <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl pointer transition">
                 Agendar Agora
               </button>
@@ -58,7 +72,6 @@ export default function Home() {
 
         {/* Section titulo,subtitulo, com cards e informações... */}
         <section className="w-full justify-center gap-2 grid  ">
-
           {/* Card */}
           <div className="grid justify-center w-full xl:flex xl:gap-3 -mt-12">
             {cardInfos.slice(0, 3).map((cardInfo) => (
@@ -78,37 +91,34 @@ export default function Home() {
                     {cardInfo.descricao}
                   </p>
                 </div>
-
               </div>
             ))}
           </div>
         </section>
 
-        {/* Section, anuncio do agendendamento mobile */}
-        {/* <section className="grid md:flex justify-center w-full mt-10 mb-10">
-
-          <div className="w-400px grid justify-center ">
-            <h1 className="text-3xl font-playfair font-bold  titulo-cor-padrao-medgo mb-4">
-            Com o MedGo você pode :
-            </h1>
-            <div className="flex">
-              <p>a</p>
-              <p>a</p>
+        {/*Section especialidades*/}
+        <section className="grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10   relative">
+          <div className="container mx-auto px-4 grid gap-10">
+            <h2 className="xl:text-3xl text-xl font-playfair font-bold text-black mb-4">
+              <span className="titulo-cor-padrao-medgo ">Especialidades</span>{" "}
+              disponíveis em MedGo
+            </h2>
+            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-4 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
+              {especialidades.map((especialidade, index) => (
+                <div
+                  key={index}
+                  className="w-full h-40px rounded-4xl grid place-items-center text-center"
+                >
+                  <img className="w-10 h-10" src={especialidade.icon} alt="" />
+                  <h3 className="text-lg text-black font-semi-bold mb-2">
+                    {especialidade.nome}
+                  </h3>
+                </div>
+              ))}
             </div>
-            <div className="flex">
-              <p>a</p>
-              <p>a</p>
-            </div>
-            <p>a</p>
           </div>
+        </section>
 
-
-
-          <div className="w-md h-300px items-center grid justify-center bg-amber-200 ">
-            <img src="/home/woman-laptop (2).png" className="w-sm rounded-2xl" alt="" />
-          </div>
-
-        </section> */}
       </main>
     </>
   );
