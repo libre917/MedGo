@@ -26,9 +26,15 @@ const listarAgendaPorIdController = async (req, res) => {
 }
 
 const adicionarAgendamentoController = async (req, res) => {
-    try {
-        const { data, hora, id_medico, id_paciente, status } = req.body
+    try { console.log(req.body)
+        const {  id_clinica, id_medico, id_paciente, data, hora, status } = req.body
+        
+        if (  !id_clinica || !id_medico || !id_paciente || !data || !hora || !status){
+            res.status(400).json({mensagem: "Erro: informações incompletas e/ou ausentes"})
+            return;
+        }
         const agendaData = {
+            id_clinica: id_clinica,
             id_medico: id_medico,         
             id_paciente: id_paciente, 
             data: data, 
