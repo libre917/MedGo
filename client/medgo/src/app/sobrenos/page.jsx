@@ -255,7 +255,7 @@ export default function SobreNos() {
           <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
             <div className="flex items-center gap-4 mb-4">
               <div className="bg-[#004aad]/10 p-3 rounded-lg">
-                <img src="https://img.icons8.com/color/48/women-health.png" alt="Ginecologia" className="w-8 h-8" />
+                <img src="/icons/reproductive-system.png" alt="Ginecologia" className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900">Ginecologia</h3>
             </div>
@@ -281,7 +281,7 @@ export default function SobreNos() {
           <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
             <div className="flex items-center gap-4 mb-4">
               <div className="bg-[#004aad]/10 p-3 rounded-lg">
-                <img src="https://img.icons8.com/color/48/orthopedic.png" alt="Ortopedia" className="w-8 h-8" />
+                <img src="/icons/arthritis.png" alt="Ortopedia" className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900">Ortopedia</h3>
             </div>

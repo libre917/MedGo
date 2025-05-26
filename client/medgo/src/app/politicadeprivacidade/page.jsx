@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function PoliticaPrivacidade() {
   const userId = localStorage.getItem("usuario");
@@ -17,6 +18,7 @@ export default function PoliticaPrivacidade() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
         {/* Cabeçalho */}
+        <button><Link href="/cadastro" className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-3 py-3 rounded-4xl pointer transition">Voltar</Link></button>
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-blue-800 mb-2">Política de Privacidade</h1>
           <p className="text-lg text-gray-600">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
