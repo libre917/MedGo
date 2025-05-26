@@ -8,7 +8,7 @@ export default function ClientLayout({ children }) {
   const pathname = usePathname();
 
   // Oculta o Header e Footer na home, cadastro e na página not-found
-  const hideLayout = ["/", "/cadastro", "/not-found" , "/politicadeprivacidade"].includes(pathname);
+  const hideLayout = ["/", "/cadastro", "/not-found" , "/politicadeprivacidade" , "/login-medico"].includes(pathname);
 
   return (
     <>
