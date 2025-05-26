@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Perfil() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+    window.location.href = "/";
+  }
+  const [paciente, setPaciente] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tipoUsuario, setTipoUsuario] = useState('');

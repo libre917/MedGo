@@ -2,6 +2,11 @@
 import { useState } from "react";
 
 export default function PoliticaPrivacidade() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+    window.location.href = "/";
+  }
   const [abrirSecao, setAbrirSecao] = useState(null);
 
   const toggleSecao = (secao) => {

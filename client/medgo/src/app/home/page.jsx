@@ -5,6 +5,11 @@ import { useState, useEffect } from "react";
 import "./home.css";
 
 export default function Home() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+    window.location.href = "/";
+  }
   const cardInfos = [
     {
       id: "1",

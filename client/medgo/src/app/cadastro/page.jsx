@@ -13,22 +13,34 @@ export default function Cadastro() {
 
   const adiocionarDados = async () => {
     try {
-      await axios.post("http://localhost:3000/Pacientes", {
-        nome: nome,
-        email: email,
-        senha: senha,
-        telefone: telefone,
-        idade: Idade,
-      });
+   
 
       const response = await axios.get("http://localhost:3000/Pacientes");
       const paciente = response.data;
 
       const user = paciente.find(
-        (paciente) => paciente.email === email && paciente.senha === senha
+        (paciente) => paciente.email === email
       );
-      localStorage.setItem("usuario", JSON.stringify(user));
-      window.location.href = "/home";
+
+      if (user) {
+        alert('Email já cadastrado')
+      } else {
+        await axios.post("http://localhost:3000/Pacientes", {
+          nome: nome,
+          email: email,
+          senha: senha,
+          telefone: telefone,
+          idade: Idade,
+        });
+        
+      const newResponse = await axios.get("http://localhost:3000/Pacientes");
+      const newPaciente = newResponse.data;
+
+      const newUser = newPaciente.find(
+        (p) => p.email === email
+      );
+      localStorage.setItem("usuario", JSON.stringify(newUser));
+      window.location.href = "/home";}
     } catch (err) {
       console.error("Erro ao comparar dados", err);
       alert("Erro ao conectar-se ao servidor.");
