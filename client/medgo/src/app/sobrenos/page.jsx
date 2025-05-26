@@ -1,6 +1,12 @@
+"use client";
 import React from "react";
 
 export default function SobreNos() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    window.location.href = "/";
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+  }
   return (
     <div className="min-h-screen  from-blue-50 to-white">
       {/* Hero Section */}

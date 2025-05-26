@@ -28,7 +28,8 @@ async function listarMedicos() {
 export default function MarcarConsulta() {
   const userId = localStorage.getItem("usuario");
   if(!userId){
-    alert('Erro')
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+    window.location.href = "/";
   }
 
   const user = JSON.parse(userId)

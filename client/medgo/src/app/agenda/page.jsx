@@ -5,6 +5,11 @@ import { useState, useEffect } from "react";
 const API_URL = "http://localhost:3000";
 
 async function listarAgendamentos() {
+  const userId = localStorage.getItem("usuario");
+  if(!userId){
+    alert('Erro: Login ou cadastro necessário para funcionamento')
+    window.location.href = "/";
+  }   
   try {
     const response = await axios.get(`${API_URL}/Agendamentos`);
     return response.data;
