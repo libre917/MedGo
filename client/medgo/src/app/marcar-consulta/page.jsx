@@ -65,7 +65,6 @@ export default function MarcarConsulta() {
   const [medicoSelecionado, setMedicoSelecionado] = useState(null);
   const [dataSelecionada, setDataSelecionada] = useState("");
   const [horarioSelecionado, setHorarioSelecionado] = useState("");
-  const [observacoes, setObservacoes] = useState("");
 
   // Filtrar médicos pela clínica selecionada
   const medicosDaClinica = clinicaSelecionada 
@@ -91,19 +90,55 @@ export default function MarcarConsulta() {
   };
 
   // Função para finalizar o agendamento
-  const finalizarAgendamento = () => {
-    const consulta = {
-      id: id,
-      clinica: clinicaSelecionada,
-      medico: medicoSelecionado,
-      data: dataSelecionada,
-      horario: horarioSelecionado,
-      status: "marcado"
-    };
-    
-    alert(`Consulta marcada com sucesso!\n\nDetalhes:\nClínica: ${consulta.clinica.nome}\nMédico: ${consulta.medico.nome}\nData: ${consulta.data}\nHorário: ${consulta.horario}`);
-    // Aqui você enviaria os dados para a API
+  const id = JSON.parse(localStorage.getItem('usuario'))
+  const [dia, mes, ano] = dataSelecionada.split(" ")
+  const data = [ano, mes, dia]
+       const status = "marcado"
+       const consulta = {
+        id_clinica: clinicaSelecionada?.id,
+        id_medico: medicoSelecionado?.id,
+        id_paciente: id.id,
+        data: `${ano}-${mes}-${dia}`,
+        horario: horarioSelecionado+":00",
+        status: status
+      };
+  
+  console.log(clinicaSelecionada, medicoSelecionado, id.id, ano, mes, dia, data, horarioSelecionado, status)
+  console.log('Consulta----',consulta)
+
+
+
+  const finalizarAgendamento = async () => {
+    if (!clinicaSelecionada || !medicoSelecionado || !dataSelecionada || !horarioSelecionado) {
+      alert("Preencha todos os campos antes de agendar.");
+      return;
+    }
+  
+    try {
+      const id = JSON.parse(localStorage.getItem('usuario'));
+      const [dia, mes, ano] = dataSelecionada.split(" ");
+      const status = "marcado";
+  
+      const consulta = {
+        id_clinica: clinicaSelecionada.id,
+        id_medico: medicoSelecionado.id,
+        id_paciente: id.id,
+        data: `${ano}-${mes}-${dia}`,
+        hora: `${horarioSelecionado}:00`,
+        status: status
+      };
+  
+      console.log("Enviando para API:", consulta);
+      await axios.post(`http://localhost:3000/Agendamentos`, consulta);
+  
+      alert("Agendamento realizado com sucesso!");
+      window.location.href = "/marcar-agendadem";
+    } catch (err) {
+      console.error('Erro ao agendar:', err.response?.data || err.message);
+      alert("Erro ao realizar o agendamento. Tente novamente.");
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
