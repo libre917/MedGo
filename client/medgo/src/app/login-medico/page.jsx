@@ -5,22 +5,22 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 
-export default function Login() {
+export default function LoginMedico() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const compararDados = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/Pacientes");
-      const paciente = response.data;
+      const response = await axios.get("http://localhost:3000/Medicos");
+      const medicos = response.data;
 
-      const user = paciente.find(
-        (paciente) => paciente.email === email && paciente.senha === senha
+      const user = medicos.find(
+        (medico) => medico.email === email && medico.senha === senha
       );
 
       if (user) {
         localStorage.setItem("usuario", JSON.stringify(user));
-        window.location.href = "/home";
+        window.location.href = "/home-medico";
       } else {
         alert("Email ou senha incorreto(s)");
       }
@@ -51,22 +51,24 @@ export default function Login() {
           <img
             src="/MEDGO_logo.png"
             alt="Logo MedGo"
-            className="w-32 md:w-40 mx-25  "
+            className="w-32 md:w-40 mx-25"
           />
 
-          <h1 className="text-black font-semibold text-2xl md:text-3xl text-center font-playfair ">
-            Faça o login para continuar
+          <h1 className="text-black font-semibold text-2xl md:text-3xl text-center font-playfair">
+            Área Médica - Faça o login
           </h1>
 
           <p className="text-black text-center">
-            Não tem conta? <Link href="/cadastro" className="text-blue-600">
+            Não tem cadastro médico?{" "}
+            <Link href="/cadastro-medico" className="text-blue-600">
               Cadastre-se
             </Link>
           </p>
 
           <p className="text-black text-center">
-            Sou Médico? <Link href="/login-medico" className="text-blue-600">
-              login
+            Sou Paciente?{" "}
+            <Link href="/" className="text-blue-600">
+              Login Paciente
             </Link>
           </p>
 
@@ -97,7 +99,7 @@ export default function Login() {
               className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition"
               type="submit"
             >
-              Log In
+              Acessar Área Médica
             </button>
           </div>
         </form>
