@@ -4,54 +4,74 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:3000";
 
-async function listarAgendamentos() {
-  const userId = localStorage.getItem("usuario");
-  if(!userId){
-    alert('Erro: Login ou cadastro necessário para funcionamento')
-    window.location.href = "/";
-  }   
-  try {
-    const response = await axios.get(`${API_URL}/Agendamentos`);
-    return response.data;
-  } catch (err) {
-    console.error("Erro ao buscar agendamentos:", err);
-    return [];
-  }
-}
-
-async function listarMedicos() {
-  try {
-    const response = await axios.get(`${API_URL}/Medicos`);
-    return response.data;
-  } catch (err) {
-    console.error("Erro ao buscar médicos:", err);
-    return [];
-  }
-}
-
-export default function ListaAgendamentos() {
+export default function AgendamentosUsuario() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [medicos, setMedicos] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [detalhesAgendamento, setDetalhesAgendamento] = useState(null);
+  const [tipoUsuario, setTipoUsuario] = useState('');
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
 
   useEffect(() => {
-    async function carregarDados() {
+    const carregarDados = async () => {
       setCarregando(true);
-      const [dadosAgendamentos, dadosMedicos] = await Promise.all([
-        listarAgendamentos(),
-        listarMedicos()
-      ]);
-      setAgendamentos(dadosAgendamentos);
-      setMedicos(dadosMedicos);
-      setCarregando(false);
-    }
+      
+      try {
+        // Verifica se o usuário está logado
+        const userData = localStorage.getItem("usuario");
+        if (!userData) {
+          alert('Erro: Login ou cadastro necessário para funcionamento');
+          window.location.href = "/";
+          return;
+        }
+        
+        const usuario = JSON.parse(userData);
+        setUsuarioLogado(usuario);
+        
+        // Determina se é médico ou paciente
+        if (usuario.crm) {
+          setTipoUsuario('medico');
+        } else {
+          setTipoUsuario('paciente');
+        }
+
+        // Carrega todos os dados necessários
+        const [agendamentosRes, medicosRes, pacientesRes] = await Promise.all([
+          axios.get(`${API_URL}/Agendamentos`),
+          axios.get(`${API_URL}/Medicos`),
+          axios.get(`${API_URL}/Pacientes`)
+        ]);
+
+        setMedicos(medicosRes.data);
+        setPacientes(pacientesRes.data);
+
+        // Filtra agendamentos pelo usuário logado
+        const agendamentosFiltrados = agendamentosRes.data.filter(agendamento => {
+          return tipoUsuario === 'medico' 
+            ? agendamento.id_medico === usuario.id
+            : agendamento.id_paciente === usuario.id;
+        });
+
+        setAgendamentos(agendamentosFiltrados);
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
     carregarDados();
-  }, []);
+  }, [tipoUsuario]);
 
   const encontrarNomeMedico = (idMedico) => {
     const medico = medicos.find(m => m.id === idMedico);
     return medico ? medico.nome : "Médico não encontrado";
+  };
+
+  const encontrarNomePaciente = (idPaciente) => {
+    const paciente = pacientes.find(p => p.id === idPaciente);
+    return paciente ? paciente.nome : "Paciente não encontrado";
   };
 
   const formatarData = (dataISO) => {
@@ -63,6 +83,31 @@ export default function ListaAgendamentos() {
   const formatarHora = (hora) => {
     if (!hora) return "--:--";
     return hora.substring(0, 5);
+  };
+
+  const cancelarAgendamento = async (idAgendamento) => {
+    try {
+      await axios.patch(`${API_URL}/Agendamentos/${idAgendamento}`, {
+        status: "cancelado"
+      });
+      
+      // Atualiza a lista de agendamentos
+      setAgendamentos(agendamentos.map(ag => 
+        ag.id === idAgendamento ? {...ag, status: "cancelado"} : ag
+      ));
+      
+      if (detalhesAgendamento?.id === idAgendamento) {
+        setDetalhesAgendamento({
+          ...detalhesAgendamento,
+          status: "cancelado"
+        });
+      }
+      
+      alert("Agendamento cancelado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao cancelar agendamento:", err);
+      alert("Erro ao cancelar agendamento");
+    }
   };
 
   if (carregando) {
@@ -80,8 +125,14 @@ export default function ListaAgendamentos() {
       <div className="max-w-6xl mx-auto">
         {/* Cabeçalho */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-800">Meus Agendamentos</h1>
-          <p className="mt-2 text-gray-600">Próximas consultas marcadas</p>
+          <h1 className="text-3xl font-bold text-blue-800">
+            {tipoUsuario === 'medico' ? 'Agendamentos do Médico' : 'Meus Agendamentos'}
+          </h1>
+          <p className="mt-2 text-gray-600">
+            {tipoUsuario === 'medico' 
+              ? 'Consultas marcadas com pacientes' 
+              : 'Próximas consultas marcadas'}
+          </p>
         </div>
 
         {/* Grid de Cards */}
@@ -89,6 +140,12 @@ export default function ListaAgendamentos() {
           {agendamentos.length === 0 ? (
             <div className="col-span-3 text-center py-12 bg-white rounded-xl shadow">
               <p className="text-gray-500 mb-4">Nenhum agendamento encontrado</p>
+              <a 
+                href={tipoUsuario === 'medico' ? "/medico" : "/agendar"}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                {tipoUsuario === 'medico' ? "Voltar ao painel" : "Marcar consulta"}
+              </a>
             </div>
           ) : (
             agendamentos.map((agendamento) => (
@@ -99,7 +156,9 @@ export default function ListaAgendamentos() {
                 <div className="p-6 h-full flex flex-col">
                   <div className="flex justify-between items-start mb-4">
                     <h2 className="text-xl font-semibold text-gray-800">
-                      {encontrarNomeMedico(agendamento.id_medico)}
+                      {tipoUsuario === 'medico'
+                        ? encontrarNomePaciente(agendamento.id_paciente)
+                        : encontrarNomeMedico(agendamento.id_medico)}
                     </h2>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       agendamento.status === "marcado" 
@@ -129,13 +188,21 @@ export default function ListaAgendamentos() {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+                  <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between">
                     <button
                       onClick={() => setDetalhesAgendamento(agendamento)}
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                     >
-                      Ver detalhes →
+                      Ver detalhes
                     </button>
+                    {agendamento.status === "marcado" && (
+                      <button
+                        onClick={() => cancelarAgendamento(agendamento.id)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        Cancelar
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -160,9 +227,13 @@ export default function ListaAgendamentos() {
 
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Médico</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  {tipoUsuario === 'medico' ? 'Paciente' : 'Médico'}
+                </h3>
                 <p className="text-lg text-gray-800">
-                  {encontrarNomeMedico(detalhesAgendamento.id_medico)}
+                  {tipoUsuario === 'medico'
+                    ? encontrarNomePaciente(detalhesAgendamento.id_paciente)
+                    : encontrarNomeMedico(detalhesAgendamento.id_medico)}
                 </p>
               </div>
 
@@ -197,7 +268,18 @@ export default function ListaAgendamentos() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-end space-x-3">
+              {detalhesAgendamento.status === "marcado" && (
+                <button
+                  onClick={() => {
+                    cancelarAgendamento(detalhesAgendamento.id);
+                    setDetalhesAgendamento(null);
+                  }}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Cancelar Consulta
+                </button>
+              )}
               <button
                 onClick={() => setDetalhesAgendamento(null)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
