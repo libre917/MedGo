@@ -27,6 +27,14 @@ const adicionarAgendamento = async (agendaData) => {
     }
 }
 
+const atualizarAgendamento = async (id, agendaData) => {
+    try {
+        return await update('Agendamentos', agendaData, `id = ${id}`)
+    }catch(err){
+        console.error("Erro ao atulizar o agendamento")
+    }
+}
+
 const deletarAgendamento = async (id) => {
     try{
         return await deleteRecord('Agendamentos', `id = ${id}`)
@@ -36,4 +44,4 @@ const deletarAgendamento = async (id) => {
     }
 }
 
-export { listarAgenda, listarAgendaPorId, adicionarAgendamento, deletarAgendamento}
+export { listarAgenda, listarAgendaPorId, adicionarAgendamento, atualizarAgendamento, deletarAgendamento}

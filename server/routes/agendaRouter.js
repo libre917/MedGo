@@ -1,4 +1,4 @@
-import { adicionarAgendamentoController, listarAgendaController, listarAgendaPorIdController, deletarAgendamentoController } from "../controller/AgendaController.js";
+import { adicionarAgendamentoController, listarAgendaController, listarAgendaPorIdController, deletarAgendamentoController, } from "../controller/AgendaController.js";
 import express from 'express'
 
 const router = express.Router();

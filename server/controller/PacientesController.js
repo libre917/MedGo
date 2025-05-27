@@ -31,12 +31,13 @@ const listarPacientesPorIdController = async (req, res) => {
 
 const adicionarPacientesController = async (req, res) => {
     try {
-        const { nome, email, senha, telefone, idade } = req.body;
+        const { nome, email, senha, endereco, telefone, idade } = req.body;
 
         const pacienteData = {
             nome: nome,
             email: email,
             senha: senha,
+            endereco: endereco,
             telefone: telefone,
             idade: idade
         } // analisar depois para (se quiser) adicionar foto de usuario
@@ -51,12 +52,13 @@ const adicionarPacientesController = async (req, res) => {
 const atualizarPacienteController = async (req, res) => {
     try {
         const pacienteId = req.params.id
-        const { nome, email, senha, telefone, idade } = req.body;
+        const { nome, email, senha, endereco, telefone, idade } = req.body;
 
         const pacienteData = {
             nome: nome,
             email: email,
             senha: senha,
+            endereco: endereco,
             telefone: telefone,
             idade: idade
         } // analisar depois para (se quiser) adicionar foto de usuario

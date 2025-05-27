@@ -1,4 +1,4 @@
-import { listarAgenda, listarAgendaPorId, adicionarAgendamento, deletarAgendamento } from "../models/Agenda.js";
+import { listarAgenda, listarAgendaPorId, adicionarAgendamento, atualizarAgendamento, deletarAgendamento } from "../models/Agenda.js";
 
 const listarAgendaController = async (req, res) => {
     try {
@@ -26,7 +26,7 @@ const listarAgendaPorIdController = async (req, res) => {
 }
 
 const adicionarAgendamentoController = async (req, res) => {
-    try { console.log(req.body)
+    try { 
         const {  id_clinica, id_medico, id_paciente, data, hora, status } = req.body
         
         if (  !id_clinica || !id_medico || !id_paciente || !data || !hora || !status){
@@ -42,6 +42,31 @@ const adicionarAgendamentoController = async (req, res) => {
             status: status
         }
         const agendamentoInfo = await adicionarAgendamento(agendaData);
+        res.status(201).json({mensagem: "Agendamento marcado", agendamentoInfo})
+    } catch (err) {
+        console.error("Erro ao marcar agendamento:", err)
+        res.status(500).json({mensagem: "Erro ao agendar"})
+    }
+}
+
+const atualizarAgendamentoController = async (req,res) => {
+    try { 
+        const agendaId = req.params.id
+        const {  id_clinica, id_medico, id_paciente, data, hora, status } = req.body
+        
+        if (  !id_clinica || !id_medico || !id_paciente || !data || !hora || !status){
+            res.status(400).json({mensagem: "Erro: informações incompletas e/ou ausentes"})
+            return;
+        }
+        const agendaData = {
+            id_clinica: id_clinica,
+            id_medico: id_medico,         
+            id_paciente: id_paciente, 
+            data: data, 
+            hora: hora, 
+            status: status
+        }
+        const agendamentoInfo = await atualizarAgendamento(agendaId, agendaData);
         res.status(201).json({mensagem: "Agendamento marcado", agendamentoInfo})
     } catch (err) {
         console.error("Erro ao marcar agendamento:", err)
