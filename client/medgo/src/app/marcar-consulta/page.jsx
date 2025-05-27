@@ -156,7 +156,7 @@ export default function MarcarConsulta() {
                   }`}
                 >
                   <h3 className="font-semibold text-gray-800">{clinica.nome}</h3>
-                  <p className="text-sm text-gray-600">{clinica.telefone}</p>
+                  <p className="text-sm text-gray-600">{clinica.endereco}</p>
                 </div>
               ))}
             </div>
@@ -235,19 +235,19 @@ export default function MarcarConsulta() {
             <div className="space-y-3 mb-4">
               <div className="p-3 border border-gray-200 rounded-md">
                 <p className="text-sm text-gray-500 font-medium">Clínica</p>
-                <p className="font-semibold">{clinicaSelecionada.nome}</p>
+                <p className=" text-black font-semibold">{clinicaSelecionada.nome}</p>
                 <p className="text-xs text-gray-600">{clinicaSelecionada.endereco}</p>
               </div>
               
               <div className="p-3 border border-gray-200 rounded-md">
                 <p className="text-sm text-gray-500 font-medium">Médico</p>
-                <p className="font-semibold">{medicoSelecionado.nome}</p>
+                <p className=" text-black font-semibold">{medicoSelecionado.nome}</p>
                 <p className="text-xs text-indigo-600">{medicoSelecionado.especialidade}</p>
               </div>
               
               <div className="p-3 border border-gray-200 rounded-md">
                 <p className="text-sm text-gray-500 font-medium">Data e Horário</p>
-                <p className="font-semibold">{dataSelecionada} às {horarioSelecionado}</p>
+                <p className=" text-black font-semibold">{dataSelecionada} às {horarioSelecionado}</p>
               </div>
             </div>
           </div>
