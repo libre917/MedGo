@@ -10,6 +10,7 @@ export default function Cadastro() {
   const [Idade, setIdade] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [endereco, setEndereco] = useState("");
 
   const adiocionarDados = async () => {
     try {
@@ -29,6 +30,7 @@ export default function Cadastro() {
           nome: nome,
           email: email,
           senha: senha,
+          endereco: endereco,
           telefone: telefone,
           idade: Idade,
         });
@@ -96,6 +98,15 @@ export default function Cadastro() {
             onChange={(e) => setTelefone(e.target.value)}
             required
             pattern="[0-9]{2}[0-9]{5}[0-9]{4}"
+            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+          />
+
+          <input
+            placeholder="Endereço:"
+            type="text"
+            name="endereco"
+            onChange={(e) => setEndereco(e.target.value)}
+            required
             className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 

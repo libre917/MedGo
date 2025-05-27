@@ -132,8 +132,8 @@ export default function MarcarConsulta() {
       await axios.post(`http://localhost:3000/Agendamentos`, consulta);
   
       alert("Agendamento realizado com sucesso!");
-      window.location.href = "/marcar-agendadem";
-    } catch (err) {
+      window.location.href = "/marcar-agendadem";   
+     } catch (err) {
       console.error('Erro ao agendar:', err.response?.data || err.message);
       alert("Erro ao realizar o agendamento. Tente novamente.");
     }
