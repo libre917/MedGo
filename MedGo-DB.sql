@@ -38,7 +38,7 @@ CREATE TABLE Agendamentos (
   id_paciente INT,
   data DATE NOT NULL,
   hora TIME NOT NULL,
-  status ENUM('marcado', 'cancelado', 'realizado') DEFAULT 'marcado',
+  status ENUM('marcado', 'remarcando','cancelado', 'realizado') DEFAULT 'marcado',
   FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
   FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade,
   foreign key (id_clinica) references Clinicas(id) on delete cascade
