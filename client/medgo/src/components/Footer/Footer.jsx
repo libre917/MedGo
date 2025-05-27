@@ -6,7 +6,6 @@ export default function Footer() {
           
           {/* Logo da Empresa */}
           <div className="flex flex-col items-center sm:items-start gap-4">
-            <h3 className="text-[#004aad] font-semibold text-xl">MEDGO</h3>
             <img
               src="/MEDGO_logo.png"
               alt="Logo MEDGO"
@@ -20,10 +19,16 @@ export default function Footer() {
             <h4 className="text-slate-700 font-semibold mb-4">Navegação</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/home" className="hover:text-[#004aad]">Home</a></li>
+<<<<<<< HEAD
               <li><a href="/planos" className="hover:text-[#004aad]">Médicos Disponíveis</a></li>
               <li><a href="/agenda" className="hover:text-[#004aad]">Agenda</a></li>
               <li><a href="/sobrenos" className="hover:text-[#004aad]">Sobre nós</a></li>
               <li><a href="/sobrenos" className="hover:text-[#004aad]">FAQ</a></li>
+=======
+              <li><a href="/marcar-consulta" className="hover:text-[#004aad]">Marcar consulta</a></li>
+              <li><a href="/agenda" className="hover:text-[#004aad]">Agenda</a></li>
+              <li><a href="/sobrenos" className="hover:text-[#004aad]">Sobre nós</a></li>
+>>>>>>> ee8cddc98c6f023793195c87cbd9955bd86b5682
             </ul>
           </div>
 

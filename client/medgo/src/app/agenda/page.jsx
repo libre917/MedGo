@@ -87,7 +87,7 @@ export default function AgendamentosUsuario() {
 
   const cancelarAgendamento = async (idAgendamento) => {
     try {
-      await axios.patch(`${API_URL}/Agendamentos/${idAgendamento}`, {
+      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
         status: "cancelado"
       });
       
