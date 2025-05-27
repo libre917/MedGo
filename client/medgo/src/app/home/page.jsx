@@ -51,7 +51,7 @@ export default function Home() {
       <main className="w-full justify-center  grid ">
         {/* principal novo baseado em https://www.onemedical.com/ */}
         <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
-          <div className="w-full 2 px-6 ">
+          <div className="w-full 2 px-6 grid justify-center xl:justify-end">
             <h1 className="text-3xl font-playfair font-bold  text-black mb-4">
              <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
             </h1>
@@ -60,7 +60,7 @@ export default function Home() {
               praticidade.
             </p>
             <Link href="/marcar-consulta">
-              <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl pointer transition">
+              <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl pointer transition ">
                 Agendar Agora
               </button>
             </Link>

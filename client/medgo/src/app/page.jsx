@@ -1,4 +1,6 @@
 "use client";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faNotesMedical } from '@fortawesome/free-solid-svg-icons';
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -58,17 +60,17 @@ export default function Login() {
             Faça o login para continuar
           </h1>
 
+
           <p className="text-black text-center">
             Não tem conta? <Link href="/cadastro" className="text-blue-600">
               Cadastre-se
             </Link>
           </p>
 
-          <p className="text-black text-center">
-            Sou Médico? <Link href="/login-medico" className="text-blue-600">
-              login
-            </Link>
-          </p>
+         <p className='text-black'>
+          É medico?<Link href="/login-medico">Login</Link> 
+         </p>
+
 
           <div className="grid">
             <input
@@ -77,7 +79,7 @@ export default function Login() {
               name="email"
               required
               onChange={(e) => setEmail(e.target.value)}
-              className="w-90 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+              className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
             />
           </div>
 
@@ -88,9 +90,10 @@ export default function Login() {
               name="password"
               required
               onChange={(e) => setSenha(e.target.value)}
-              className="w-90 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+              className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
             />
           </div>
+
 
           <div className="text-black">
             <button
@@ -100,6 +103,10 @@ export default function Login() {
               Log In
             </button>
           </div>
+
+
+
+
         </form>
       </section>
     </>
