@@ -1,73 +1,121 @@
 "use client";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
+const API_URL = "http://localhost:3000";
 
 export default function AgendaMedico() {
-  const userId = localStorage.getItem("usuario");
-  if(!userId){
-    alert('Erro: Login ou cadastro necessário para funcionamento')
-    window.location.href = "/";
-  }
-  const [consultas, setConsultas] = useState([
-    {
-      id: 1,
-      paciente: "João Silva",
-      idade: 35,
-      data: "15/06/2024",
-      horario: "14:30",
-      status: "agendado",
-      endereco: "Av. Paulista, 1000 - Sala 305 - São Paulo/SP",
-      telefone: "(11) 99999-9999"
-    },
-    {
-      id: 2,
-      paciente: "Maria Oliveira",
-      idade: 42,
-      data: "15/06/2024",
-      horario: "15:30",
-      status: "agendado",
-      endereco: "Av. Paulista, 1000 - Sala 305 - São Paulo/SP",
-      telefone: "(11) 98888-8888"
-    },
-    {
-      id: 3,
-      paciente: "Carlos Souza",
-      idade: 28,
-      data: "16/06/2024",
-      horario: "09:00",
-      status: "agendado",
-      endereco: "Av. Paulista, 1000 - Sala 305 - São Paulo/SP",
-      telefone: "(11) 97777-7777"
-    },
-    {
-      id: 4,
-      paciente: "Ana Costa",
-      idade: 50,
-      data: "16/06/2024",
-      horario: "10:30",
-      status: "agendado",
-      endereco: "Av. Paulista, 1000 - Sala 305 - São Paulo/SP",
-      telefone: "(11) 96666-6666"
-    },
-    {
-      id: 5,
-      paciente: "Pedro Santos",
-      idade: 60,
-      data: "17/06/2024",
-      horario: "11:00",
-      status: "agendado",
-      endereco: "Av. Paulista, 1000 - Sala 305 - São Paulo/SP",
-      telefone: "(11) 95555-5555"
-    }
-  ]);
-
+  const [consultas, setConsultas] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
+  const [carregando, setCarregando] = useState(true);
   const [detalhesConsulta, setDetalhesConsulta] = useState(null);
   const [filtroStatus, setFiltroStatus] = useState("todos");
+
+  useEffect(() => {
+    const carregarDados = async () => {
+      setCarregando(true);
+      
+      try {
+        // Verifica se o usuário está logado
+        const userData = localStorage.getItem("usuario");
+        if (!userData) {
+          alert('Erro: Login ou cadastro necessário para funcionamento');
+          window.location.href = "/";
+          return;
+        }
+        
+        const usuario = JSON.parse(userData);
+        
+        // Verifica se é médico
+        if (!usuario.crm) {
+          alert('Acesso permitido apenas para médicos');
+          window.location.href = "/";
+          return;
+        }
+
+        // Carrega todos os dados necessários
+        const [consultasRes, pacientesRes] = await Promise.all([
+          axios.get(`${API_URL}/Agendamentos`),
+          axios.get(`${API_URL}/Pacientes`)
+        ]);
+
+        setPacientes(pacientesRes.data);
+
+        // Filtra agendamentos pelo médico logado
+        const consultasFiltradas = consultasRes.data.filter(consulta => 
+          consulta.id_medico === usuario.id
+        );
+
+        setConsultas(consultasFiltradas);
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    carregarDados();
+  }, []);
+
+  const encontrarPaciente = (idPaciente) => {
+    return pacientes.find(p => p.id === idPaciente) || {
+      nome: "Paciente não encontrado",
+      idade: "--",
+      telefone: "--",
+      endereco: "--"
+    };
+  };
+
+  const formatarData = (dataISO) => {
+    if (!dataISO) return "--/--/----";
+    const [ano, mes, dia] = dataISO.split('-');
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  const formatarHora = (hora) => {
+    if (!hora) return "--:--";
+    return hora.substring(0, 5);
+  };
+
+  const atualizarStatusConsulta = async (idConsulta, novoStatus) => {
+    try {
+      await axios.put(`${API_URL}/Agendamentos/${idConsulta}`, {
+        status: novoStatus
+      });
+      
+      // Atualiza a lista de consultas
+      setConsultas(consultas.map(consulta => 
+        consulta.id === idConsulta ? {...consulta, status: novoStatus} : consulta
+      ));
+      
+      if (detalhesConsulta?.id === idConsulta) {
+        setDetalhesConsulta({
+          ...detalhesConsulta,
+          status: novoStatus
+        });
+      }
+      
+      alert(`Consulta ${novoStatus === "cancelado" ? "cancelada" : "confirmada"} com sucesso!`);
+    } catch (err) {
+      console.error("Erro ao atualizar consulta:", err);
+      alert("Erro ao atualizar consulta");
+    }
+  };
 
   const consultasFiltradas = consultas.filter(consulta => {
     if (filtroStatus === "todos") return true;
     return consulta.status === filtroStatus;
   });
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Carregando consultas...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -77,7 +125,7 @@ export default function AgendaMedico() {
           <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
           <div className="flex justify-center mt-4 space-x-2">
-            {["todos", "agendado"].map((status) => (
+            {["todos", "marcado", "cancelado", "realizado"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFiltroStatus(status)}
@@ -87,7 +135,9 @@ export default function AgendaMedico() {
                     : "bg-white text-blue-600 border border-blue-200"
                 }`}
               >
-                {status === "todos" ? "Todos" : "Agendados"}
+                {status === "todos" ? "Todos" : 
+                 status === "marcado" ? "Agendados" :
+                 status === "cancelado" ? "Cancelados" : "Realizados"}
               </button>
             ))}
           </div>
@@ -99,44 +149,57 @@ export default function AgendaMedico() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {consultasFiltradas.map((consulta) => (
-              <div
-                key={consulta.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-blue-500"
-              >
-                <div className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h2 className="text-lg font-semibold text-gray-800">{consulta.paciente}</h2>
-                      <p className="text-sm text-gray-500">{consulta.idade} anos</p>
+            {consultasFiltradas.map((consulta) => {
+              const paciente = encontrarPaciente(consulta.id_paciente);
+              
+              return (
+                <div
+                  key={consulta.id}
+                  className={`bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${
+                    consulta.status === "marcado" ? "border-blue-500" :
+                    consulta.status === "cancelado" ? "border-red-500" :
+                    "border-green-500"
+                  }`}
+                >
+                  <div className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-800">{paciente.nome}</h2>
+                        <p className="text-sm text-gray-500">{paciente.idade || "--"} anos</p>
+                      </div>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
+                        consulta.status === "cancelado" ? "bg-red-100 text-red-800" :
+                        "bg-green-100 text-green-800"
+                      }`}>
+                        {consulta.status === "marcado" ? "Agendado" : 
+                         consulta.status === "cancelado" ? "Cancelado" : "Realizado"}
+                      </span>
                     </div>
-                    <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
-                      Agendado
-                    </span>
-                  </div>
 
-                  <div className="mt-3 space-y-1 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Data:</span>
-                      <span className="font-medium">{consulta.data}</span>
+                    <div className="mt-3 space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Data:</span>
+                        <span className="font-medium">{formatarData(consulta.data)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Horário:</span>
+                        <span className="font-medium">{formatarHora(consulta.hora)}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Horário:</span>
-                      <span className="font-medium">{consulta.horario}</span>
-                    </div>
-                  </div>
 
-                  <div className="mt-4">
-                    <button
-                      onClick={() => setDetalhesConsulta(consulta)}
-                      className="w-full py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                    >
-                      Detalhes
-                    </button>
+                    <div className="mt-4 flex space-x-2">
+                      <button
+                        onClick={() => setDetalhesConsulta({...consulta, paciente})}
+                        className="flex-1 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      >
+                        Detalhes
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -157,40 +220,62 @@ export default function AgendaMedico() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium text-gray-500">Paciente</h3>
-                <p className="text-lg font-semibold">{detalhesConsulta.paciente}</p>
-                <p className="text-gray-600">{detalhesConsulta.idade} anos</p>
+                <p className="text-lg font-semibold">{detalhesConsulta.paciente.nome}</p>
+                <p className="text-gray-600">{detalhesConsulta.paciente.idade || "--"} anos</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h3 className="font-medium text-gray-500">Data</h3>
-                  <p className="text-gray-800">{detalhesConsulta.data}</p>
+                  <p className="text-gray-800">{formatarData(detalhesConsulta.data)}</p>
                 </div>
                 <div>
                   <h3 className="font-medium text-gray-500">Horário</h3>
-                  <p className="text-gray-800">{detalhesConsulta.horario}</p>
+                  <p className="text-gray-800">{formatarHora(detalhesConsulta.hora)}</p>
                 </div>
               </div>
 
               <div>
                 <h3 className="font-medium text-gray-500">Telefone</h3>
-                <p className="text-gray-800">{detalhesConsulta.telefone}</p>
-              </div>
-
-              <div>
-                <h3 className="font-medium text-gray-500">Local</h3>
-                <p className="text-gray-800">{detalhesConsulta.endereco}</p>
+                <p className="text-gray-800">{detalhesConsulta.paciente.telefone || "--"}</p>
               </div>
 
               <div>
                 <h3 className="font-medium text-gray-500">Status</h3>
-                <p className="inline-block px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
-                  Agendado
-                </p>
+                <span className={`px-3 py-1 rounded-full text-sm inline-block ${
+                  detalhesConsulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
+                  detalhesConsulta.status === "cancelado" ? "bg-red-100 text-red-800" :
+                  "bg-green-100 text-green-800"
+                }`}>
+                  {detalhesConsulta.status === "marcado" ? "Agendado" : 
+                   detalhesConsulta.status === "cancelado" ? "Cancelado" : "Realizado"}
+                </span>
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-end space-x-3">
+              {detalhesConsulta.status === "marcado" && (
+                <>
+                  <button
+                    onClick={() => {
+                      atualizarStatusConsulta(detalhesConsulta.id, "cancelado");
+                      setDetalhesConsulta(null);
+                    }}
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => {
+                      atualizarStatusConsulta(detalhesConsulta.id, "realizado");
+                      setDetalhesConsulta(null);
+                    }}
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                  >
+                    Marcar como Realizado
+                  </button>
+                </>
+              )}
               <button
                 onClick={() => setDetalhesConsulta(null)}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
