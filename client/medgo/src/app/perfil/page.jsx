@@ -30,14 +30,29 @@ export default function Perfil() {
         } else {
           setTipoUsuario('paciente');
           const { data } = await axios.get(`http://localhost:3000/Pacientes/${usuarioLogado.id}`);
-          setUsuario({
-            ...data,
-            data_nascimento: new Date(data.data_nascimento).toLocaleDateString('pt-BR', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric'
-            })
-          });
+          
+          // Se já tiver idade no objeto, usa ela diretamente
+          if (data.idade) {
+            setUsuario(data);
+          } else if (data.data_nascimento) {
+            // Se tiver data_nascimento, calcula a idade
+            const birthDate = new Date(data.data_nascimento);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+            
+            setUsuario({
+              ...data,
+              idade: age
+            });
+          } else {
+            // Se não tiver nem idade nem data_nascimento, mantém os dados sem idade
+            setUsuario(data);
+          }
         }
       } catch (error) {
         console.error("Erro ao carregar perfil:", error);
@@ -99,9 +114,9 @@ export default function Perfil() {
                   {tipoUsuario === 'paciente' ? (
                     <>
                       <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-gray-500">Data de Nascimento</p>
+                        <p className="text-sm text-gray-500">Idade</p>
                         <p className="mt-1 text-lg font-light text-gray-800">
-                          {usuario.data_nascimento}
+                          {usuario.idade ? `${usuario.idade} anos` : 'Não informada'}
                         </p>
                       </div>
                       <div className="pb-4 border-b border-gray-100">
