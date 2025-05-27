@@ -55,17 +55,17 @@ export default function LoginMedico() {
           />
 
           <h1 className="text-black font-semibold text-2xl md:text-3xl text-center font-playfair">
-            Área Médica - Faça o login
+            Área Médica - Faça o <span className="titulo-cor-padrao-medgo">login</span> 
           </h1>
 
-          <p className="text-black text-center">
+          <p className="text-black text-center ">
             Não tem cadastro médico?{" "}
             <Link href="/cadastro-medico" className="text-blue-600">
               Cadastre-se
             </Link>
           </p>
 
-          <p className="text-black text-center">
+          <p className="text-black text-center text-sm">
             Sou Paciente?{" "}
             <Link href="/" className="text-blue-600">
               Login Paciente
@@ -79,7 +79,7 @@ export default function LoginMedico() {
               name="email"
               required
               onChange={(e) => setEmail(e.target.value)}
-              className="w-90 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+              className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
             />
           </div>
 
@@ -90,7 +90,7 @@ export default function LoginMedico() {
               name="password"
               required
               onChange={(e) => setSenha(e.target.value)}
-              className="w-90 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+              className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
             />
           </div>
 

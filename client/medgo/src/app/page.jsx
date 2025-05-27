@@ -57,7 +57,7 @@ export default function Login() {
           />
 
           <h1 className="text-black font-semibold text-2xl md:text-3xl text-center font-playfair ">
-            Faça o login para continuar
+            Faça o <span className='titulo-cor-padrao-medgo'>login</span>  para continuar
           </h1>
 
 
@@ -67,8 +67,8 @@ export default function Login() {
             </Link>
           </p>
 
-         <p className='text-black'>
-          É medico?<Link href="/login-medico">Login</Link> 
+         <p className='text-black text-sm'>
+          É medico? <Link href="/login-medico" className='text-blue-600'>Login</Link> 
          </p>
 
 
