@@ -1,9 +1,4 @@
 import { listarPacientes, listarPacientesPorId, adicionarPaciente, atualizarPaciente, deletarPaciente } from '../models/Pacientes.js'
-import { fileURLToPath } from "url";
-import path from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const listarPacientesController = async (req, res) => {
     try {

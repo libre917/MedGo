@@ -152,6 +152,16 @@ export default function AgendamentosUsuario() {
     }
   }
 
+  const deletarAgendamento = async (idAgendamento) => {
+    try{
+      axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`)
+      window.location.href = "/agenda"
+    } catch(err) {
+      console.error("Erro ao deletar agendamento:", err);
+      alert("Erro ao deletar agendamento");
+    }
+  }
+
   if (carregando) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -183,7 +193,7 @@ export default function AgendamentosUsuario() {
             <div className="col-span-3 text-center py-12 bg-white rounded-xl shadow">
               <p className="text-gray-500 mb-4">Nenhum agendamento encontrado</p>
               <a 
-                href={tipoUsuario === 'medico' ? "/medico" : "/agendar"}
+                href={tipoUsuario === 'medico' ? "/medico" : "/marcar-consulta"}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 {tipoUsuario === 'medico' ? "Voltar ao painel" : "Marcar consulta"}
@@ -247,12 +257,19 @@ export default function AgendamentosUsuario() {
                       </button>
                     )}
                     {agendamento.status === "cancelado" &&(
+                      <>
                       <button
                       onClick={() => remarcarAgendamento(agendamento.id)}
                       className="text-green-600 hover:text-green-800 text-sm font-medium"
                       >
                         Remarcar
                         </button>
+                        <button  onClick={() => deletarAgendamento(agendamento.id)}
+                           className="text-red-600 hover:text-red-800 text-sm font-medium"
+                           >
+                          Deletar
+                        </button>
+                        </>
                     )}
                   </div>
                 </div>
