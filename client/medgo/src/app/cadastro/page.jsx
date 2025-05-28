@@ -61,7 +61,7 @@ export default function Cadastro() {
         </div>
 
         <form
-          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center"
+          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center "
           onSubmit={(e) => {
             e.preventDefault();
             adiocionarDados();
@@ -70,7 +70,7 @@ export default function Cadastro() {
           <img
             src="/MEDGO_logo.png"
             alt="Logo MedGo"
-            className="w-32 md:w-40 mx-25 mt-20 xl:mt-0"
+            className="w-32 md:w-40 mx-25 md:mx-30 mt-20 xl:mt-0"
           />
           <h1 className="text-black font-semibold text-2xl md:text-2xl text-center font-playfair">
             Faça o cadastro para continuar
@@ -145,7 +145,7 @@ export default function Cadastro() {
             de Medgo.
             <div className="text-black">
             <button
-              className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition"
+              className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition mt-5"
               type="submit"
             >
               Cadastre-se

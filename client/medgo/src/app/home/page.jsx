@@ -51,7 +51,7 @@ export default function Home() {
       <main className="w-full justify-center  grid ">
         {/* principal novo baseado em https://www.onemedical.com/ */}
         <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
-          <div className="w-full  px-8 grid justify-center md:justify-end xl:justify-end sm:items-center ">
+          <div className="w-full px-8 grid xl:justify-end justify-items-center md:justify-items sm:items-center ">
             <h1 className="text-3xl font-playfair font-bold  text-black mb-4">
              <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
             </h1>
@@ -102,17 +102,17 @@ export default function Home() {
         </section>
 
         {/*Section especialidades*/}
-        <section className=" grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10   relative">
-          <div className="container mx-auto px-4 grid gap-10">
-            <h2 className="xl:text-3xl text-xl font-playfair font-bold text-black mb-4">
-              <span className="titulo-cor-padrao-medgo ">Especialidades</span>{" "}
+        <section className=" grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10  relative">
+          <div className="container mx-auto px-4 grid gap-10 ">
+            <h2 className="xl:text-3xl text-2xl font-playfair font-bold text-black mb-4">
+              <span className="titulo-cor-padrao-medgo  ">Especialidades</span>{" "}
               disponíveis em MedGo
             </h2>
-            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-4 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
+            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-4 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6 ">
               {especialidades.map((especialidade, index) => (
                 <div
                   key={index}
-                  className="w-full h-40px rounded-4xl grid place-items-center text-center"
+                  className="w-full h-40px rounded-4xl grid place-items-center text-center bg-blue-50 px-3   py-3 "
                 >
                   <img className="w-10 h-10" src={especialidade.icon} alt="" />
                   <h3 className="text-lg text-black font-semi-bold mb-2">
