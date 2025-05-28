@@ -87,7 +87,16 @@ export default function AgendamentosUsuario() {
 
   const cancelarAgendamento = async (idAgendamento) => {
     try {
+      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`)
+      const agendamentoDados = response.data;
+
       await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
+        id: idAgendamento,
+        id_clinica: agendamentoDados.id_clinica,
+        id_medico: agendamentoDados.id_medico,
+        id_paciente: agendamentoDados.id_paciente,
+        data: agendamentoDados.data,
+        hora: agendamentoDados.hora,
         status: "cancelado"
       });
       
@@ -102,13 +111,46 @@ export default function AgendamentosUsuario() {
           status: "cancelado"
         });
       }
-      
-      alert("Agendamento cancelado com sucesso!");
+
     } catch (err) {
       console.error("Erro ao cancelar agendamento:", err);
       alert("Erro ao cancelar agendamento");
     }
   };
+
+  const remarcarAgendamento = async (idAgendamento) => {
+    try {
+      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`)
+      const agendamentoDados = response.data;
+
+      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
+        id: idAgendamento,
+        id_clinica: agendamentoDados.id_clinica,
+        id_medico: agendamentoDados.id_medico,
+        id_paciente: agendamentoDados.id_paciente,
+        data: agendamentoDados.data,
+        hora: agendamentoDados.hora,
+        status: "remarcando"
+      });
+      
+      // Atualiza a lista de agendamentos
+      setAgendamentos(agendamentos.map(ag => 
+        ag.id === idAgendamento ? {...ag, status: "remarcando"} : ag
+      ));
+      
+      if (detalhesAgendamento?.id === idAgendamento) {
+        setDetalhesAgendamento({
+          ...detalhesAgendamento,
+          status: "remarcando"
+        });
+      }
+      
+  
+    } catch (err) {
+      console.error("Erro ao cancelar agendamento:", err);
+      alert("Erro ao cancelar agendamento");
+    }
+  }
 
   if (carregando) {
     return (
@@ -169,6 +211,7 @@ export default function AgendamentosUsuario() {
                     }`}>
                       {agendamento.status === "marcado" ? "Marcado" : 
                        agendamento.status === "cancelado" ? "Cancelado" : 
+                       agendamento.status === "remarcando" ? "Remarcando":
                        agendamento.status}
                     </span>
                   </div>
@@ -202,6 +245,14 @@ export default function AgendamentosUsuario() {
                       >
                         Cancelar
                       </button>
+                    )}
+                    {agendamento.status === "cancelado" &&(
+                      <button
+                      onClick={() => remarcarAgendamento(agendamento.id)}
+                      className="text-green-600 hover:text-green-800 text-sm font-medium"
+                      >
+                        Remarcar
+                        </button>
                     )}
                   </div>
                 </div>
