@@ -6,7 +6,7 @@ use MedGoDB;
 CREATE TABLE Clinicas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
-  endereco VARCHAR(255),
+  endereco VARCHAR(255) not null,
   telefone VARCHAR(20) unique
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE Medicos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
   email varchar(100) not null unique,
-  senha varchar(50) not null,
+  senha varchar(255) not null,
   crm VARCHAR(20) NOT NULL UNIQUE,
   especialidade VARCHAR(100) NOT NULL, 
   id_clinica INT,
@@ -25,9 +25,9 @@ CREATE TABLE Pacientes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
    email varchar(100) not null unique,
-  senha varchar(50) not null,
+  senha varchar(255) not null,
   endereco varchar(100),
-  telefone VARCHAR(20),
+  telefone VARCHAR(20) not null,
  idade INT
 );
 
@@ -42,6 +42,12 @@ CREATE TABLE Agendamentos (
   FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
   FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade,
   foreign key (id_clinica) references Clinicas(id) on delete cascade
+);
+
+create table Horarios (
+id int auto_increment primary key,
+hora time not null,
+status enum('ocupado','aberto') default 'aberto'
 );
 
 INSERT INTO Clinicas (nome, endereco, telefone) VALUES
@@ -92,5 +98,15 @@ INSERT INTO Agendamentos (id_medico, id_paciente, data, hora, status) VALUES
 (9, 9, '2025-06-03', '14:30:00', 'marcado'),
 (10, 10, '2025-06-03', '15:30:00', 'marcado');
 
+INSERT INTO Horarios (hora, status) VALUES 
+('08:00', 'aberto'), ('08:30', 'aberto'), ('09:00', 'aberto'), ('09:30', 'aberto'),
+('10:00', 'aberto'), ('10:30', 'aberto'), ('11:00', 'aberto'), ('11:30', 'aberto'),
+('12:00', 'aberto'), ('12:30', 'aberto'), ('13:00', 'aberto'), ('13:30', 'aberto'),
+('14:00', 'aberto'), ('14:30', 'aberto'), ('15:00', 'aberto'), ('15:30', 'aberto'),
+('16:00', 'aberto'), ('16:30', 'aberto'), ('17:00', 'aberto'), ('17:30', 'aberto'),
+('18:00', 'aberto');
 
 drop database medgodb;
+
+SELECT * FROM Agendamentos WHERE data = '2025-03-12' AND hora = '11:00:00';
+
