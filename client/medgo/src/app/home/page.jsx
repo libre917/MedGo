@@ -92,7 +92,7 @@ export default function Home() {
                     {cardInfo.titulo}
                   </h6>
 
-                  <p className="text-slate-600 leading-normal font-light">
+                  <p className="text-slate-900 leading-normal font-light">
                     {cardInfo.descricao}
                   </p>
                 </div>
@@ -112,7 +112,7 @@ export default function Home() {
               {especialidades.map((especialidade, index) => (
                 <div
                   key={index}
-                  className="w-full h-40px  rounded-4xl grid place-items-center text-center bg-blue-50 px-3   py-3 lg:px-8 "
+                  className="w-full h-40px  rounded-4xl grid place-items-center text-center bg-blue-50 hover:bg-blue-200 px-3   py-4 lg:px-4 "
                 >
                   <img className="w-10 h-10" src={especialidade.icon} alt="" />
                   <h3 className="text-lg text-black font-semi-bold mb-2">
