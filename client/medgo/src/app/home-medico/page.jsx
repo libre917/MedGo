@@ -68,8 +68,8 @@ export default function AgendaMedico() {
 
   const formatarData = (dataISO) => {
     if (!dataISO) return "--/--/----";
-    const [ano, mes, dia] = dataISO.split('-');
-    return `${dia}/${mes}/${ano}`;
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR');
   };
 
   const formatarHora = (hora) => {
@@ -125,7 +125,7 @@ export default function AgendaMedico() {
           <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
           <div className="flex justify-center mt-4 space-x-2">
-            {["todos", "marcado", "cancelado", "realizado"].map((status) => (
+            {["todos", "marcado", "cancelado", "remarcando","realizado"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFiltroStatus(status)}
@@ -137,7 +137,8 @@ export default function AgendaMedico() {
               >
                 {status === "todos" ? "Todos" : 
                  status === "marcado" ? "Agendados" :
-                 status === "cancelado" ? "Cancelados" : "Realizados"}
+                 status === "cancelado" ? "Cancelados" : 
+                 status === "remarcando" ? "Remarcando" : "Realizado"}
               </button>
             ))}
           </div>
@@ -158,6 +159,7 @@ export default function AgendaMedico() {
                   className={`bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${
                     consulta.status === "marcado" ? "border-blue-900" :
                     consulta.status === "cancelado" ? "border-red-500" :
+                    consulta.status === "remarcando" ? "border-yellow-500" :
                     "border-green-500"
                   }`}
                 >
@@ -170,10 +172,12 @@ export default function AgendaMedico() {
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
                         consulta.status === "cancelado" ? "bg-red-100 text-red-800" :
+                        consulta.status === "remarcando" ? " bg-yellow-100 text-yellow-800":  
                         "bg-green-100 text-green-800"
                       }`}>
                         {consulta.status === "marcado" ? "Agendado" : 
-                         consulta.status === "cancelado" ? "Cancelado" : "Realizado"}
+                         consulta.status === "cancelado" ? "Cancelado" : 
+                         consulta.status === "remarcando" ? "Remarcando": "Realizado"}
                       </span>
                     </div>
 
@@ -220,7 +224,7 @@ export default function AgendaMedico() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium text-black">Paciente</h3>
-                <p className="text-lg font-semibold">{detalhesConsulta.paciente.nome}</p>
+                <p className="text-lg text-gray-800 font-semibold">{detalhesConsulta.paciente.nome}</p>
                 <p className="text-gray-600">{detalhesConsulta.paciente.idade || "--"} anos</p>
               </div>
 
@@ -237,7 +241,7 @@ export default function AgendaMedico() {
 
               <div>
                 <h3 className="font-medium text-gray-500">Telefone</h3>
-                <p className="text-gray-800">{detalhesConsulta.paciente.telefone || "--"}</p>
+                <p className="text-gray-900">{detalhesConsulta.paciente.telefone || "--"}</p>
               </div>
 
               <div>
@@ -245,10 +249,12 @@ export default function AgendaMedico() {
                 <span className={`px-3 py-1 rounded-full text-sm inline-block ${
                   detalhesConsulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
                   detalhesConsulta.status === "cancelado" ? "bg-red-100 text-red-800" :
+                  detalhesConsulta.status === "remarcando" ? "bg-yellow-100 text-yellow-800": 
                   "bg-green-100 text-green-800"
                 }`}>
                   {detalhesConsulta.status === "marcado" ? "Agendado" : 
-                   detalhesConsulta.status === "cancelado" ? "Cancelado" : "Realizado"}
+                   detalhesConsulta.status === "cancelado" ? "Cancelado" : 
+                   detalhesConsulta.status === "remarcando" ? "Remarcando" : "Realizado"}
                 </span>
               </div>
             </div>
