@@ -1,4 +1,4 @@
-import { adicionarAgendamentoController, listarAgendaController, listarAgendaPorIdController, deletarAgendamentoController, } from "../controller/AgendaController.js";
+import { adicionarAgendamentoController, listarAgendaController, listarAgendaPorIdController, deletarAgendamentoController, atualizarAgendamentoController } from "../controller/AgendaController.js";
 import express from 'express'
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const port = 3000;
 router.get('/', listarAgendaController);
 router.get('/:id', listarAgendaPorIdController);
 router.post('/', adicionarAgendamentoController);
+router.put('/:id', atualizarAgendamentoController)
 router.delete('/:id', deletarAgendamentoController);
 
 router.options("/", (req, res) => {

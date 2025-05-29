@@ -88,7 +88,7 @@ export default function SobreNos() {
       </section>
 
       {/* Perguntas Frequentes */}
-      <section className="max-w-4xl mx-auto px-4 py-12">
+      <section id="faq" className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Dúvidas <span className="text-[#004aad]">Frequentes</span>

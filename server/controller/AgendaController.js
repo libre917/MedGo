@@ -66,11 +66,11 @@ const atualizarAgendamentoController = async (req,res) => {
             hora: hora, 
             status: status
         }
-        const agendamentoInfo = await atualizarAgendamento(agendaId, agendaData);
-        res.status(201).json({mensagem: "Agendamento marcado", agendamentoInfo})
+         await atualizarAgendamento(agendaId, agendaData);
+        res.status(201).json({mensagem: "Agendamento atualizado"})
     } catch (err) {
-        console.error("Erro ao marcar agendamento:", err)
-        res.status(500).json({mensagem: "Erro ao agendar"})
+        console.error("Erro ao atualizar agendamento:", err)
+        res.status(500).json({mensagem: "Erro ao atualizar"})
     }
 }
 
@@ -84,4 +84,4 @@ const deletarAgendamentoController = async (req, res) => {
     }
 }
 
-export { listarAgendaController, listarAgendaPorIdController, adicionarAgendamentoController, deletarAgendamentoController }
+export { listarAgendaController, listarAgendaPorIdController, adicionarAgendamentoController, deletarAgendamentoController, atualizarAgendamentoController }

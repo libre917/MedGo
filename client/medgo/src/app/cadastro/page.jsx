@@ -22,6 +22,9 @@ export default function Cadastro() {
       const user = paciente.find(
         (paciente) => paciente.email === email
       );
+      if(Idade < 18){
+        alert('Idade não permitida')
+      } else {
 
       if (user) {
         alert('Email já cadastrado')
@@ -34,7 +37,7 @@ export default function Cadastro() {
           telefone: telefone,
           idade: Idade,
         });
-        
+        }
       const newResponse = await axios.get("http://localhost:3000/Pacientes");
       const newPaciente = newResponse.data;
 
@@ -61,7 +64,7 @@ export default function Cadastro() {
         </div>
 
         <form
-          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center"
+          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center "
           onSubmit={(e) => {
             e.preventDefault();
             adiocionarDados();
@@ -70,7 +73,7 @@ export default function Cadastro() {
           <img
             src="/MEDGO_logo.png"
             alt="Logo MedGo"
-            className="w-32 md:w-40 mx-25  "
+            className="w-32 md:w-40 mx-25 md:mx-30 mt-20 xl:mt-0"
           />
           <h1 className="text-black font-semibold text-2xl md:text-2xl text-center font-playfair">
             Faça o cadastro para continuar
@@ -88,7 +91,7 @@ export default function Cadastro() {
             name="nome"
             onChange={(e) => setNome(e.target.value)}
             required
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <input
@@ -98,7 +101,7 @@ export default function Cadastro() {
             onChange={(e) => setTelefone(e.target.value)}
             required
             pattern="[0-9]{2}[0-9]{5}[0-9]{4}"
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100  sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <input
@@ -107,7 +110,7 @@ export default function Cadastro() {
             name="endereco"
             onChange={(e) => setEndereco(e.target.value)}
             required
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <input
@@ -116,7 +119,7 @@ export default function Cadastro() {
             name="idade"
             onChange={(e) => setIdade(e.target.value)}
             required
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <input
@@ -125,7 +128,7 @@ export default function Cadastro() {
             name="email"
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <input
@@ -134,7 +137,7 @@ export default function Cadastro() {
             name="password"
             onChange={(e) => setSenha(e.target.value)}
             required
-            className="w-80 md:w-100  border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
 
           <div className="text-black ">
@@ -145,7 +148,7 @@ export default function Cadastro() {
             de Medgo.
             <div className="text-black">
             <button
-              className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition"
+              className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition mt-5"
               type="submit"
             >
               Cadastre-se
