@@ -22,6 +22,9 @@ export default function Cadastro() {
       const user = paciente.find(
         (paciente) => paciente.email === email
       );
+      if(Idade < 18){
+        alert('Idade não permitida')
+      } else {
 
       if (user) {
         alert('Email já cadastrado')
@@ -34,7 +37,7 @@ export default function Cadastro() {
           telefone: telefone,
           idade: Idade,
         });
-        
+        }
       const newResponse = await axios.get("http://localhost:3000/Pacientes");
       const newPaciente = newResponse.data;
 

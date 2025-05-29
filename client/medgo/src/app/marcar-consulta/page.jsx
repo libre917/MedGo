@@ -105,7 +105,7 @@ export default function MarcarConsulta() {
 
     try {
       const id = JSON.parse(localStorage.getItem('usuario'));
-      const [dia, mes, ano] = dataSelecionada.split("/");
+      const [dia, mes] = dataSelecionada.split("/");
       const status = "marcado";
       if(horarioSelecionado == "00:00"){
         alert('Horário inválido')
@@ -122,7 +122,6 @@ export default function MarcarConsulta() {
         status: status
       };
 
-      console.log("Enviando para API:", consulta);
       const responseCompare = await axios.get(`${API_URL}/Agendamentos`)
       const compare = responseCompare.data
       const conflito = compare.some(agenda =>

@@ -4,39 +4,59 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:3000";
 
+async function listarHorarios() {
+  try {
+    const response = await axios.get(`${API_URL}/Horarios`);
+    return response.data;
+  } catch (err) {
+    console.error('Erro ao exibir horarios');
+    return [];
+  }
+}
+
 export default function AgendamentosUsuario() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [medicos, setMedicos] = useState([]);
   const [pacientes, setPacientes] = useState([]);
+  const [horarios, setHorarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [detalhesAgendamento, setDetalhesAgendamento] = useState(null);
+  const [remarcarAgendamento, setRemarcarAgendamento] = useState(null);
+  const [medicoSelecionado, setMedicoSelecionado] = useState(null);
+  const [dataSelecionada, setDataSelecionada] = useState("");
+  const [horarioSelecionado, setHorarioSelecionado] = useState("");
   const [tipoUsuario, setTipoUsuario] = useState('');
   const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [isRemarcando, setIsRemarcando] = useState(false);
 
+  // Load available time slots
+  useEffect(() => {
+    async function fetchHorarios() {
+      const dados = await listarHorarios();
+      setHorarios(dados);
+    }
+    fetchHorarios();
+  }, []);
+
+  // Load main data
   useEffect(() => {
     const carregarDados = async () => {
       setCarregando(true);
-      
       try {
-        // Verifica se o usuário está logado
         const userData = localStorage.getItem("usuario");
         if (!userData) {
           alert('Erro: Login ou cadastro necessário para funcionamento');
           window.location.href = "/";
           return;
         }
-        
+
         const usuario = JSON.parse(userData);
         setUsuarioLogado(usuario);
-        
-        // Determina se é médico ou paciente
-        if (usuario.crm) {
-          setTipoUsuario('medico');
-        } else {
-          setTipoUsuario('paciente');
-        }
 
-        // Carrega todos os dados necessários
+        // Determine user type directly from the user object
+        const userType = usuario.crm ? 'medico' : 'paciente';
+        setTipoUsuario(userType);
+
         const [agendamentosRes, medicosRes, pacientesRes] = await Promise.all([
           axios.get(`${API_URL}/Agendamentos`),
           axios.get(`${API_URL}/Medicos`),
@@ -46,9 +66,9 @@ export default function AgendamentosUsuario() {
         setMedicos(medicosRes.data);
         setPacientes(pacientesRes.data);
 
-        // Filtra agendamentos pelo usuário logado
+        // Filter appointments based on user type
         const agendamentosFiltrados = agendamentosRes.data.filter(agendamento => {
-          return tipoUsuario === 'medico' 
+          return userType === 'medico'
             ? agendamento.id_medico === usuario.id
             : agendamento.id_paciente === usuario.id;
         });
@@ -62,8 +82,9 @@ export default function AgendamentosUsuario() {
     };
 
     carregarDados();
-  }, [tipoUsuario]);
+  }, []);
 
+  // Helper functions
   const encontrarNomeMedico = (idMedico) => {
     const medico = medicos.find(m => m.id === idMedico);
     return medico ? medico.nome : "Médico não encontrado";
@@ -85,26 +106,22 @@ export default function AgendamentosUsuario() {
     return hora.substring(0, 5);
   };
 
+  // Appointment actions
   const cancelarAgendamento = async (idAgendamento) => {
     try {
-      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`)
+      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
       const agendamentoDados = response.data;
 
       await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
-        id: idAgendamento,
-        id_clinica: agendamentoDados.id_clinica,
-        id_medico: agendamentoDados.id_medico,
-        id_paciente: agendamentoDados.id_paciente,
-        data: agendamentoDados.data,
-        hora: agendamentoDados.hora,
+        ...agendamentoDados,
         status: "cancelado"
       });
-      
-      // Atualiza a lista de agendamentos
-      setAgendamentos(agendamentos.map(ag => 
-        ag.id === idAgendamento ? {...ag, status: "cancelado"} : ag
+
+      // Update local state
+      setAgendamentos(agendamentos.map(ag =>
+        ag.id === idAgendamento ? { ...ag, status: "cancelado" } : ag
       ));
-      
+
       if (detalhesAgendamento?.id === idAgendamento) {
         setDetalhesAgendamento({
           ...detalhesAgendamento,
@@ -112,55 +129,107 @@ export default function AgendamentosUsuario() {
         });
       }
 
+      if (remarcarAgendamento?.id === idAgendamento) {
+        setRemarcarAgendamento({
+          ...detalhesAgendamento,
+          status: "cancelado"
+        });
+      }
+
+      alert('Agendamento cancelado com sucesso!');
     } catch (err) {
       console.error("Erro ao cancelar agendamento:", err);
       alert("Erro ao cancelar agendamento");
     }
   };
 
-  const remarcarAgendamento = async (idAgendamento) => {
+  const remarcarAgendamentoSubmit = async (idAgendamento) => {
+    setIsRemarcando(true);
     try {
-      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`)
-      const agendamentoDados = response.data;
-
-      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
-        id: idAgendamento,
-        id_clinica: agendamentoDados.id_clinica,
-        id_medico: agendamentoDados.id_medico,
-        id_paciente: agendamentoDados.id_paciente,
-        data: agendamentoDados.data,
-        hora: agendamentoDados.hora,
-        status: "remarcando"
-      });
-      
-      // Atualiza a lista de agendamentos
-      setAgendamentos(agendamentos.map(ag => 
-        ag.id === idAgendamento ? {...ag, status: "remarcando"} : ag
-      ));
-      
-      if (detalhesAgendamento?.id === idAgendamento) {
-        setDetalhesAgendamento({
-          ...detalhesAgendamento,
-          status: "remarcando"
-        });
+      if (horarioSelecionado === "00:00") {
+        alert('Horário inválido');
+        return;
       }
-      
   
+      if (!dataSelecionada) {
+        alert('Selecione uma data');
+        return;
+      }
+  
+      // Format date properly for your API
+      const [dia, mes] = dataSelecionada.split("/");
+      const dataAtual = new Date();
+      const dataFormatada = new Date(
+        dataAtual.getFullYear(),
+        parseInt(mes) - 1,
+        parseInt(dia)
+      ).toISOString();
+  
+      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
+      const newResponse = await axios.get(`${API_URL}/Agendamentos`);
+      const agendamentoDados = response.data;
+      const allAppointments = newResponse.data;
+  
+      // Use the doctor ID from the appointment being rescheduled
+      const doctorId = agendamentoDados.id_medico;
+  
+      const conflito = allAppointments.some(agenda =>
+        agenda.id_medico === doctorId &&
+        agenda.data === dataFormatada &&
+        agenda.hora === horarioSelecionado &&
+        agenda.id !== idAgendamento // Exclude current appointment from conflict check
+      );
+  
+      if (conflito) {
+        alert('Data ou horário indisponíveis');
+        return;
+      }
+  
+      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
+        ...agendamentoDados,
+        data: dataFormatada,
+        hora: horarioSelecionado,
+        status: "remarcando" // Changed from "remarcando" to "marcado"
+      });
+  
+      // Update local state
+      setAgendamentos(agendamentos.map(ag => 
+        ag.id === idAgendamento 
+          ? { 
+              ...ag, 
+              data: dataFormatada, 
+              hora: horarioSelecionado,
+              status: "remarcando"
+            } 
+          : ag
+      ));
+  
+      // Close the modal and reset fields
+      setRemarcarAgendamento(null);
+      setDataSelecionada("");
+      setHorarioSelecionado("");
+      
+      alert('Agendamento remarcado com sucesso!');
     } catch (err) {
-      console.error("Erro ao cancelar agendamento:", err);
-      alert("Erro ao cancelar agendamento");
+      console.error("Erro ao remarcar agendamento:", err);
+      alert("Erro ao remarcar agendamento");
+    } finally {
+      setIsRemarcando(false);
     }
-  }
+  };
 
   const deletarAgendamento = async (idAgendamento) => {
-    try{
-      axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`)
-      window.location.href = "/agenda"
-    } catch(err) {
+    if (!confirm('Tem certeza que deseja deletar este agendamento?')) return;
+    
+    try {
+      axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`);
+      setAgendamentos(agendamentos.filter(ag => ag.id !== idAgendamento));
+      alert('Agendamento deletado com sucesso!');
+    } catch (err) {
       console.error("Erro ao deletar agendamento:", err);
       alert("Erro ao deletar agendamento");
     }
-  }
+  };
 
   if (carregando) {
     return (
@@ -175,24 +244,24 @@ export default function AgendamentosUsuario() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Cabeçalho */}
+        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-800">
             {tipoUsuario === 'medico' ? 'Agendamentos do Médico' : 'Meus Agendamentos'}
           </h1>
           <p className="mt-2 text-gray-600">
-            {tipoUsuario === 'medico' 
-              ? 'Consultas marcadas com pacientes' 
+            {tipoUsuario === 'medico'
+              ? 'Consultas marcadas com pacientes'
               : 'Próximas consultas marcadas'}
           </p>
         </div>
 
-        {/* Grid de Cards */}
+        {/* Appointments Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {agendamentos.length === 0 ? (
             <div className="col-span-3 text-center py-12 bg-white rounded-xl shadow">
               <p className="text-gray-500 mb-4">Nenhum agendamento encontrado</p>
-              <a 
+              <a
                 href={tipoUsuario === 'medico' ? "/medico" : "/marcar-consulta"}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
@@ -201,7 +270,7 @@ export default function AgendamentosUsuario() {
             </div>
           ) : (
             agendamentos.map((agendamento) => (
-              <div 
+              <div
                 key={agendamento.id}
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               >
@@ -213,15 +282,15 @@ export default function AgendamentosUsuario() {
                         : encontrarNomeMedico(agendamento.id_medico)}
                     </h2>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      agendamento.status === "marcado" 
-                        ? "bg-green-100 text-green-800" 
+                      agendamento.status === "marcado"
+                        ? "bg-green-100 text-green-800"
                         : agendamento.status === "cancelado"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
                     }`}>
-                      {agendamento.status === "marcado" ? "Marcado" : 
-                       agendamento.status === "cancelado" ? "Cancelado" : 
-                       agendamento.status === "remarcando" ? "Remarcando":
+                      {agendamento.status === "marcado" ? "Marcado" :
+                       agendamento.status === "cancelado" ? "Cancelado" :
+                       agendamento.status === "remarcando" ? "Remarcando" :
                        agendamento.status}
                     </span>
                   </div>
@@ -249,27 +318,28 @@ export default function AgendamentosUsuario() {
                       Ver detalhes
                     </button>
                     {agendamento.status === "marcado" && (
-                      <button
-                        onClick={() => cancelarAgendamento(agendamento.id)}
+                      <>
+                        <button
+                          onClick={() => setRemarcarAgendamento(agendamento)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                          Remarcar
+                        </button>
+                        <button
+                          onClick={() => cancelarAgendamento(agendamento.id)}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    )}
+                    {agendamento.status === "cancelado" && (
+                      <button 
+                        onClick={() => deletarAgendamento(agendamento.id)}
                         className="text-red-600 hover:text-red-800 text-sm font-medium"
                       >
-                        Cancelar
+                        Deletar
                       </button>
-                    )}
-                    {agendamento.status === "cancelado" &&(
-                      <>
-                      <button
-                      onClick={() => remarcarAgendamento(agendamento.id)}
-                      className="text-green-600 hover:text-green-800 text-sm font-medium"
-                      >
-                        Remarcar
-                        </button>
-                        <button  onClick={() => deletarAgendamento(agendamento.id)}
-                           className="text-red-600 hover:text-red-800 text-sm font-medium"
-                           >
-                          Deletar
-                        </button>
-                        </>
                     )}
                   </div>
                 </div>
@@ -279,13 +349,13 @@ export default function AgendamentosUsuario() {
         </div>
       </div>
 
-      {/* Modal de Detalhes */}
+      {/* Appointment Details Modal */}
       {detalhesAgendamento && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
             <div className="flex justify-between items-start mb-4">
               <h2 className="text-2xl font-bold text-blue-800">Detalhes do Agendamento</h2>
-              <button 
+              <button
                 onClick={() => setDetalhesAgendamento(null)}
                 className="text-gray-500 hover:text-gray-700 text-xl"
               >
@@ -323,14 +393,14 @@ export default function AgendamentosUsuario() {
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Status</h3>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium inline-block ${
-                  detalhesAgendamento.status === "marcado" 
-                    ? "bg-green-100 text-green-800" 
+                  detalhesAgendamento.status === "marcado"
+                    ? "bg-green-100 text-green-800"
                     : detalhesAgendamento.status === "cancelado"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
                 }`}>
-                  {detalhesAgendamento.status === "marcado" ? "Marcado" : 
-                   detalhesAgendamento.status === "cancelado" ? "Cancelado" : 
+                  {detalhesAgendamento.status === "marcado" ? "Marcado" :
+                   detalhesAgendamento.status === "cancelado" ? "Cancelado" :
                    detalhesAgendamento.status}
                 </span>
               </div>
@@ -348,16 +418,96 @@ export default function AgendamentosUsuario() {
                   Cancelar Consulta
                 </button>
               )}
-              <button
-                onClick={() => setDetalhesAgendamento(null)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Fechar
-              </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reschedule Modal */}
+      {remarcarAgendamento && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              remarcarAgendamentoSubmit(remarcarAgendamento.id);
+            }}>
+                <div className="flex justify-between items-start mb-4">
+          <h2 className="text-2xl font-bold text-blue-800">
+            Remarcar consulta com:<br></br> {encontrarNomeMedico(remarcarAgendamento.id_medico)}
+          </h2>
+            
+                <button
+                  type="button"
+                  onClick={() => setRemarcarAgendamento(null)}
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Nova Data
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="dd/mm"
+                      value={dataSelecionada}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "" || /^\d{0,2}\/?\d{0,2}$/.test(value)) {
+                          setDataSelecionada(value);
+                        }
+                      }}
+                      pattern="\d{2}/\d{2}"
+                      required
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Novo Horário
+                    </label>
+                    <select
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      value={horarioSelecionado}
+                      onChange={(e) => setHorarioSelecionado(e.target.value)}
+                      required
+                    >
+                      <option value="">Selecione</option>
+                      <option value="00:00">00:00</option>
+                      {horarios.map((horario) => (
+                        <option key={horario.id} value={horario.hora}>
+                          {horario.hora.slice(0, 5)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setRemarcarAgendamento(null)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isRemarcando}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isRemarcando ? 'Remarcando...' : 'Confirmar Remarcação'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
     </div>
   );
-}
+}   
