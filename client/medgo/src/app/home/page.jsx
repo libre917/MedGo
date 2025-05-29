@@ -48,14 +48,14 @@ export default function Home() {
   return (
     <>
       {/* Home main, titulo principal,subtitulo e imagem  */}
-      <main className="w-full justify-center  grid ">
+      <main className="w-full justify-center  grid mt-12 md:mt-0 text-center ">
         {/* principal novo baseado em https://www.onemedical.com/ */}
         <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
           <div className="w-full px-8 grid xl:justify-end justify-items-center md:justify-items sm:items-center ">
             <h1 className="text-3xl font-playfair font-bold  text-black mb-4">
              <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
             </h1>
-            <p className="text-gray-700 text-base md:text-lg mb-6">
+            <p className="text-gray-700 text-base md:text-lg mb-6 " >
               Encontre horários disponíveis e garanta sua consulta com
               praticidade.
             </p>
@@ -76,7 +76,7 @@ export default function Home() {
         </div>
 
         {/* Section titulo,subtitulo, com cards e informações... */}
-        <section className="w-full justify-center gap-2 grid  xl:-mt-10">
+        <section className="w-full justify-center gap-2 grid  xl:-mt-10 ">
           {/* Card */}
           <div className="grid justify-center w-full xl:flex xl:gap-10 ">
             {cardInfos.slice(0, 3).map((cardInfo) => (
@@ -108,11 +108,11 @@ export default function Home() {
               <span className="titulo-cor-padrao-medgo  ">Especialidades</span>{" "}
               disponíveis em MedGo
             </h2>
-            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-4 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6 ">
+            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-2 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6 ">
               {especialidades.map((especialidade, index) => (
                 <div
                   key={index}
-                  className="w-full h-40px rounded-4xl grid place-items-center text-center bg-blue-50 px-3   py-3 "
+                  className="w-full h-40px  rounded-4xl grid place-items-center text-center bg-blue-50 px-3   py-3 lg:px-8 "
                 >
                   <img className="w-10 h-10" src={especialidade.icon} alt="" />
                   <h3 className="text-lg text-black font-semi-bold mb-2">

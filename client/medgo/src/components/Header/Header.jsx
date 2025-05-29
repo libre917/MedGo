@@ -153,7 +153,7 @@ export default function Header() {
           
           <Link
             href="/marcar-consulta"
-            className="hidden lg:block px-4 py-2 bg-[#004aad] text-white rounded-md hover:bg-[#003a8c] transition duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
+            className="hidden lg:block px-4 py-3 bg-[#004aad] text-white rounded-4xl hover:bg-[#003a8c] transition duration-300 shadow-sm hover:shadow-md whitespace-nowrap"
           >
             Marcar Consulta
           </Link>

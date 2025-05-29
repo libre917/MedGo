@@ -55,7 +55,7 @@ export default function LoginMedico() {
           />
 
           <h1 className="text-black font-semibold text-2xl md:text-3xl text-center font-playfair">
-            Área Médica - Faça o <span className="titulo-cor-padrao-medgo">login</span> 
+          <span className="titulo-cor-padrao-medgo">Área Médica </span> - Faça o <span className="titulo-cor-padrao-medgo">login</span> 
           </h1>
 
           <p className="text-black text-center ">

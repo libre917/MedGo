@@ -121,7 +121,7 @@ export default function AgendaMedico() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-800">Minha Agenda</h1>
+          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo ">Minha Agenda</h1>
           <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
           <div className="flex justify-center mt-4 space-x-2">
@@ -129,10 +129,10 @@ export default function AgendaMedico() {
               <button
                 key={status}
                 onClick={() => setFiltroStatus(status)}
-                className={`px-3 py-1 text-sm rounded-full ${
+                className={`px-3 py-1 text-sm rounded-full cursor-pointer ${
                   filtroStatus === status
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-blue-600 border border-blue-200"
+                    ? "bg-blue-900 text-white"
+                    : "bg-white text-blue-800 border border-blue-200"
                 }`}
               >
                 {status === "todos" ? "Todos" : 
@@ -156,7 +156,7 @@ export default function AgendaMedico() {
                 <div
                   key={consulta.id}
                   className={`bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${
-                    consulta.status === "marcado" ? "border-blue-500" :
+                    consulta.status === "marcado" ? "border-blue-900" :
                     consulta.status === "cancelado" ? "border-red-500" :
                     "border-green-500"
                   }`}
@@ -165,7 +165,7 @@ export default function AgendaMedico() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h2 className="text-lg font-semibold text-gray-800">{paciente.nome}</h2>
-                        <p className="text-sm text-gray-500">{paciente.idade || "--"} anos</p>
+                        <p className="text-sm text-gray-600">{paciente.idade || "--"} anos</p>
                       </div>
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
@@ -179,19 +179,19 @@ export default function AgendaMedico() {
 
                     <div className="mt-3 space-y-1 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Data:</span>
-                        <span className="font-medium">{formatarData(consulta.data)}</span>
+                        <span className="text-black">Data:</span>
+                        <span className="font-medium text-black">{formatarData(consulta.data)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Horário:</span>
-                        <span className="font-medium">{formatarHora(consulta.hora)}</span>
+                        <span className="text-black">Horário:</span>
+                        <span className="font-medium text-black">{formatarHora(consulta.hora)}</span>
                       </div>
                     </div>
 
                     <div className="mt-4 flex space-x-2">
                       <button
                         onClick={() => setDetalhesConsulta({...consulta, paciente})}
-                        className="flex-1 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                        className="flex-1 py-1 text-sm bg-gray-100 text-gray-900 rounded hover:bg-gray-200"
                       >
                         Detalhes
                       </button>
@@ -219,19 +219,19 @@ export default function AgendaMedico() {
 
             <div className="space-y-4">
               <div>
-                <h3 className="font-medium text-gray-500">Paciente</h3>
+                <h3 className="font-medium text-black">Paciente</h3>
                 <p className="text-lg font-semibold">{detalhesConsulta.paciente.nome}</p>
                 <p className="text-gray-600">{detalhesConsulta.paciente.idade || "--"} anos</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h3 className="font-medium text-gray-500">Data</h3>
+                  <h3 className="font-medium text-black">Data</h3>
                   <p className="text-gray-800">{formatarData(detalhesConsulta.data)}</p>
                 </div>
                 <div>
                   <h3 className="font-medium text-gray-500">Horário</h3>
-                  <p className="text-gray-800">{formatarHora(detalhesConsulta.hora)}</p>
+                  <p className="text-black">{formatarHora(detalhesConsulta.hora)}</p>
                 </div>
               </div>
 
