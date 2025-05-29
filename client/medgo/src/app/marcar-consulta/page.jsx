@@ -246,7 +246,7 @@ export default function MarcarConsulta() {
             {dataSelecionada && (
               <div>
                 <label className="block text-gray-700 font-medium mb-2 text-sm">Horário</label>
-                <select className="text-black" type="text" onChange={(e) => setHorarioSelecionado(e.target.value)}>
+                <select className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" onChange={(e) => setHorarioSelecionado(e.target.value)}>
                   <option value="00:00">00:00</option>
                   {horarios.map((horario) => (
                     <option key={horario.id} value={horario.hora}>{horario.hora.slice(0,5)}</option>
