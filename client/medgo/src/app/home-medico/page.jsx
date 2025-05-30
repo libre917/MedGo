@@ -194,27 +194,54 @@ export default function AgendaMedico() {
                         <span className="text-black">Horário:</span>
                         <span className="font-medium text-black">{formatarHora(consulta.hora)}</span>
                       </div>
-                    </div>
-
+                    </div> 
                     <div className="mt-4 flex space-x-2">
                       <button
                         onClick={() => setDetalhesConsulta({...consulta, paciente})}
-                        className="flex-1 py-1 text-sm bg-gray-100 text-gray-900 rounded hover:bg-gray-200"
-                      >
+                        className="flex-1 py-1 text-sm bg-gray-100 text-gray-900 rounded hover:bg-gray-200">
+                          
                         Detalhes
                       </button>
+
+                 
+                   
+                      
+                      {consulta.status === "remarcando" && (
+                        <>
+                           <button
+                           onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
+                           className="flex-1 py-1 text-sm bg-blue-100 text-green-900 rounded hover:bg-blue-200"
+                         >
+                           Confirmar
+                         </button>
+                           
                       <button
-                        onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
-                        className="flex-1 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
-                      >
-                        Confirmar
-                      </button>
+                      onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                      className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                    >
+                      Cancelar
+                    </button>
+                    </>
+
+                      )}
+                      {consulta.status === "marcado" && (
+                        <>
+                           <button
+                           onClick={() => atualizarStatusConsulta(consulta.id, "realizado")}
+                           className="flex-2 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
+                         >
+                           Marcar como realizado
+                         </button>
+                           
                       <button
-                        onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
-                        className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
-                      >
-                        Cancelar
-                      </button>
+                      onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                      className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                    >
+                      Cancelar
+                    </button>
+                    </>
+
+                      )}
                     </div>
                   </div>
                 </div>

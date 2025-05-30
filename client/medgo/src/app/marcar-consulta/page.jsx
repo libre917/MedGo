@@ -240,7 +240,7 @@ export default function MarcarConsulta() {
               <input
                 type="text"
                 placeholder="dd/mm"
-                onChange={(e) => setDataSelecionada(e.target.value)}
+                onChange={(e) => setDataSelecionada(e.target.value )}
                 pattern="\d{2}/\d{2}"
                 required
                 className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
