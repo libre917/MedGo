@@ -56,7 +56,7 @@ export default function Cadastro() {
   return (
     <>
       <section className="flex flex-col md:flex-row justify-center items-center h-screen ">
-        <div className="hidden md:flex">
+        <div className="hidden md:flex ">
           <img
             src="/login-img/Wavy_Med.jpg"
             alt="Imagem ao lado dos inputs"
@@ -65,7 +65,7 @@ export default function Cadastro() {
         </div>
 
         <form
-          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center "
+          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center justify-items-center"
           onSubmit={(e) => {
             e.preventDefault();
             adiocionarDados();

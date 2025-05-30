@@ -6,7 +6,7 @@ import "./home.css";
 
 export default function Home() {
   const userId = localStorage.getItem("usuario");
-  if(!userId){
+  if (!userId) {
     alert('Erro: Login ou cadastro necessário para funcionamento')
     window.location.href = "/";
   }
@@ -49,11 +49,11 @@ export default function Home() {
     <>
       {/* Home main, titulo principal,subtitulo e imagem  */}
       <main className="w-full justify-center  grid mt-12 md:mt-0 text-center ">
-        {/* principal novo baseado em https://www.onemedical.com/ */}
+        {/* texto banner */}
         <div className="relative w-full md:flex grid  items-center justify-between gap-6  ">
           <div className="w-full px-8 grid xl:justify-end justify-items-center md:justify-items sm:items-center ">
             <h1 className="text-3xl font-playfair font-bold  text-black mb-4">
-             <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
+              <span className="titulo-cor-padrao-medgo">Agendamento Online</span> de Consultas
             </h1>
             <p className="text-gray-700 text-base md:text-lg mb-6 " >
               Encontre horários disponíveis e garanta sua consulta com
@@ -65,7 +65,7 @@ export default function Home() {
               </button>
             </Link>
           </div>
-
+          {/* imagem banner */}
           <div className="w-full hidden md:flex ">
             <img
               src="/home/OM-homepage_transparent_bg_Mobile_425.original.png"
@@ -101,7 +101,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/*Section especialidades*/}
+        {/* Especialidades*/}
         <section className=" grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10  relative">
           <div className="container mx-auto px-4 grid gap-10 ">
             <h2 className="xl:text-3xl text-2xl font-playfair font-bold text-black mb-4">

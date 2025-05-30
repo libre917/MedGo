@@ -8,6 +8,7 @@ export default function SobreNos() {
     alert('Erro: Login ou cadastro necessário para funcionamento')
   }
   return (
+    
     <div className="min-h-screen  from-blue-50 to-white">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
