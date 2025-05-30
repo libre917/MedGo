@@ -87,10 +87,7 @@ export default function Login() {
         </div>
       )}
 
-      {/* 
-        RESTANTE DO CÓDIGO PERMANECE EXATAMENTE IGUAL 
-        (mantido conforme seu original)
-      */}
+      
       <section className="flex flex-col md:flex-row justify-center items-center h-screen overflow-hidden text-center">
         <div className="hidden md:flex">
           <img
@@ -118,13 +115,13 @@ export default function Login() {
           </h1>
 
           <p className="text-black text-center">
-            Não tem conta? <Link href="/cadastro" className="text-blue-600">
+            Não tem conta? <Link href="/cadastro" className="text-blue-600 ">
               Cadastre-se
             </Link>
           </p>
 
-          <p className='text-black'>
-            É médico? <Link href="/login-medico">Login</Link> 
+          <p className='text-black text-sm'>
+            É médico? <Link href="/login-medico" className='text-blue-600 '>Login</Link> 
           </p>
 
           <div className="grid">

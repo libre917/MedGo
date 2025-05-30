@@ -96,7 +96,7 @@ export default function CadastroMedico() {
         </div>
 
         <form
-          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center"
+          className="grid justify-center items-center gap-6 p-6 md:p-10 text-center justify-items-center"
           onSubmit={adicionarMedico}
         >
           <img

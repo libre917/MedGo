@@ -18,18 +18,18 @@ export default function PoliticaPrivacidade() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
         {/* Cabeçalho */}
-        <button><Link href="/cadastro" className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-3 py-3 rounded-4xl pointer transition">Voltar</Link></button>
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-blue-800 mb-2">Política de Privacidade</h1>
-          <p className="text-lg text-gray-600">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
+        <button><Link href="/cadastro" className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-2 py-2 md:px-3 md:py-3 rounded-4xl pointer transition">Voltar</Link></button>
+        <div className="text-center mb-10 mt-6">
+          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo mb-2">Política de Privacidade</h1>
+          <p className="text-lg text-gray-400">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
         </div>
 
         {/* Introdução */}
         <section className="mb-8">
-          <p className="text-gray-700 mb-4">
+          <p className="text-black mb-4">
             A MedGo valoriza a privacidade e a segurança dos dados dos seus usuários. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais quando você utiliza nossos serviços de agendamento médico.
           </p>
-          <p className="text-gray-700">
+          <p className="text-black">
             Ao utilizar nosso site e serviços, você concorda com os termos desta Política de Privacidade.
           </p>
         </section>
@@ -42,7 +42,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(1)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">1. Informações que Coletamos</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">1. Informações que Coletamos</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 1 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -71,7 +71,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(2)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">2. Como Usamos Suas Informações</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">2. Como Usamos Suas Informações</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 2 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -104,7 +104,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(3)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">3. Compartilhamento de Dados</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">3. Compartilhamento de Dados</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 3 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -135,7 +135,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(4)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">4. Segurança dos Dados</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">4. Segurança dos Dados</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 4 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -167,7 +167,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(5)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">5. Seus Direitos</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">5. Seus Direitos</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 5 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -200,7 +200,7 @@ export default function PoliticaPrivacidade() {
               onClick={() => toggleSecao(6)}
               className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
             >
-              <h2 className="text-xl font-semibold text-blue-800">6. Alterações na Política</h2>
+              <h2 className="text-xl font-semibold titulo-cor-padrao-medgo">6. Alterações na Política</h2>
               <svg
                 className={`w-5 h-5 text-gray-500 transform transition-transform ${abrirSecao === 6 ? 'rotate-180' : ''}`}
                 fill="none"
@@ -222,7 +222,7 @@ export default function PoliticaPrivacidade() {
 
         {/* Contato */}
         <section className="mt-10 p-6 bg-blue-50 rounded-lg">
-          <h2 className="text-xl font-semibold text-blue-800 mb-3">Dúvidas e Contato</h2>
+          <h2 className="text-xl font-semibold titulo-cor-padrao-medgo mb-3">Dúvidas e Contato</h2>
           <p className="text-gray-700">
             Para quaisquer questões sobre esta Política de Privacidade ou sobre o tratamento de seus dados pessoais, entre em contato com nosso Encarregado de Proteção de Dados (DPO):
           </p>
