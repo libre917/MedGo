@@ -6,7 +6,9 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function LoginMedico() {
+  localStorage.clear();
   const [email, setEmail] = useState("");
+  const [crm, setCrm] = useState("");
   const [senha, setSenha] = useState("");
 
   const compararDados = async () => {
@@ -15,14 +17,14 @@ export default function LoginMedico() {
       const medicos = response.data;
 
       const user = medicos.find(
-        (medico) => medico.email === email && medico.senha === senha
+        (medico) => medico.email === email && medico.senha === senha && medico.crm === crm
       );
 
       if (user) {
         localStorage.setItem("usuario", JSON.stringify(user));
         window.location.href = "/home-medico";
       } else {
-        alert("Email ou senha incorreto(s)");
+        alert("Dados incorretos ou faltantes");
       }
     } catch (err) {
       console.error("Erro ao comparar dados", err);
@@ -93,6 +95,20 @@ export default function LoginMedico() {
               className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
             />
           </div>
+
+          <div className="grid">
+            <input
+              placeholder="CRM:"
+              type="text"
+              name="crm"
+              pattern="^\d{6}-[A-Z]{2}$"
+              required
+              onChange={(e) => setCrm(e.target.value)}
+              className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
+            />
+          </div>
+
+
 
           <div className="text-black">
             <button

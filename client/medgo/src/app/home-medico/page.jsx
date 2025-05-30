@@ -79,7 +79,10 @@ export default function AgendaMedico() {
 
   const atualizarStatusConsulta = async (idConsulta, novoStatus) => {
     try {
+      const response = await axios.get(`${API_URL}/Agendamentos/${idConsulta}`)
+      const agendamentoDados = response.data
       await axios.put(`${API_URL}/Agendamentos/${idConsulta}`, {
+        ...agendamentoDados,
         status: novoStatus
       });
       
@@ -94,6 +97,7 @@ export default function AgendaMedico() {
           status: novoStatus
         });
       }
+   
       
       alert(`Consulta ${novoStatus === "cancelado" ? "cancelada" : "confirmada"} com sucesso!`);
     } catch (err) {
@@ -138,7 +142,7 @@ export default function AgendaMedico() {
                 {status === "todos" ? "Todos" : 
                  status === "marcado" ? "Agendados" :
                  status === "cancelado" ? "Cancelados" : 
-                 status === "remarcando" ? "Remarcando" : "Realizado"}
+                 status === "remarcando" ? "Pedidos para remarcar" : "Realizado"}
               </button>
             ))}
           </div>
@@ -177,7 +181,7 @@ export default function AgendaMedico() {
                       }`}>
                         {consulta.status === "marcado" ? "Agendado" : 
                          consulta.status === "cancelado" ? "Cancelado" : 
-                         consulta.status === "remarcando" ? "Remarcando": "Realizado"}
+                         consulta.status === "remarcando" ? "Solicitação para remarcar": "Realizado"}
                       </span>
                     </div>
 
@@ -198,6 +202,18 @@ export default function AgendaMedico() {
                         className="flex-1 py-1 text-sm bg-gray-100 text-gray-900 rounded hover:bg-gray-200"
                       >
                         Detalhes
+                      </button>
+                      <button
+                        onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
+                        className="flex-1 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
+                      >
+                        Confirmar
+                      </button>
+                      <button
+                        onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                        className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                      >
+                        Cancelar
                       </button>
                     </div>
                   </div>
