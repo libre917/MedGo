@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function Cadastro() {
+  localStorage.clear();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [Idade, setIdade] = useState("");

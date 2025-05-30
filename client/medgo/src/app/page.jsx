@@ -9,6 +9,7 @@ import { useState } from "react";
 
 
 export default function Login() {
+  localStorage.clear();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);

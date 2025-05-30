@@ -149,7 +149,9 @@ export default function AgendamentosUsuario() {
       if (horarioSelecionado === "00:00") {
         alert('Horário inválido');
         return;
-      }
+      }     
+    
+
   
       if (!dataSelecionada) {
         alert('Selecione uma data');
@@ -158,6 +160,10 @@ export default function AgendamentosUsuario() {
   
       // Format date properly for your API
       const [dia, mes] = dataSelecionada.split("/");
+      if(dia == "00" || mes == "00" || dia > 30 || mes > 12){
+        alert('Data inválida')
+        return
+      }
       const dataAtual = new Date();
       const dataFormatada = new Date(
         dataAtual.getFullYear(),
@@ -169,15 +175,14 @@ export default function AgendamentosUsuario() {
       const newResponse = await axios.get(`${API_URL}/Agendamentos`);
       const agendamentoDados = response.data;
       const allAppointments = newResponse.data;
-  
-      // Use the doctor ID from the appointment being rescheduled
+
       const doctorId = agendamentoDados.id_medico;
   
       const conflito = allAppointments.some(agenda =>
         agenda.id_medico === doctorId &&
         agenda.data === dataFormatada &&
         agenda.hora === horarioSelecionado &&
-        agenda.id !== idAgendamento // Exclude current appointment from conflict check
+        agenda.id !== idAgendamento 
       );
   
       if (conflito) {
@@ -189,10 +194,10 @@ export default function AgendamentosUsuario() {
         ...agendamentoDados,
         data: dataFormatada,
         hora: horarioSelecionado,
-        status: "remarcando" // Changed from "remarcando" to "marcado"
+        status: "remarcando"
       });
   
-      // Update local state
+      
       setAgendamentos(agendamentos.map(ag => 
         ag.id === idAgendamento 
           ? { 
@@ -454,6 +459,7 @@ export default function AgendamentosUsuario() {
                     <input
                       type="text"
                       placeholder="dd/mm"
+                      pattern="\d{2}/\d{2}"
                       value={dataSelecionada}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -461,7 +467,7 @@ export default function AgendamentosUsuario() {
                           setDataSelecionada(value);
                         }
                       }}
-                      pattern="\d{2}/\d{2}"
+                    
                       required
                       className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
                     />

@@ -63,16 +63,16 @@ INSERT INTO Clinicas (nome, endereco, telefone) VALUES
 ('Unidade Médica Comunitária', 'Av. G, 1000', '9101234567');
 
 INSERT INTO Medicos (nome, email, senha, crm, especialidade, id_clinica) VALUES
-('Dr. Ana Souza', 'ana.souza@med.com', 'senha123', '123456-SP', 'Clínico Geral', 1),
-('Dr. Pedro Lima', 'pedro.lima@med.com', 'senha123', '654321-SP', 'Cardiologia', 2),
-('Dr. Carla Mendes', 'carla.mendes@med.com', 'senha123', '112233-RJ', 'Dermatologia', 3),
-('Dr. Bruno Silva', 'bruno.silva@med.com', 'senha123', '223344-MG', 'Pediatria', 4),
-('Dr. Fernanda Rocha', 'fernanda.rocha@med.com', 'senha123', '334455-PR', 'Ortopedia', 5),
-('Dr. Marcos Pinto', 'marcos.pinto@med.com', 'senha123', '445566-RS', 'Ginecologia', 6),
-('Dr. Paula Dias', 'paula.dias@med.com', 'senha123', '556677-DF', 'Neurologia', 7),
-('Dr. Rafael Costa', 'rafael.costa@med.com', 'senha123', '667788-BA', 'Psiquiatria', 8),
-('Dr. Juliana Alves', 'juliana.alves@med.com', 'senha123', '778899-PE', 'Endocrinologia', 9),
-('Dr. Tiago Martins', 'tiago.martins@med.com', 'senha123', '889900-PA', 'Urologia', 10);
+('Ana Souza', 'ana.souza@med.com', 'senha123', '123456-SP', 'Clínico Geral', 1),
+('Pedro Lima', 'pedro.lima@med.com', 'senha123', '654321-SP', 'Cardiologia', 2),
+('Carla Mendes', 'carla.mendes@med.com', 'senha123', '112233-RJ', 'Dermatologia', 3),
+('Bruno Silva', 'bruno.silva@med.com', 'senha123', '223344-MG', 'Pediatria', 4),
+('Fernanda Rocha', 'fernanda.rocha@med.com', 'senha123', '334455-PR', 'Ortopedia', 5),
+('Marcos Pinto', 'marcos.pinto@med.com', 'senha123', '445566-RS', 'Ginecologia', 6),
+('Paula Dias', 'paula.dias@med.com', 'senha123', '556677-DF', 'Neurologia', 7),
+('Rafael Costa', 'rafael.costa@med.com', 'senha123', '667788-BA', 'Psiquiatria', 8),
+('Juliana Alves', 'juliana.alves@med.com', 'senha123', '778899-PE', 'Endocrinologia', 9),
+('Tiago Martins', 'tiago.martins@med.com', 'senha123', '889900-PA', 'Urologia', 10);
 
 INSERT INTO Pacientes (nome, email, senha, telefone, endereco, idade) VALUES
 ('João Carlos', 'joao.carlos@pac.com', 'senha123', '11912345678', 'Rua A, 123', 35),

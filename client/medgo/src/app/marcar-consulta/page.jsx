@@ -111,6 +111,10 @@ export default function MarcarConsulta() {
         alert('Horário inválido')
         return
       }
+      if(dia == "00" || mes == "00" || dia > 30 || mes > 12){
+        alert('Data inválida')
+        return
+      }
 
   
       const consulta = {

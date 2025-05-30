@@ -37,7 +37,7 @@ const atualizarAgendamento = async (id, agendaData) => {
 
 const deletarAgendamento = async (id) => {
     try{
-        return await deleteRecord('Agendamentos', `id = ${id}`)
+       await deleteRecord('Agendamentos', `id = ${id}`)
     } catch (err) {
         console.error("Erro ao cancelar agendamento: ", err)
         throw err;
