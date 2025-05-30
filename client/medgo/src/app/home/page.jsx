@@ -60,7 +60,7 @@ export default function Home() {
               praticidade.
             </p>
             <Link href="/marcar-consulta">
-              <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl pointer transition ">
+              <button className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-6 py-4.5 rounded-4xl cursor-pointer transition ">
                 Agendar Agora
               </button>
             </Link>

@@ -251,7 +251,7 @@ export default function AgendamentosUsuario() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-800">
+          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo">
             {tipoUsuario === 'medico' ? 'Agendamentos do Médico' : 'Meus Agendamentos'}
           </h1>
           <p className="mt-2 text-gray-600">
@@ -268,7 +268,7 @@ export default function AgendamentosUsuario() {
               <p className="text-gray-500 mb-4">Nenhum agendamento encontrado</p>
               <a
                 href={tipoUsuario === 'medico' ? "/medico" : "/marcar-consulta"}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-blue-600 hover:titulo-cor-padrao-medgo font-medium"
               >
                 {tipoUsuario === 'medico' ? "Voltar ao painel" : "Marcar consulta"}
               </a>
@@ -318,7 +318,7 @@ export default function AgendamentosUsuario() {
                   <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between">
                     <button
                       onClick={() => setDetalhesAgendamento(agendamento)}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
                     >
                       Ver detalhes
                     </button>
@@ -326,13 +326,13 @@ export default function AgendamentosUsuario() {
                       <>
                         <button
                           onClick={() => setRemarcarAgendamento(agendamento)}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          className="text-blue-600 hover:titulo-cor-padrao-medgo text-sm font-medium cursor-pointer"
                         >
                           Remarcar
                         </button>
                         <button
                           onClick={() => cancelarAgendamento(agendamento.id)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                          className="text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer"
                         >
                           Cancelar
                         </button>
@@ -341,7 +341,7 @@ export default function AgendamentosUsuario() {
                     {agendamento.status === "cancelado" && (
                       <button 
                         onClick={() => deletarAgendamento(agendamento.id)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        className="text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer"
                       >
                         Deletar
                       </button>

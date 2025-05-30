@@ -150,15 +150,15 @@ export default function MarcarConsulta() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-indigo-800 mb-2">Agendar Consulta</h1>
-          <p className="text-md text-indigo-600">Preencha as informações passo a passo</p>
+          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo mb-2">Agendar Consulta</h1>
+          <p className="text-md text-black ">Preencha as informações passo a passo</p>
         </div>
 
         {/* Indicador de Passos */}
         <div className="flex justify-between mb-8 relative">
           {[1, 2, 3, 4].map((step) => (
             <div key={step} className="flex flex-col items-center z-10">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${passo >= step ? "bg-indigo-600" : "bg-gray-300"
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${passo >= step ? "titulo-background-padrao-medgo" : "bg-gray-300"
                 }`}>
                 {step}
               </div>
@@ -219,7 +219,7 @@ export default function MarcarConsulta() {
                     }`}
                 >
                   <h3 className="font-semibold text-gray-800">{medico.nome}</h3>
-                  <p className="text-sm text-indigo-600">{medico.especialidade}</p>
+                  <p className="text-sm titulo-cor-padrao-medgo">{medico.especialidade}</p>
                 </div>
               ))}
             </div>
@@ -231,7 +231,7 @@ export default function MarcarConsulta() {
           <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Selecione o Horário</h2>
             <div className="mb-3 p-3 bg-indigo-50 rounded-md text-sm">
-              <p className="font-medium text-indigo-800">Médico selecionado:</p>
+              <p className="font-medium titulo-cor-padrao-medgo">Médico selecionado:</p>
               <p className="text-gray-800">{medicoSelecionado.nome} - {medicoSelecionado.especialidade}</p>
             </div>
 
@@ -292,7 +292,7 @@ export default function MarcarConsulta() {
           {passo > 1 && (
             <button
               onClick={() => setPasso(passo - 1)}
-              className="px-4 py-2 text-indigo-600 font-medium rounded-md hover:bg-indigo-50 transition text-sm"
+              className="px-4 py-2 titulo-cor-padrao-medgo cursor-pointer font-medium rounded-md hover:bg-indigo-50 transition text-sm"
             >
               Voltar
             </button>
@@ -301,14 +301,14 @@ export default function MarcarConsulta() {
           {passo < 4 ? (
             <button
               onClick={proximoPasso}
-              className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition ml-auto text-sm"
+              className="px-4 py-2 titulo-background-padrao-medgo text-white font-medium rounded-4xl cursor-pointer hover:bg-indigo-700 transition ml-auto text-sm"
             >
               Próximo
             </button>
           ) : (
             <button
               onClick={finalizarAgendamento}
-              className="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition ml-auto text-sm"
+              className="px-4 py-2 bg-green-800 text-white font-medium rounded-md cursor-pointer hover:bg-green-600 transition ml-auto text-sm"
             >
               Confirmar Agendamento
             </button>
