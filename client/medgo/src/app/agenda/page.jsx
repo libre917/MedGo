@@ -22,7 +22,7 @@ export default function AgendamentosUsuario() {
   const [carregando, setCarregando] = useState(true);
   const [detalhesAgendamento, setDetalhesAgendamento] = useState(null);
   const [remarcarAgendamento, setRemarcarAgendamento] = useState(null);
-  const [medicoSelecionado, setMedicoSelecionado] = useState(null);
+
   const [dataSelecionada, setDataSelecionada] = useState("");
   const [horarioSelecionado, setHorarioSelecionado] = useState("");
   const [tipoUsuario, setTipoUsuario] = useState('');
@@ -48,6 +48,10 @@ export default function AgendamentosUsuario() {
           alert('Erro: Login ou cadastro necessário para funcionamento');
           window.location.href = "/";
           return;
+        } 
+        const medVerification = JSON.parse(userData)
+        if (medVerification.crm){
+          window.location.href = "/home-medico"
         }
 
         const usuario = JSON.parse(userData);
