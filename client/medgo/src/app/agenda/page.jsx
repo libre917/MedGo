@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:3000";
 
+// Helper function for consistent date formatting
+const formatDateForMySQL = (dateString) => {
+  if (!dateString) return null;
+  return dateString.split('T')[0]; // YYYY-MM-DD
+};
+
 async function listarHorarios() {
   try {
     const response = await axios.get(`${API_URL}/Horarios`);
@@ -112,14 +118,20 @@ export default function AgendamentosUsuario() {
 
   // Appointment actions
   const cancelarAgendamento = async (idAgendamento) => {
+    if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
+      
     try {
       const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
       const agendamentoDados = response.data;
 
-      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
+      // Format the date properly before sending to the backend
+      const formattedData = {
         ...agendamentoDados,
-        status: "cancelado"
-      });
+        status: "cancelado",
+        data: formatDateForMySQL(agendamentoDados.data)
+      };
+
+      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, formattedData);
 
       // Update local state
       setAgendamentos(agendamentos.map(ag =>
@@ -153,66 +165,65 @@ export default function AgendamentosUsuario() {
       if (horarioSelecionado === "00:00") {
         alert('Horário inválido');
         return;
-      }     
-    
+      }
 
-  
       if (!dataSelecionada) {
         alert('Selecione uma data');
         return;
       }
-  
-      // Format date properly for your API
+
+      // Validate date format
       const [dia, mes] = dataSelecionada.split("/");
-      if(dia == "00" || mes == "00" || dia > 30 || mes > 12){
-        alert('Data inválida')
-        return
+      if (dia === "00" || mes === "00" || dia > 31 || mes > 12) {
+        alert('Data inválida');
+        return;
       }
+
+      // Create proper MySQL DATE format (YYYY-MM-DD)
       const dataAtual = new Date();
-      const dataFormatada = new Date(
-        dataAtual.getFullYear(),
-        parseInt(mes) - 1,
-        parseInt(dia)
-      ).toISOString();
-  
+      const ano = dataAtual.getFullYear();
+      const mysqlDate = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+
       const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
       const newResponse = await axios.get(`${API_URL}/Agendamentos`);
       const agendamentoDados = response.data;
       const allAppointments = newResponse.data;
 
       const doctorId = agendamentoDados.id_medico;
-  
+
       const conflito = allAppointments.some(agenda =>
         agenda.id_medico === doctorId &&
-        agenda.data === dataFormatada &&
+        agenda.data === mysqlDate &&
         agenda.hora === horarioSelecionado &&
-        agenda.id !== idAgendamento 
+        agenda.id !== idAgendamento
       );
-  
+
       if (conflito) {
         alert('Data ou horário indisponíveis');
         return;
       }
-  
-      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, {
+
+      // Format the data before sending
+      const formattedData = {
         ...agendamentoDados,
-        data: dataFormatada,
+        data: mysqlDate,
         hora: horarioSelecionado,
         status: "remarcando"
-      });
-  
-      
+      };
+
+      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, formattedData);
+
       setAgendamentos(agendamentos.map(ag => 
         ag.id === idAgendamento 
           ? { 
               ...ag, 
-              data: dataFormatada, 
+              data: mysqlDate, 
               hora: horarioSelecionado,
               status: "remarcando"
             } 
           : ag
       ));
-  
+
       // Close the modal and reset fields
       setRemarcarAgendamento(null);
       setDataSelecionada("");
@@ -231,7 +242,7 @@ export default function AgendamentosUsuario() {
     if (!confirm('Tem certeza que deseja deletar este agendamento?')) return;
     
     try {
-      axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`);
+       axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`);
       setAgendamentos(agendamentos.filter(ag => ag.id !== idAgendamento));
       alert('Agendamento deletado com sucesso!');
     } catch (err) {
@@ -520,4 +531,4 @@ export default function AgendamentosUsuario() {
       )}
     </div>
   );
-}   
+}

@@ -2,10 +2,48 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+const API_URL = "http://localhost:3000"
 
 export default function Perfil() {
+  const deletarConta = async (idUser) => {
+    if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
+    try {
+      axios.delete(`${API_URL}/Pacientes/${idUser}`)
+      window.location = "/"
+    } catch (err) {
+      console.error("Erro", err)
+    }
+  }
+  const atualizarSenha = async (idUser) => {
+    try{
+     const response = await axios.get(`${API_URL}/Pacientes/${idUser}`)
+     const data = response.data
+     const senhaAntiga = response.data.senha
+     if(senhaAntiga !== senha){
+      alert("Senha antiga incorreta")
+      return
+     }
+
+     if(senha == newSenha){
+      alert('A senha não pode ser igual a anterior') 
+      return;
+     }
+     await axios.put(`${API_URL}/Pacientes/${idUser}`, {
+      ...data,
+      senha: newSenha
+     }
+     )
+     alert('Senha alterada com sucesso')
+
+     setAltSenha(null)
+
+
+    } catch (err) {
+      console.error("Erro", err)
+    }
+  }
   const userId = localStorage.getItem("usuario");
-  if(!userId){
+  if (!userId) {
     alert('Erro: Login ou cadastro necessário para funcionamento')
     window.location.href = "/";
   }
@@ -13,24 +51,27 @@ export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tipoUsuario, setTipoUsuario] = useState('');
+  const [altSenha, setAltSenha] = useState(null)
+  const [senha, setSenha] = useState("")
+  const [newSenha, setNewSenha] = useState("");
 
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
         const userData = localStorage.getItem("usuario");
         if (!userData) return;
-        
+
         const usuarioLogado = JSON.parse(userData);
-        
+
         // Verifica se é médico (tem CRM) ou paciente
         if (usuarioLogado.crm) {
           setTipoUsuario('medico');
-          const { data } = await axios.get(`http://localhost:3000/Medicos/${usuarioLogado.id}`);
+          const { data } = await axios.get(`${API_URL}/Medicos/${usuarioLogado.id}`);
           setUsuario(data);
         } else {
           setTipoUsuario('paciente');
-          const { data } = await axios.get(`http://localhost:3000/Pacientes/${usuarioLogado.id}`);
-          
+          const { data } = await axios.get(`${API_URL}/Pacientes/${usuarioLogado.id}`);
+
           // Se já tiver idade no objeto, usa ela diretamente
           if (data.idade) {
             setUsuario(data);
@@ -40,11 +81,11 @@ export default function Perfil() {
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
-            
+
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
               age--;
             }
-            
+
             setUsuario({
               ...data,
               idade: age
@@ -169,9 +210,56 @@ export default function Perfil() {
                 </div>
               </div>
             </div>
+            <div className="flex">
+              <div>
+                <button className="m-2 text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
+                  Excluir conta
+                </button>
+                <button className="m-2 text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
+                  Alterar senha
+                </button>
+              </div>
+            </div>
+            {altSenha && (
+              <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >
+                <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+                   <form onSubmit={(e) => {
+                    e.preventDefault();
+                    atualizarSenha(usuario.id)
+                   }}>
+                    <div className="flex justify-between items-start mb-4">
+              
+                  <h2 className="text-2xl font-bold text-blue-800">Digite a nova senha</h2>
+                      <button
+                  type="button"
+                  onClick={() => setAltSenha(null)}
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                >
+                  ×
+                </button>
+                </div>
+                 <div className="space-y-4">
+                 
+                    <input required type="password" placeholder="Senha antiga" className="w-80 md:w-60 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"  onChange={(e) => setSenha(e.target.value)} />
+                    
+                  
+                 
+                    <input required type="password" placeholder="Nova senha" className="w-80 md:w-60 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"  onChange={(e) => setNewSenha(e.target.value)} />
+                    
+                  </div>
+                       <div className="mt-6 flex justify-end space-x-3">
+                        <button type="submit" className="text-green-800 bg-green-100">Alterar</button>
+                       </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
     </div>
+
   );
+
 }

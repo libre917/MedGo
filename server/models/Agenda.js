@@ -31,7 +31,7 @@ const atualizarAgendamento = async (id, agendaData) => {
     try {
         return await update('Agendamentos', agendaData, `id = ${id}`)
     }catch(err){
-        console.error("Erro ao atulizar o agendamento")
+        console.error("Erro ao atualizar o agendamento")
     }
 }
 

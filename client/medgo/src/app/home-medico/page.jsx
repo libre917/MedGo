@@ -4,6 +4,24 @@ import { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:3000";
 
+// Helper function for consistent date formatting
+const formatDateForMySQL = (dateString) => {
+  if (!dateString) return null;
+  return dateString.split('T')[0]; // YYYY-MM-DD
+};
+
+// Helper function for display formatting
+const formatarData = (dataISO) => {
+  if (!dataISO) return "--/--/----";
+  const data = new Date(dataISO);
+  return data.toLocaleDateString('pt-BR');
+};
+
+const formatarHora = (hora) => {
+  if (!hora) return "--:--";
+  return hora.substring(0, 5);
+};
+
 export default function AgendaMedico() {
   const [consultas, setConsultas] = useState([]);
   const [pacientes, setPacientes] = useState([]);
@@ -66,27 +84,21 @@ export default function AgendaMedico() {
     };
   };
 
-  const formatarData = (dataISO) => {
-    if (!dataISO) return "--/--/----";
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR');
-  };
-
-  const formatarHora = (hora) => {
-    if (!hora) return "--:--";
-    return hora.substring(0, 5);
-  };
-
   const atualizarStatusConsulta = async (idConsulta, novoStatus) => {
     try {
-      const response = await axios.get(`${API_URL}/Agendamentos/${idConsulta}`)
-      const agendamentoDados = response.data
-      await axios.put(`${API_URL}/Agendamentos/${idConsulta}`, {
-        ...agendamentoDados,
-        status: novoStatus
-      });
+      const response = await axios.get(`${API_URL}/Agendamentos/${idConsulta}`);
+      const agendamentoDados = response.data;
       
-      // Atualiza a lista de consultas
+      // Format the date properly before sending to the backend
+      const formattedData = {
+        ...agendamentoDados,
+        status: novoStatus,
+        data: formatDateForMySQL(agendamentoDados.data)
+      };
+
+      await axios.put(`${API_URL}/Agendamentos/${idConsulta}`, formattedData);
+      
+      // Update the local state
       setConsultas(consultas.map(consulta => 
         consulta.id === idConsulta ? {...consulta, status: novoStatus} : consulta
       ));
@@ -97,12 +109,16 @@ export default function AgendaMedico() {
           status: novoStatus
         });
       }
-   
       
       alert(`Consulta ${novoStatus === "cancelado" ? "cancelada" : "confirmada"} com sucesso!`);
     } catch (err) {
-      console.error("Erro ao atualizar consulta:", err);
-      alert("Erro ao atualizar consulta");
+      if (err.response) {
+        console.error("Server responded with:", err.response.data);
+        alert(`Erro: ${err.response.data.message || "Erro ao atualizar consulta"}`);
+      } else {
+        console.error("Request error:", err.message);
+        alert("Erro de conexão com o servidor");
+      }
     }
   };
 
@@ -125,11 +141,11 @@ export default function AgendaMedico() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo ">Minha Agenda</h1>
+          <h1 className="text-3xl font-bold titulo-cor-padrao-medgo">Minha Agenda</h1>
           <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
           <div className="flex justify-center mt-4 space-x-2">
-            {["todos", "marcado", "cancelado", "remarcando","realizado"].map((status) => (
+            {["todos", "marcado", "cancelado", "remarcando", "realizado"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFiltroStatus(status)}
@@ -176,7 +192,7 @@ export default function AgendaMedico() {
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
                         consulta.status === "cancelado" ? "bg-red-100 text-red-800" :
-                        consulta.status === "remarcando" ? " bg-yellow-100 text-yellow-800":  
+                        consulta.status === "remarcando" ? "bg-yellow-100 text-yellow-800":  
                         "bg-green-100 text-green-800"
                       }`}>
                         {consulta.status === "marcado" ? "Agendado" : 
@@ -199,48 +215,42 @@ export default function AgendaMedico() {
                       <button
                         onClick={() => setDetalhesConsulta({...consulta, paciente})}
                         className="flex-1 py-1 text-sm bg-gray-100 text-gray-900 rounded hover:bg-gray-200">
-                          
                         Detalhes
                       </button>
 
-                 
-                   
-                      
                       {consulta.status === "remarcando" && (
                         <>
-                           <button
-                           onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
-                           className="flex-1 py-1 text-sm bg-blue-100 text-green-900 rounded hover:bg-blue-200"
-                         >
-                           Confirmar
-                         </button>
+                          <button
+                            onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
+                            className="flex-1 py-1 text-sm bg-blue-100 text-green-900 rounded hover:bg-blue-200"
+                          >
+                            Confirmar
+                          </button>
                            
-                      <button
-                      onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
-                      className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
-                    >
-                      Cancelar
-                    </button>
-                    </>
-
+                          <button
+                            onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                            className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                          >
+                            Cancelar
+                          </button>
+                        </>
                       )}
                       {consulta.status === "marcado" && (
                         <>
-                           <button
-                           onClick={() => atualizarStatusConsulta(consulta.id, "realizado")}
-                           className="flex-2 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
-                         >
-                           Marcar como realizado
-                         </button>
+                          <button
+                            onClick={() => atualizarStatusConsulta(consulta.id, "realizado")}
+                            className="flex-2 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
+                          >
+                            Marcar como realizado
+                          </button>
                            
-                      <button
-                      onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
-                      className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
-                    >
-                      Cancelar
-                    </button>
-                    </>
-
+                          <button
+                            onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                            className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                          >
+                            Cancelar
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
