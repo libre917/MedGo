@@ -53,8 +53,8 @@ export default function AgendaMedico() {
 
         // Carrega todos os dados necessários
         const [consultasRes, pacientesRes] = await Promise.all([
-          axios.get(`${API_URL}/Agendamentos`),
-          axios.get(`${API_URL}/Pacientes`)
+          axios.get(`${API_URL}/agendamentos`),
+          axios.get(`${API_URL}/pacientes`)
         ]);
 
         setPacientes(pacientesRes.data);
@@ -86,7 +86,7 @@ export default function AgendaMedico() {
 
   const atualizarStatusConsulta = async (idConsulta, novoStatus) => {
     try {
-      const response = await axios.get(`${API_URL}/Agendamentos/${idConsulta}`);
+      const response = await axios.get(`${API_URL}/agendamentos/${idConsulta}`);
       const agendamentoDados = response.data;
       
       // Format the date properly before sending to the backend
@@ -96,7 +96,7 @@ export default function AgendaMedico() {
         data: formatDateForMySQL(agendamentoDados.data)
       };
 
-      await axios.put(`${API_URL}/Agendamentos/${idConsulta}`, formattedData);
+      await axios.put(`${API_URL}/agendamentos/${idConsulta}`, formattedData);
       
       // Update the local state
       setConsultas(consultas.map(consulta => 

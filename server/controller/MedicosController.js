@@ -28,6 +28,11 @@ const listarMedicosPorIdController = async (req,res) => {
 const adicionarMedicosController = async (req, res) => {
    try {
     const { nome, email, senha, crm, especialidade, id_clinica } = req.body;
+    if(senha.length < 6){
+        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
+    }
+      const senhaHash = await bcrypt.hash(senha, 10)
+            console.log(senhaHash)
     
     const medicoData = {
         nome: nome,
@@ -50,10 +55,16 @@ const atualizarMedicosController = async (req, res) => {
     try {
         const medicoId = req.params.id
         const { nome, email, senha, crm, especialidade, id_clinica } = req.body;
+            if(senha.length < 6){
+        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
+    }
+          const senhaHash = await bcrypt.hash(senha, 10)
+                console.log(senhaHash) 
+
         const medicoData = {
             nome: nome,
             email: email,
-            senha: senha, 
+            senha: senhaHash, 
             crm: crm,
             especialidade: especialidade,
             id_clinica: id_clinica
@@ -70,6 +81,7 @@ const deletarMedicoController = async (req,res) => {
     try{
         const medicoId = req.params.id;
         await deletarMedico(medicoId);
+        res.status(200).json({mensagem: "Médico deletado"})
     } catch (err) {
         console.error("Erro ao deletar dados do medico:", err)
         res.status(500).json({mensagem: "Erro ao deletar"})

@@ -33,9 +33,9 @@ CREATE TABLE Pacientes (
 
 CREATE TABLE Agendamentos (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  id_clinica INT,
-  id_medico INT,
-  id_paciente INT,
+  id_clinica INT not null,
+  id_medico INT not null,
+  id_paciente INT not null,
   data DATE NOT NULL,
   hora TIME NOT NULL,
   status ENUM('marcado', 'remarcando','cancelado', 'realizado') DEFAULT 'marcado',
@@ -63,40 +63,16 @@ INSERT INTO Clinicas (nome, endereco, telefone) VALUES
 ('Unidade Médica Comunitária', 'Av. G, 1000', '9101234567');
 
 INSERT INTO Medicos (nome, email, senha, crm, especialidade, id_clinica) VALUES
-('Ana Souza', 'ana.souza@med.com', 'senha123', '123456-SP', 'Clínico Geral', 1),
-('Pedro Lima', 'pedro.lima@med.com', 'senha123', '654321-SP', 'Cardiologia', 2),
-('Carla Mendes', 'carla.mendes@med.com', 'senha123', '112233-RJ', 'Dermatologia', 3),
-('Bruno Silva', 'bruno.silva@med.com', 'senha123', '223344-MG', 'Pediatria', 4),
-('Fernanda Rocha', 'fernanda.rocha@med.com', 'senha123', '334455-PR', 'Ortopedia', 5),
-('Marcos Pinto', 'marcos.pinto@med.com', 'senha123', '445566-RS', 'Ginecologia', 6),
-('Paula Dias', 'paula.dias@med.com', 'senha123', '556677-DF', 'Neurologia', 7),
-('Rafael Costa', 'rafael.costa@med.com', 'senha123', '667788-BA', 'Psiquiatria', 8),
-('Juliana Alves', 'juliana.alves@med.com', 'senha123', '778899-PE', 'Endocrinologia', 9),
-('Tiago Martins', 'tiago.martins@med.com', 'senha123', '889900-PA', 'Urologia', 10);
-
-INSERT INTO Pacientes (nome, email, senha, telefone, endereco, idade) VALUES
-('João Carlos', 'joao.carlos@pac.com', 'senha123', '11912345678', 'Rua A, 123', 35),
-('Mariana Oliveira', 'mariana.oliveira@pac.com', 'senha123', '11923456789', 'Rua B, 456', 40),
-('Carlos Eduardo', 'carlos.eduardo@pac.com', 'senha123', '21934567890', 'Rua C, 789', 33),
-('Ana Paula', 'ana.paula@pac.com', 'senha123', '31945678901', 'Rua D, 321', 37),
-('Lucas Ferreira', 'lucas.ferreira@pac.com', 'senha123', '41956789012', 'Rua E, 654', 25),
-('Camila Santos', 'camila.santos@pac.com', 'senha123', '51967890123', 'Rua F, 987', 30),
-('Roberta Lima', 'roberta.lima@pac.com', 'senha123', '61978901234', 'Rua G, 741', 45),
-('Felipe Alves', 'felipe.alves@pac.com', 'senha123', '71989012345', 'Rua H, 852', 26),
-('Tatiane Souza', 'tatiane.souza@pac.com', 'senha123', '81990123456', 'Rua I, 963', 43),
-('Rafael Mendes', 'rafael.mendes@pac.com', 'senha123', '91901234567', 'Rua J, 159', 34);
-
-INSERT INTO Agendamentos (id_medico, id_paciente, data, hora, status) VALUES
-(1, 1, '2025-06-01', '09:00:00', 'marcado'),
-(2, 2, '2025-06-01', '10:00:00', 'marcado'),
-(3, 3, '2025-06-01', '11:00:00', 'marcado'),
-(4, 4, '2025-06-01', '14:00:00', 'marcado'),
-(5, 5, '2025-06-01', '15:00:00', 'marcado'),
-(6, 6, '2025-06-02', '09:30:00', 'marcado'),
-(7, 7, '2025-06-02', '10:30:00', 'marcado'),
-(8, 8, '2025-06-02', '13:00:00', 'marcado'),
-(9, 9, '2025-06-03', '14:30:00', 'marcado'),
-(10, 10, '2025-06-03', '15:30:00', 'marcado');
+('Ana Souza', 'ana.souza@med.com', '$2b$10$kT5gC202dSWyGWFXGZ5fKOktbadv5SknlWYc.L8iyyspGlpb.Vv/u', '123456-SP', 'Clínico Geral', 1),
+('Pedro Lima', 'pedro.lima@med.com', '$2b$10$TFXBNFh/fWU1ChZCJMORcu501j19/f0nlIrb/El8RXnQbWj/mB8Ka', '654321-SP', 'Cardiologia', 2),
+('Carla Mendes', 'carla.mendes@med.com', '$2b$10$jFyuf3I7uMjrrOcMTGt6W.MnwIuIQ6L9Yzoz1qDeQw8KAFctDiGt2', '112233-RJ', 'Dermatologia', 3),
+('Bruno Silva', 'bruno.silva@med.com', '$2b$10$Pq2dSa8NN8no8gz0tF.Rju5IjN27ppWqlQHQOUtKKWv.iGxuvKrzG', '223344-MG', 'Pediatria', 4),
+('Fernanda Rocha', 'fernanda.rocha@med.com', '$2b$10$Oe7oOJl3M6rWtX7pry16K.n.4wdYCztQypY0RORmSGd51gr06Z8Qu', '334455-PR', 'Ortopedia', 5),
+('Marcos Pinto', 'marcos.pinto@med.com', '$2b$10$r8uW8VbZHJH.lRdOMZDcTuSbuvWlbSchekdIvIuoGS8AYr64VxWZy', '445566-RS', 'Ginecologia', 6),
+('Paula Dias', 'paula.dias@med.com', '$2b$10$Ce5yVCIRP9fK48X.wY9/2eLE5iSDY04Yh5rh/OX6g4zk3V1IrJl4S', '556677-DF', 'Neurologia', 7),
+('Rafael Costa', 'rafael.costa@med.com', '$2b$10$r.WIHQUPR32QDof0DDNdgOn.wmJPAfd5HRuIqEZRKn.jkUv/tFzPi', '667788-BA', 'Psiquiatria', 8),
+('Juliana Alves', 'juliana.alves@med.com', '$2b$10$MyoSk447UaIblwdj43Z9rOQu4HJnBSV.CyfKyIMVMprPb3kgxXw5K', '778899-PE', 'Endocrinologia', 9),
+('Tiago Martins', 'tiago.martins@med.com', '$2b$10$u.G6tuobulcJAxqvzikX5.8FckQhxD0rAPhLL6EAkBUZJR7zEGrRu', '889900-PA', 'Urologia', 10);
 
 INSERT INTO Horarios (hora, status) VALUES 
 ('08:00', 'aberto'), ('08:30', 'aberto'), ('09:00', 'aberto'), ('09:30', 'aberto'),
@@ -106,7 +82,5 @@ INSERT INTO Horarios (hora, status) VALUES
 ('16:00', 'aberto'), ('16:30', 'aberto'), ('17:00', 'aberto'), ('17:30', 'aberto'),
 ('18:00', 'aberto');
 
-drop database medgodb;
 
-SELECT * FROM Agendamentos WHERE data = '2025-03-12' AND hora = '11:00:00';
 

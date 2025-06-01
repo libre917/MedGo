@@ -17,20 +17,26 @@ export default function Cadastro() {
     try {
    
 
-      const response = await axios.get("http://localhost:3000/Pacientes");
+      const response = await axios.get("http://localhost:3000/pacientes");
       const paciente = response.data;
 
       const user = paciente.find(
         (paciente) => paciente.email === email
       );
+      if (senha.length < 6){
+        alert("A senha deve ter mais de 6 caracteres")
+        return
+      }
       if(Idade < 18){
-        alert('Idade não permitida')
+        alert('Idade não permitida') 
+        return
       } else {
 
       if (user) {
         alert('Email já cadastrado')
+        return
       } else {
-        await axios.post("http://localhost:3000/Pacientes", {
+        await axios.post("http://localhost:3000/pacientes", {
           nome: nome,
           email: email,
           senha: senha,
@@ -39,13 +45,10 @@ export default function Cadastro() {
           idade: Idade,
         });
         }
-      const newResponse = await axios.get("http://localhost:3000/Pacientes");
-      const newPaciente = newResponse.data;
+          const response = await axios.post("http://localhost:3000/auth/login", {email: email, senha: senha});
+      const paciente = response.data;
 
-      const newUser = newPaciente.find(
-        (p) => p.email === email
-      );
-      localStorage.setItem("usuario", JSON.stringify(newUser));
+      localStorage.setItem("usuario", JSON.stringify(paciente));
       window.location.href = "/home";}
     } catch (err) {
       console.error("Erro ao comparar dados", err);

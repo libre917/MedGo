@@ -78,6 +78,7 @@ const deletarAgendamentoController = async (req, res) => {
     try {
         const agendaId = req.params.id;
         await deletarAgendamento(agendaId)
+        res.status(200).json({mensagem: "Agendamento deletado"})
     } catch(err) {
         console.error("Erro ao cancelar agendamento:", err);
         res.status(500).json({mensagem: "Erro ao cancelar agendamento"})

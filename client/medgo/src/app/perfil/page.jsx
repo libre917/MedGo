@@ -8,27 +8,21 @@ export default function Perfil() {
   const deletarConta = async (idUser) => {
     if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
     try {
-      axios.delete(`${API_URL}/Pacientes/${idUser}`)
+      axios.delete(`${API_URL}/pacientes/${idUser}`)
       window.location = "/"
     } catch (err) {
       console.error("Erro", err)
     }
   }
+  const userData = localStorage.getItem("usuario");
+  const usuarioLogado = JSON.parse(userData);
   const atualizarSenha = async (idUser) => {
     try{
-     const response = await axios.get(`${API_URL}/Pacientes/${idUser}`)
+     const response = await axios.get(`${API_URL}/pacientes/${idUser}`)
      const data = response.data
-     const senhaAntiga = response.data.senha
-     if(senhaAntiga !== senha){
-      alert("Senha antiga incorreta")
-      return
-     }
+     await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
 
-     if(senha == newSenha){
-      alert('A senha não pode ser igual a anterior') 
-      return;
-     }
-     await axios.put(`${API_URL}/Pacientes/${idUser}`, {
+     await axios.put(`${API_URL}/pacientes/${idUser}`, {
       ...data,
       senha: newSenha
      }
@@ -58,19 +52,19 @@ export default function Perfil() {
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
-        const userData = localStorage.getItem("usuario");
+      
         if (!userData) return;
 
-        const usuarioLogado = JSON.parse(userData);
+       
 
         // Verifica se é médico (tem CRM) ou paciente
         if (usuarioLogado.crm) {
           setTipoUsuario('medico');
-          const { data } = await axios.get(`${API_URL}/Medicos/${usuarioLogado.id}`);
+          const { data } = await axios.get(`${API_URL}/medicos/${usuarioLogado.id}`);
           setUsuario(data);
         } else {
           setTipoUsuario('paciente');
-          const { data } = await axios.get(`${API_URL}/Pacientes/${usuarioLogado.id}`);
+          const { data } = await axios.get(`${API_URL}/pacientes/${usuarioLogado.id}`);
 
           // Se já tiver idade no objeto, usa ela diretamente
           if (data.idade) {

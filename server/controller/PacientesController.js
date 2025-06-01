@@ -1,4 +1,5 @@
 import { listarPacientes, listarPacientesPorId, adicionarPaciente, atualizarPaciente, deletarPaciente } from '../models/Pacientes.js'
+import bcrypt from 'bcrypt';
 
 const listarPacientesController = async (req, res) => {
     try {
@@ -27,11 +28,17 @@ const listarPacientesPorIdController = async (req, res) => {
 const adicionarPacientesController = async (req, res) => {
     try {
         const { nome, email, senha, endereco, telefone, idade } = req.body;
+            if(senha.length < 6){
+        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
+    }
+
+        const senhaHash = await bcrypt.hash(senha, 10)
+        console.log(senhaHash)
 
         const pacienteData = {
             nome: nome,
             email: email,
-            senha: senha,
+            senha: senhaHash,
             endereco: endereco,
             telefone: telefone,
             idade: idade
@@ -48,11 +55,16 @@ const atualizarPacienteController = async (req, res) => {
     try {
         const pacienteId = req.params.id
         const { nome, email, senha, endereco, telefone, idade } = req.body;
+            if(senha.length < 6){
+        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
+    }
+          const senhaHash = await bcrypt.hash(senha, 10)
+        console.log(senhaHash)
 
         const pacienteData = {
             nome: nome,
             email: email,
-            senha: senha,
+            senha: senhaHash,
             endereco: endereco,
             telefone: telefone,
             idade: idade
@@ -69,6 +81,7 @@ const deletarPacienteController = async (req,res) => {
     try {
         const pacienteId = req.params.id;
         await deletarPaciente(pacienteId)
+        res.status(200).json({mensagem: "Paciente deletado"})
     } catch (err) {
         console.error('Erro ao deletar paciente: ', err)
         res.status(500).json({mensagem: "Erro ao deletar"})

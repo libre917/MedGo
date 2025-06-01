@@ -12,7 +12,7 @@ const formatDateForMySQL = (dateString) => {
 
 async function listarHorarios() {
   try {
-    const response = await axios.get(`${API_URL}/Horarios`);
+    const response = await axios.get(`${API_URL}/horarios`);
     return response.data;
   } catch (err) {
     console.error('Erro ao exibir horarios');
@@ -68,9 +68,9 @@ export default function AgendamentosUsuario() {
         setTipoUsuario(userType);
 
         const [agendamentosRes, medicosRes, pacientesRes] = await Promise.all([
-          axios.get(`${API_URL}/Agendamentos`),
-          axios.get(`${API_URL}/Medicos`),
-          axios.get(`${API_URL}/Pacientes`)
+          axios.get(`${API_URL}/agendamentos`),
+          axios.get(`${API_URL}/medicos`),
+          axios.get(`${API_URL}/pacientes`)
         ]);
 
         setMedicos(medicosRes.data);
@@ -121,7 +121,7 @@ export default function AgendamentosUsuario() {
     if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
       
     try {
-      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
+      const response = await axios.get(`${API_URL}/agendamentos/${idAgendamento}`);
       const agendamentoDados = response.data;
 
       // Format the date properly before sending to the backend
@@ -131,7 +131,7 @@ export default function AgendamentosUsuario() {
         data: formatDateForMySQL(agendamentoDados.data)
       };
 
-      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, formattedData);
+      await axios.put(`${API_URL}/agendamentos/${idAgendamento}`, formattedData);
 
       // Update local state
       setAgendamentos(agendamentos.map(ag =>
@@ -184,8 +184,8 @@ export default function AgendamentosUsuario() {
       const ano = dataAtual.getFullYear();
       const mysqlDate = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
 
-      const response = await axios.get(`${API_URL}/Agendamentos/${idAgendamento}`);
-      const newResponse = await axios.get(`${API_URL}/Agendamentos`);
+      const response = await axios.get(`${API_URL}/agendamentos/${idAgendamento}`);
+      const newResponse = await axios.get(`${API_URL}/agendamentos`);
       const agendamentoDados = response.data;
       const allAppointments = newResponse.data;
 
@@ -211,7 +211,7 @@ export default function AgendamentosUsuario() {
         status: "remarcando"
       };
 
-      await axios.put(`${API_URL}/Agendamentos/${idAgendamento}`, formattedData);
+      await axios.put(`${API_URL}/agendamentos/${idAgendamento}`, formattedData);
 
       setAgendamentos(agendamentos.map(ag => 
         ag.id === idAgendamento 
@@ -242,7 +242,7 @@ export default function AgendamentosUsuario() {
     if (!confirm('Tem certeza que deseja deletar este agendamento?')) return;
     
     try {
-       axios.delete(`${API_URL}/Agendamentos/${idAgendamento}`);
+       axios.delete(`${API_URL}/agendamentos/${idAgendamento}`);
       setAgendamentos(agendamentos.filter(ag => ag.id !== idAgendamento));
       alert('Agendamento deletado com sucesso!');
     } catch (err) {

@@ -6,6 +6,9 @@ import Link from "next/link";
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+
+
 
 
 export default function Login() {
@@ -15,22 +18,19 @@ export default function Login() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mensagemErro, setMensagemErro] = useState("");
 
+      const router = useRouter()
+
   const compararDados = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/Pacientes");
+      const response = await axios.post("http://localhost:3000/auth/login", {email: email, senha: senha});
       const paciente = response.data;
 
-      const user = paciente.find(
-        (paciente) => paciente.email === email && paciente.senha === senha
-      );
+  
 
-      if (user) {
-        localStorage.setItem("usuario", JSON.stringify(user));
-        window.location.href = "/home";
-      } else {
-        setMensagemErro("Email ou senha incorreto(s)");
-        setMostrarModal(true);
-      }
+  
+        localStorage.setItem("usuario", JSON.stringify(paciente));
+        router.push('/home')
+    
     } catch (err) {
       console.error("Erro ao comparar dados", err);
       setMensagemErro("Erro ao conectar-se ao servidor.");
@@ -126,6 +126,7 @@ export default function Login() {
           </p>
 
           <div className="grid">
+          <label htmlFor="email" className='sr-only'>Email</label>
             <input
               placeholder="Email:"
               type="email"
@@ -137,6 +138,7 @@ export default function Login() {
           </div>
 
           <div className="grid">
+            <label htmlFor="senha" className='sr-only'>Senha</label>
             <input
               placeholder="Senha:"
               type="password"

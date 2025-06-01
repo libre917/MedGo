@@ -2,7 +2,7 @@ import express from 'express';
 import { listarPacientesController, listarPacientesPorIdController, adicionarPacientesController, atualizarPacienteController,deletarPacienteController } from '../controller/PacientesController.js'
 
 const router = express.Router();
-const port = 3000
+
 
 router.get('/', listarPacientesController);
 router.get('/:id', listarPacientesPorIdController)

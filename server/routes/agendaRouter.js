@@ -2,7 +2,7 @@ import { adicionarAgendamentoController, listarAgendaController, listarAgendaPor
 import express from 'express'
 
 const router = express.Router();
-const port = 3000;
+
 
 router.get('/', listarAgendaController);
 router.get('/:id', listarAgendaPorIdController);

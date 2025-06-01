@@ -2,7 +2,6 @@ import { listarClinicasController, listarClinicasPorIdController } from '../cont
 import express from 'express'
 
 const router = express.Router();
-const port = 3000;
 
 router.get('/', listarClinicasController);
 router.get('/:id', listarClinicasPorIdController);

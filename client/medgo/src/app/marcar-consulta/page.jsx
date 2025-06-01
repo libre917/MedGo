@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 async function listarClinicas() {
   try {
-    const response = await axios.get(`${API_URL}/Clinicas`);
+    const response = await axios.get(`${API_URL}/clinicas`);
     return response.data;
   } catch (err) {
     console.error("Erro ao exibir clinicas");
@@ -17,7 +17,7 @@ async function listarClinicas() {
 
 async function listarMedicos() {
   try {
-    const response = await axios.get(`${API_URL}/Medicos`)
+    const response = await axios.get(`${API_URL}/medicos`)
     return response.data
   } catch (err) {
     console.error("Erro ao exibir medicos");
@@ -27,7 +27,7 @@ async function listarMedicos() {
 
 async function listarHorarios() {
   try {
-    const response = await axios.get(`${API_URL}/Horarios`)
+    const response = await axios.get(`${API_URL}/horarios`)
     return response.data
   } catch ( err) {
     console.error('Erro ao exibir horarios');
@@ -126,7 +126,7 @@ export default function MarcarConsulta() {
         status: status
       };
 
-      const responseCompare = await axios.get(`${API_URL}/Agendamentos`)
+      const responseCompare = await axios.get(`${API_URL}/agendamentos`)
       const compare = responseCompare.data
       const conflito = compare.some(agenda =>
         agenda.id_medico === medicoSelecionado.id &&
@@ -134,7 +134,7 @@ export default function MarcarConsulta() {
         agenda.hora === horarioSelecionado
       );
       if(!conflito){
-      await axios.post(`${API_URL}/Agendamentos`, consulta);
+      await axios.post(`${API_URL}/agendamentos`, consulta);
 
       alert("Agendamento realizado com sucesso!");
       window.location.href = "/agenda";} else {
@@ -186,7 +186,9 @@ export default function MarcarConsulta() {
               {clinicas.map((clinica) => (
                 <div
                   key={clinica.id}
-                  onClick={() => setClinicaSelecionada(clinica)}
+                  onClick={() => {setClinicaSelecionada(clinica)
+                    setPasso(2)
+                  }}
                   className={`p-3 border rounded-md cursor-pointer transition-all ${clinicaSelecionada?.id === clinica.id
                       ? "border-indigo-500 bg-indigo-50"
                       : "border-gray-200 hover:border-indigo-300"
@@ -212,7 +214,9 @@ export default function MarcarConsulta() {
               {medicosDaClinica.map((medico) => (
                 <div
                   key={medico.id}
-                  onClick={() => setMedicoSelecionado(medico)}
+                  onClick={() => {setMedicoSelecionado(medico)
+                    setPasso(3)
+                  } }
                   className={`p-3 border rounded-md cursor-pointer transition-all ${medicoSelecionado?.id === medico.id
                       ? "border-indigo-500 bg-indigo-50"
                       : "border-gray-200 hover:border-indigo-300"
@@ -241,6 +245,7 @@ export default function MarcarConsulta() {
                 type="text"
                 placeholder="dd/mm"
                 onChange={(e) => setDataSelecionada(e.target.value )}
+                maxLength="5"
                 pattern="\d{2}/\d{2}"
                 required
                 className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"

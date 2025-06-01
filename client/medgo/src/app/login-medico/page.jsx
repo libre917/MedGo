@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginMedico() {
   localStorage.clear();
@@ -11,21 +12,21 @@ export default function LoginMedico() {
   const [crm, setCrm] = useState("");
   const [senha, setSenha] = useState("");
 
+      const router = useRouter()
+
   const compararDados = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/Medicos");
+      const response = await axios.post("http://localhost:3000/auth/medLogin",{
+        email: email,
+        senha: senha,
+        crm: crm
+      });
       const medicos = response.data;
 
-      const user = medicos.find(
-        (medico) => medico.email === email && medico.senha === senha && medico.crm === crm
-      );
-
-      if (user) {
-        localStorage.setItem("usuario", JSON.stringify(user));
-        window.location.href = "/home-medico";
-      } else {
-        alert("Dados incorretos ou faltantes");
-      }
+      
+        localStorage.setItem("usuario", JSON.stringify(medicos));
+     router.push('/home-medico')
+   
     } catch (err) {
       console.error("Erro ao comparar dados", err);
       alert("Erro ao conectar-se ao servidor.");

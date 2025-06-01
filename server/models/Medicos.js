@@ -15,6 +15,7 @@ const listarMedicosPorId = async (id)=> {
         return await read( 'Medicos', `id = ${id}`)
     } catch (err) {
         console.error('Erro ao obter o medico de id:',id, err)
+        throw err
     }
 }
 

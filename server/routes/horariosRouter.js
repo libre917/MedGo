@@ -2,7 +2,6 @@ import express from "express";
 import { listarHorariosController, listarHorariosPorIdController } from "../controller/HorariosController.js";
 
 const router = express.Router();
-const port = 3000
 
 router.get('/', listarHorariosController);
 router.get('/:id', listarHorariosPorIdController)

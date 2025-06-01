@@ -19,7 +19,7 @@ export default function CadastroMedico() {
   useEffect(() => {
     async function fetchClinicas() {
       try {
-        const response = await axios.get(`${API_URL}/Clinicas`);
+        const response = await axios.get(`${API_URL}/clinicas`);
         setClinicas(response.data);
       } catch (err) {
         console.error("Erro ao carregar clínicas", err);
@@ -46,7 +46,7 @@ export default function CadastroMedico() {
       }
 
       // Verifica se o email ou CRM já estão cadastrados
-      const response = await axios.get(`${API_URL}/Medicos`);
+      const response = await axios.get(`${API_URL}/medicos`);
       const medicos = response.data;
 
       const medicoExistente = medicos.find(
@@ -66,10 +66,10 @@ export default function CadastroMedico() {
           id_clinica: clinicaSelecionada.id
         };
 
-        await axios.post(`${API_URL}/Medicos`, novoMedico);
+        await axios.post(`${API_URL}/medicos`, novoMedico);
         
         // Busca o médico recém-criado para obter o ID
-        const newResponse = await axios.get(`${API_URL}/Medicos`);
+        const newResponse = await axios.get(`${API_URL}/medicos`);
         const newMedico = newResponse.data.find(
           (m) => m.email === email && m.crm === crm
         );
