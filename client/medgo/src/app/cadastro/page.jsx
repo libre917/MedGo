@@ -5,51 +5,68 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function Cadastro() {
+  console.log(new Date())
   localStorage.clear();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [Idade, setIdade] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
+  const dataAtual = new Date()
 
   const adiocionarDados = async () => {
     try {
-   
+
 
       const response = await axios.get("http://localhost:3000/pacientes");
       const paciente = response.data;
 
+      const [dia, mes, ano] = dataNascimento.split("/")
+      const anoAtual = dataAtual.getFullYear()
       const user = paciente.find(
         (paciente) => paciente.email === email
       );
-      if (senha.length < 6){
+      const idade = anoAtual - ano
+      if (dia > 30) {
+        alert("Dia inválido")
+        return
+      }
+      if (mes > 12) {
+        alert("Mês inválido")
+        return
+      }
+      if (ano > anoAtual || idade > 120) {
+        alert('Ano inválido')
+        return
+      }
+      if (senha.length < 6) {
         alert("A senha deve ter mais de 6 caracteres")
         return
       }
-      if(Idade < 18){
-        alert('Idade não permitida') 
+      if (idade < 18) {
+        alert("Maioridade necessária")
         return
       } else {
-
-      if (user) {
-        alert('Email já cadastrado')
-        return
-      } else {
-        await axios.post("http://localhost:3000/pacientes", {
-          nome: nome,
-          email: email,
-          senha: senha,
-          endereco: endereco,
-          telefone: telefone,
-          idade: Idade,
-        });
+        if (user) {
+          alert('Email já cadastrado')
+          return
+        } else {
+          await axios.post("http://localhost:3000/pacientes", {
+            nome: nome,
+            email: email,
+            senha: senha,
+            endereco: endereco,
+            telefone: telefone,
+            dataNascimento: dataNascimento
+          });
         }
-          const response = await axios.post("http://localhost:3000/auth/login", {email: email, senha: senha});
-      const paciente = response.data;
+        const response = await axios.post("http://localhost:3000/auth/login", { email: email, senha: senha });
+        const paciente = response.data;
 
-      localStorage.setItem("usuario", JSON.stringify(paciente));
-      window.location.href = "/home";}
+        localStorage.setItem("usuario", JSON.stringify(paciente));
+        window.location.href = "/home";
+      }
     } catch (err) {
       console.error("Erro ao comparar dados", err);
       alert("Erro ao conectar-se ao servidor.");
@@ -116,12 +133,12 @@ export default function Cadastro() {
             required
             className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
-
           <input
-            placeholder="Idade:"
+            placeholder="dataNascimento:"
             type="text"
-            name="idade"
-            onChange={(e) => setIdade(e.target.value)}
+            name="dataNascimento"
+            pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
+            onChange={(e) => setDataNascimento(e.target.value)}
             required
             className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
@@ -146,18 +163,18 @@ export default function Cadastro() {
 
           <div className="text-black ">
             <input type="checkbox" required /> Li e entendi os termos da{" "}
-            <Link className="text-blue-500" href="/politicadeprivacidade">
-              Politica de Privacidade
+            <Link className="text-blue-500" href="/politicadeprivacdataNascimento">
+              Politica de PrivacdataNascimento
             </Link>{" "}
             de Medgo.
             <div className="text-black">
-            <button
-              className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition mt-5"
-              type="submit"
-            >
-              Cadastre-se
-            </button>
-          </div>
+              <button
+                className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition mt-5"
+                type="submit"
+              >
+                Cadastre-se
+              </button>
+            </div>
           </div>
         </form>
       </section>

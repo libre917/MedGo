@@ -5,8 +5,9 @@ import axios from "axios";
 const API_URL = "http://localhost:3000"
 
 export default function Perfil() {
+
   const deletarConta = async (idUser) => {
-    if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
+    if (!confirm('Tem certeza que deseja deletar esta conta?')) return;
     try {
       axios.delete(`${API_URL}/pacientes/${idUser}`)
       window.location = "/"
@@ -16,6 +17,11 @@ export default function Perfil() {
   }
   const userData = localStorage.getItem("usuario");
   const usuarioLogado = JSON.parse(userData);
+  const data = new Date()
+  const anoAtual = data.getFullYear()
+  const dataNasc = usuarioLogado.dataNascimento.split(" ") 
+  const idade = anoAtual - dataNasc[3]
+  
   const atualizarSenha = async (idUser) => {
     try{
      const response = await axios.get(`${API_URL}/pacientes/${idUser}`)
@@ -151,7 +157,7 @@ export default function Perfil() {
                       <div className="pb-4 border-b border-gray-100">
                         <p className="text-sm text-gray-500">Idade</p>
                         <p className="mt-1 text-lg font-light text-gray-800">
-                          {usuario.idade ? `${usuario.idade} anos` : 'Não informada'}
+                          {idade} anos
                         </p>
                       </div>
                       <div className="pb-4 border-b border-gray-100">
