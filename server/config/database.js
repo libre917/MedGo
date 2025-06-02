@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "",
   database: "MedGoDB",
   waitForConnections: true,
   connectionLimit: 10,
@@ -113,14 +113,5 @@ async function compare(senha, hash){
     return false
   }
 }
-// ok, vou aderir o hash da senha, minha organização de pastas e arquivos no backend é assim, a pasta server tem um arquivo chamado app.js e as pastas: config, controller, models, routes. dentro de config tem o arquivo database.js; dentro de controller há : AgendaController.js, ClinicasController.js, HorariosController.js, MedicosController.js, PacientesController; dentro de models há:Agenda.js, Clinicas.js, Horarios.js, Medicos.js, Pacientes.js; dentro de routes há: agendaRouter.js, clinicasRouter.js, horariosRouter.js, medicosRouter.js, pacientesRouter.js. Onde eu posso encaixar o hash de senha e quem vai importar isso do database.js: async function compare(senha, hash){
-//   try {
-//     return await bcrypt.compare(senha, hash);
-//   } catch(err){
-//     console.error('Erro ao comparar a senha com o hash: ', err)
-//     return false
-//   }
-// }
-
 // exportando para o models
 export { readAll, read, create, update, deleteRecord, compare }

@@ -17,23 +17,20 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mensagemErro, setMensagemErro] = useState("");
-
-      const router = useRouter()
+  const router = useRouter()
 
   const compararDados = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {email: email, senha: senha});
+   
+      const response = await axios.post("http://localhost:3000/auth/login", { email: email, senha: senha });
       const paciente = response.data;
 
-  
+      localStorage.setItem("usuario", JSON.stringify(paciente));
+      router.push('/home')
 
-  
-        localStorage.setItem("usuario", JSON.stringify(paciente));
-        router.push('/home')
-    
     } catch (err) {
       console.error("Erro ao comparar dados", err);
-      setMensagemErro("Erro ao conectar-se ao servidor.");
+      setMensagemErro("Erro ao conectar-se ao servidor.",err);
       setMostrarModal(true);
     }
   };
@@ -49,7 +46,7 @@ export default function Login() {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
           {/* Container do modal com efeito de elevação e borda sutil */}
           <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 relative border border-red-100">
-            
+
             {/* Ícone de fechar (canto superior direito) */}
             <button
               onClick={fecharModal}
@@ -57,24 +54,24 @@ export default function Login() {
             >
               <FontAwesomeIcon icon={faXmark} className="text-xl" />
             </button>
-            
+
             {/* Cabeçalho com ícone de alerta */}
             <div className="flex flex-col items-center mb-6">
               <div className="bg-red-100/80 p-3 rounded-full mb-4">
-                <FontAwesomeIcon 
-                  icon={faTriangleExclamation} 
-                  className="text-3xl text-red-600" 
+                <FontAwesomeIcon
+                  icon={faTriangleExclamation}
+                  className="text-3xl text-red-600"
                 />
               </div>
               <h3 className="text-2xl font-bold text-gray-800">Ops, algo deu errado!</h3>
             </div>
-            
+
             {/* Mensagem de erro */}
             <div className="text-center mb-8">
               <p className="text-gray-600 text-lg">{mensagemErro}</p>
               <div className="mt-4 h-1 w-20 bg-red-100 mx-auto rounded-full"></div>
             </div>
-            
+
             {/* Botão de ação */}
             <div className="flex justify-center">
               <button
@@ -88,7 +85,7 @@ export default function Login() {
         </div>
       )}
 
-      
+
       <section className="flex flex-col md:flex-row justify-center items-center h-screen overflow-hidden text-center">
         <div className="hidden md:flex">
           <img
@@ -122,11 +119,11 @@ export default function Login() {
           </p>
 
           <p className='text-black text-sm'>
-            É médico? <Link href="/login-medico" className='text-blue-600 '>Login</Link> 
+            É médico? <Link href="/login-medico" className='text-blue-600 '>Login</Link>
           </p>
 
           <div className="grid">
-          <label htmlFor="email" className='sr-only'>Email</label>
+            <label htmlFor="email" className='sr-only'>Email</label>
             <input
               placeholder="Email:"
               type="email"

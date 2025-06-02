@@ -9,6 +9,7 @@ const loginUserController = async (req, res) => {
             return res.status(404).json({ mensagem: "Usuário não encontrado" })
         }
         const senhaCorreta = await compare(senha, paciente.senha)
+        console.log(senhaCorreta)
 
         if (!senhaCorreta) {
             return res.status(401).json({ mensagem: "Senha incorreta" })
@@ -19,7 +20,7 @@ const loginUserController = async (req, res) => {
             email: `${paciente.email}`,
             endereco: `${paciente.endereco}`,
             telefone: `${paciente.telefone}`,
-            idade: `${paciente.idade}`
+            dataNascimento: `${paciente.dataNascimento}`
         })
     } catch (err) {
         console.error('Erro ao realizar login:', err)
@@ -44,6 +45,7 @@ const loginMedController = async (req, res) => {
         id: medico.id,
         nome: `${medico.nome}`,
         email: `${medico.email}`,
+        crm: `${medico.crm}`,   
         especialidade: `${medico.especialidade}`,
         id_clinica: medico.id_clinica
        })

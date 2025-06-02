@@ -27,10 +27,23 @@ const listarPacientesPorIdController = async (req, res) => {
 
 const adicionarPacientesController = async (req, res) => {
     try {
-        const { nome, email, senha, endereco, telefone, idade } = req.body;
-            if(senha.length < 6){
-        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
-    }
+        const { nome, email, senha, endereco, telefone, dataNascimento } = req.body;
+        if (senha.length < 6) {
+            return res.status(400).json({ mensagem: "A senha deve ter mais de 6 caracteres" })
+        }
+        const [dia, mes, ano] = dataNascimento.split("/")
+        const dataAtual = new Date()
+        const anoAtual = dataAtual.getFullYear()
+        const idade = anoAtual - ano
+        if(dia > 30){
+            return res.status(400).json({mensagem: "Dia inválido"})
+        }
+        if (idade < 18) {
+            return res.status(400).json({ mensagem: "Maioridade necessária" })
+        }
+        if(idade > 120){
+            return res.status(400).json({mensagem: "Idade inválida"})
+        }
 
         const senhaHash = await bcrypt.hash(senha, 10)
         console.log(senhaHash)
@@ -41,8 +54,8 @@ const adicionarPacientesController = async (req, res) => {
             senha: senhaHash,
             endereco: endereco,
             telefone: telefone,
-            idade: idade
-        } // analisar depois para (se quiser) adicionar foto de usuario
+            dataNascimento: `${ano}-${mes}-${dia}`
+        }
         const PacienteInfo = await adicionarPaciente(pacienteData);
         res.status(201).json({ mensagem: 'Paciente adicionado com sucesso', PacienteInfo })
     } catch (err) {
@@ -53,12 +66,14 @@ const adicionarPacientesController = async (req, res) => {
 
 const atualizarPacienteController = async (req, res) => {
     try {
-        const pacienteId = req.params.id
-        const { nome, email, senha, endereco, telefone, idade } = req.body;
-            if(senha.length < 6){
-        return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
-    }
-          const senhaHash = await bcrypt.hash(senha, 10)
+        const pacienteId = req.params.id;
+        const { nome, email, senha, endereco, telefone, dataNascimento } = req.body;
+        if (senha.length < 6) {
+            return res.status(400).json({ mensagem: "A senha deve ter mais de 6 caracteres" })
+        }
+        const [dia, mes, ano] = dataNascimento.split("/")
+
+        const senhaHash = await bcrypt.hash(senha, 10)
         console.log(senhaHash)
 
         const pacienteData = {
@@ -67,8 +82,8 @@ const atualizarPacienteController = async (req, res) => {
             senha: senhaHash,
             endereco: endereco,
             telefone: telefone,
-            idade: idade
-        } // analisar depois para (se quiser) adicionar foto de usuario
+            dataNascimento: `${ano}-${mes}-${dia}`
+        }
         await atualizarPaciente(pacienteId, pacienteData);
         res.status(201).json({ mensagem: 'Informações atualizadas com sucesso' })
     } catch (err) {
@@ -77,14 +92,14 @@ const atualizarPacienteController = async (req, res) => {
     }
 }
 
-const deletarPacienteController = async (req,res) => {
+const deletarPacienteController = async (req, res) => {
     try {
         const pacienteId = req.params.id;
         await deletarPaciente(pacienteId)
-        res.status(200).json({mensagem: "Paciente deletado"})
+        res.status(200).json({ mensagem: "Paciente deletado" })
     } catch (err) {
         console.error('Erro ao deletar paciente: ', err)
-        res.status(500).json({mensagem: "Erro ao deletar"})
+        res.status(500).json({ mensagem: "Erro ao deletar" })
     }
 }
 // exportando para o routes

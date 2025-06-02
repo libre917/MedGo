@@ -28,7 +28,7 @@ CREATE TABLE Pacientes (
   senha varchar(255) not null,
   endereco varchar(100),
   telefone VARCHAR(20) not null,
- idade INT
+ dataNascimento DATE NOT NULL
 );
 
 CREATE TABLE Agendamentos (
@@ -42,6 +42,11 @@ CREATE TABLE Agendamentos (
   FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
   FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade,
   foreign key (id_clinica) references Clinicas(id) on delete cascade
+);
+
+create table PacientesAntigos (
+  FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
+  FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade
 );
 
 create table Horarios (
