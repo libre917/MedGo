@@ -13,23 +13,23 @@ export default function Home() {
   const cardInfos = [
     {
       id: "1",
-      titulo: "Profissionais de Excelência",
+      titulo: "Agende com facilidade",
       descricao:
-        "Nossa equipe é formada por especialistas dedicados a oferecer um atendimento humano, ético e de alta qualidade.",
-      path: "/home/card-img/equipe-de-jovens-medicos-especialistas-em-pe-no-corredor-hospital.jpg",
+        "Com o MedGo, pacientes marcam consultas direto do celular ou computador, de forma rápida e sem complicações.",
+      path: "/home/card-img/grandparent-learning-use-technology.jpg",
     },
     {
       id: "2",
-      titulo: " Estrutura de Ponta",
+      titulo: "Organização para sua clínica",
       descricao:
-        "Contamos com salas equipadas com tecnologia de última geração para garantir diagnósticos precisos e conforto no atendimento.",
-      path: "/home/card-img/sala-de-hospital.png",
+        "Profissionais de saúde controlam seus horários em tempo real, reduzindo conflitos e otimizando o atendimento.",
+      path: "/home/card-img/equipe-de-jovens-medicos-especialistas-em-pe-no-corredor-hospital.jpg",
     },
     {
       id: "3",
-      titulo: "Qualidade de atendimento",
+      titulo: "Acesso à saúde onde mais precisa",
       descricao:
-        "Seja atendido por profissionais qualificados, que utilizam tecnologia avançada para oferecer um cuidado preciso e humanizado.",
+        "O MedGo nasceu para facilitar o atendimento em clínicas comunitárias, promovendo mais inclusão e agilidade.",
       path: "/home/card-img/enfermeira-medindo-paciente-pressao-sangue.jpg",
     },
   ];
@@ -105,8 +105,8 @@ export default function Home() {
         <section className=" grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10  relative">
           <div className="container mx-auto px-4 grid gap-10 ">
             <h2 className="xl:text-3xl text-2xl font-playfair font-bold text-black mb-4">
-              <span className="titulo-cor-padrao-medgo  ">Especialidades</span>{" "}
-              disponíveis em MedGo
+             Áreas de atendimento das clínicas parceiras{" "}
+             <span className="titulo-cor-padrao-medgo  ">MedGo</span>
             </h2>
             <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-2 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6 ">
               {especialidades.map((especialidade, index) => (
