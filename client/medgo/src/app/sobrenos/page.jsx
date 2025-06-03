@@ -203,8 +203,8 @@ export default function SobreNos() {
                     <p className="text-gray-600"><strong>Telefone:</strong> (11) 1234-5678</p>
                     <p className="text-gray-600"><strong>WhatsApp:</strong> (11) 98765-4321</p>
                     <p className="text-gray-600"><strong>Fax:</strong> (11) 1234-5679</p>
-                    <p className="text-gray-600"><strong>Email:</strong> contato@vidaplena.org.br</p>
-                    <p className="text-gray-600"><strong>Documentos:</strong> documentos@vidaplena.org.br</p>
+                    <p className="text-gray-600"><strong>Email:</strong> contato@medgo.org.br</p>
+                    <p className="text-gray-600"><strong>Documentos:</strong> documentos@medgo.org.br</p>
                   </div>
                 </div>
               </div>

@@ -148,20 +148,20 @@ export default function Perfil() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-8">
               <div>
-                <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <h2 className="text-xs  titulo-cor-padrao-medgo font-bold uppercase tracking-wider">
                   Informações {tipoUsuario === 'medico' ? 'Profissionais' : 'Pessoais'}
                 </h2>
                 <div className="mt-4 space-y-4">
                   {tipoUsuario === 'paciente' ? (
                     <>
                       <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-gray-500">Idade</p>
+                        <p className="text-sm text-black">Idade</p>
                         <p className="mt-1 text-lg font-light text-gray-800">
                           {idade} anos
                         </p>
                       </div>
                       <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-gray-500">Telefone</p>
+                        <p className="text-sm text-black">Telefone</p>
                         <p className="mt-1 text-lg font-light text-gray-800">
                           {usuario.telefone}
                         </p>
@@ -189,19 +189,19 @@ export default function Perfil() {
 
             <div className="space-y-8">
               <div>
-                <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <h2 className="text-xs font-bold  titulo-cor-padrao-medgo uppercase tracking-wider">
                   Contato
                 </h2>
                 <div className="mt-4 space-y-4">
                   <div className="pb-4 border-b border-gray-100">
-                    <p className="text-sm text-gray-500">E-mail</p>
+                    <p className="text-sm text-black">E-mail</p>
                     <p className="mt-1 text-lg font-light text-gray-800">
                       {usuario.email}
                     </p>
                   </div>
                   {tipoUsuario === 'paciente' && (
                     <div className="pb-4 border-b border-gray-100">
-                      <p className="text-sm text-gray-500">Endereço</p>
+                      <p className="text-sm text-black">Endereço</p>
                       <p className="mt-1 text-lg font-light text-gray-800">
                         {usuario.endereco}
                       </p>
@@ -210,16 +210,16 @@ export default function Perfil() {
                 </div>
               </div>
             </div>
-            <div className="flex">
-              <div>
-                <button className="m-2 text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
+            
+              <div className="flex justify-center">
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
                   Excluir conta
                 </button>
-                <button className="m-2 text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
                   Alterar senha
                 </button>
               </div>
-            </div>
+            
             {altSenha && (
               <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >
                 <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
