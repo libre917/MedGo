@@ -46,7 +46,7 @@ const adicionarPacientesController = async (req, res) => {
         }
 
         const senhaHash = await bcrypt.hash(senha, 10)
-        console.log(senhaHash)
+     
 
         const pacienteData = {
             nome: nome,
@@ -74,7 +74,6 @@ const atualizarPacienteController = async (req, res) => {
         const [dia, mes, ano] = dataNascimento.split("/")
 
         const senhaHash = await bcrypt.hash(senha, 10)
-        console.log(senhaHash)
 
         const pacienteData = {
             nome: nome,

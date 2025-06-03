@@ -45,6 +45,8 @@ CREATE TABLE Agendamentos (
 );
 
 create table PacientesAntigos (
+  id_medico int not null,
+  id_paciente int not null,
   FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
   FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade
 );

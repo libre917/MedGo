@@ -28,6 +28,10 @@ export default function Cadastro() {
         (paciente) => paciente.email === email
       );
       const idade = anoAtual - ano
+      if(endereco.length < 5){
+        alert("Endereço inválido")
+        return
+      }
       if (dia > 30) {
         alert("Dia inválido")
         return

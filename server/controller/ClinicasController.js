@@ -1,4 +1,4 @@
-import { listarClinicas, listarClinicasPorId } from "../models/Clinicas.js";
+import { listarClinicas, listarClinicasPorId, adicionarClinicas, atualizarClinica } from "../models/Clinicas.js";
 
 
 const listarClinicasController = async (req,res) => {
