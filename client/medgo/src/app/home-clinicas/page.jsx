@@ -1,0 +1,356 @@
+"use client";
+import { useState, useEffect } from "react";
+
+export default function GerenciamentoMedicos() {
+  const [medicos, setMedicos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [medicoSelecionado, setMedicoSelecionado] = useState(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [modoEdicao, setModoEdicao] = useState(false);
+
+  // Simulação de dados da clínica logada
+  const clinicaLogada = {
+    id: 1,
+    nome: "Clínica Saúde Total",
+    cnpj: "12.345.678/0001-99"
+  };
+
+  // Simulação de carregamento dos médicos
+  useEffect(() => {
+    const carregarMedicos = async () => {
+      try {
+        // Simulando uma requisição à API
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Dados mockados de médicos
+        const dadosMockados = [
+          {
+            id: 1,
+            nome: "Dr. Carlos Silva",
+            email: "carlos.silva@email.com",
+            senha: "hashedpassword123",
+            crm: "CRM/SP 123456",
+            especialidade: "Cardiologia",
+            telefone: "(11) 98765-4321"
+          },
+          {
+            id: 2,
+            nome: "Dra. Ana Oliveira",
+            email: "ana.oliveira@email.com",
+            senha: "hashedpassword456",
+            crm: "CRM/SP 654321",
+            especialidade: "Pediatria",
+            telefone: "(11) 91234-5678"
+          },
+          {
+            id: 3,
+            nome: "Dr. Marcos Souza",
+            email: "marcos.souza@email.com",
+            senha: "hashedpassword789",
+            crm: "CRM/SP 789012",
+            especialidade: "Ortopedia",
+            telefone: "(11) 99876-5432"
+          }
+        ];
+        
+        setMedicos(dadosMockados);
+      } catch (err) {
+        console.error("Erro ao buscar médicos:", err);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    carregarMedicos();
+  }, []);
+
+  const abrirModalDetalhes = (medico) => {
+    setMedicoSelecionado(medico);
+    setModalAberto(true);
+    setModoEdicao(false);
+  };
+
+  const abrirModalEdicao = (medico) => {
+    setMedicoSelecionado(medico);
+    setModalAberto(true);
+    setModoEdicao(true);
+  };
+
+  const fecharModal = () => {
+    setModalAberto(false);
+    setMedicoSelecionado(null);
+    setModoEdicao(false);
+  };
+
+  const handleExcluirMedico = (id) => {
+    // Simulação de exclusão
+    if (confirm("Tem certeza que deseja excluir este médico?")) {
+      setMedicos(medicos.filter(medico => medico.id !== id));
+      alert("Médico excluído com sucesso!");
+    }
+  };
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Carregando médicos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-blue-900">Gerenciamento de Médicos</h1>
+          <p className="mt-2 text-gray-600">Clínica: {clinicaLogada.nome} - CNPJ: {clinicaLogada.cnpj}</p>
+          
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => {
+                setMedicoSelecionado({
+                  id: null,
+                  nome: "",
+                  email: "",
+                  senha: "",
+                  crm: "",
+                  especialidade: "",
+                  telefone: ""
+                });
+                setModoEdicao(true);
+                setModalAberto(true);
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Adicionar Novo Médico
+            </button>
+          </div>
+        </div>
+
+        {medicos.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-lg shadow">
+            <p className="text-gray-500 mb-4">Nenhum médico cadastrado nesta clínica.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {medicos.map((medico) => (
+              <div
+                key={medico.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-blue-500"
+              >
+                <div className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-800">{medico.nome}</h2>
+                      <p className="text-sm text-gray-600">{medico.crm}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Especialidade:</span>
+                      <span className="font-medium text-gray-800">{medico.especialidade}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Telefone:</span>
+                      <span className="font-medium text-gray-800">{medico.telefone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">E-mail:</span>
+                      <span className="font-medium text-gray-800 truncate">{medico.email}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex space-x-2">
+                    <button
+                      onClick={() => abrirModalDetalhes(medico)}
+                      className="flex-1 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
+                    >
+                      Detalhes
+                    </button>
+                    <button
+                      onClick={() => abrirModalEdicao(medico)}
+                      className="flex-1 py-1 text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleExcluirMedico(medico.id)}
+                      className="flex-1 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modal de Detalhes/Edição */}
+      {modalAberto && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-2xl font-bold text-blue-800">
+                {modoEdicao ? (medicoSelecionado.id ? "Editar Médico" : "Adicionar Médico") : "Detalhes do Médico"}
+              </h2>
+              <button
+                onClick={fecharModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+
+            {modoEdicao ? (
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nome completo*</label>
+                  <input
+                    type="text"
+                    value={medicoSelecionado.nome}
+                    onChange={(e) => setMedicoSelecionado({...medicoSelecionado, nome: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">E-mail*</label>
+                  <input
+                    type="email"
+                    value={medicoSelecionado.email}
+                    onChange={(e) => setMedicoSelecionado({...medicoSelecionado, email: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+
+                {!medicoSelecionado.id && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Senha*</label>
+                    <input
+                      type="password"
+                      value={medicoSelecionado.senha}
+                      onChange={(e) => setMedicoSelecionado({...medicoSelecionado, senha: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">CRM*</label>
+                    <input
+                      type="text"
+                      value={medicoSelecionado.crm}
+                      onChange={(e) => setMedicoSelecionado({...medicoSelecionado, crm: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Especialidade*</label>
+                    <input
+                      type="text"
+                      value={medicoSelecionado.especialidade}
+                      onChange={(e) => setMedicoSelecionado({...medicoSelecionado, especialidade: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                  <input
+                    type="tel"
+                    value={medicoSelecionado.telefone}
+                    onChange={(e) => setMedicoSelecionado({...medicoSelecionado, telefone: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={fecharModal}
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Simulação de salvamento
+                      if (!medicoSelecionado.id) {
+                        // Novo médico
+                        const novoMedico = {
+                          ...medicoSelecionado,
+                          id: Math.max(...medicos.map(m => m.id), 0) + 1
+                        };
+                        setMedicos([...medicos, novoMedico]);
+                      } else {
+                        // Edição
+                        setMedicos(medicos.map(m => 
+                          m.id === medicoSelecionado.id ? medicoSelecionado : m
+                        ));
+                      }
+                      alert("Dados do médico salvos com sucesso!");
+                      fecharModal();
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Salvar
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium text-gray-500">Nome</h3>
+                  <p className="text-lg text-gray-800 font-semibold">{medicoSelecionado.nome}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-medium text-gray-500">CRM</h3>
+                    <p className="text-gray-800">{medicoSelecionado.crm}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-500">Especialidade</h3>
+                    <p className="text-gray-800">{medicoSelecionado.especialidade}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-medium text-gray-500">E-mail</h3>
+                  <p className="text-gray-800">{medicoSelecionado.email}</p>
+                </div>
+
+                <div>
+                  <h3 className="font-medium text-gray-500">Telefone</h3>
+                  <p className="text-gray-800">{medicoSelecionado.telefone || "--"}</p>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={fecharModal}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
