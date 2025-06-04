@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 const API_URL = "http://localhost:3000"
 

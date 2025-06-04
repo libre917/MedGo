@@ -7,8 +7,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
-
-
+import Dropdown from '@/components/Dropdown/dropdown';
 
 
 export default function Login() {
@@ -21,7 +20,7 @@ export default function Login() {
 
   const compararDados = async () => {
     try {
-   
+
       const response = await axios.post("http://localhost:3000/auth/login", { email: email, senha: senha });
       const paciente = response.data;
 
@@ -30,7 +29,7 @@ export default function Login() {
 
     } catch (err) {
       console.error("Erro ao comparar dados", err);
-      setMensagemErro("Erro ao conectar-se ao servidor.",err);
+      setMensagemErro("Erro ao conectar-se ao servidor.", err);
       setMostrarModal(true);
     }
   };
@@ -118,9 +117,9 @@ export default function Login() {
             </Link>
           </p>
 
-          <p className='text-black text-sm'>
-            É médico? <Link href="/login-medico" className='text-blue-600 '>Login</Link>
-          </p>
+          <div className='grid justify-center '>
+            <Dropdown />
+          </div>
 
           <div className="grid">
             <label htmlFor="email" className='sr-only'>Email</label>
