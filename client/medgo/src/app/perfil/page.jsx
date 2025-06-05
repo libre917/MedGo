@@ -28,7 +28,6 @@ export default function Perfil() {
 
   const userData = localStorage.getItem("usuario");
   const usuarioLogado = JSON.parse(userData);
-<<<<<<< HEAD
   const data = new Date()
   const anoAtual = data.getFullYear()
   if(!usuarioLogado.crm){
@@ -41,7 +40,6 @@ export default function Perfil() {
  
   
   
-=======
   
   // Função para calcular idade com segurança
   const calcularIdade = (dataNascimento) => {
@@ -74,7 +72,6 @@ export default function Perfil() {
 
   const idade = calcularIdade(usuarioLogado.dataNascimento);
 
->>>>>>> 7a76a9ff46f04e8004bca6b152270b73ed1d1fa8
   const atualizarSenha = async (idUser) => {
     try{
       const endpoint = tipoUsuario === 'medico' ? 'medicos' : 'pacientes';
@@ -110,10 +107,6 @@ export default function Perfil() {
     const fetchPerfil = async () => {
       try {
         if (!userData) return;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7a76a9ff46f04e8004bca6b152270b73ed1d1fa8
         // Verifica se é médico (tem CRM) ou paciente
         if (usuarioLogado.crm) {
           setTipoUsuario('medico');
@@ -281,17 +274,6 @@ export default function Perfil() {
               </div>
             </div>
             
-<<<<<<< HEAD
-=======
-            <div className="flex justify-center">
-              <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
-                Excluir conta
-              </button>
-              <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
-                Alterar senha
-              </button>
-            </div>
->>>>>>> 7a76a9ff46f04e8004bca6b152270b73ed1d1fa8
             
             {altSenha && (
               <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >

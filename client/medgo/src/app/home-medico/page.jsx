@@ -1,17 +1,15 @@
 "use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Header from "@/components/Header_parapaginasdeadm/page.jsx"; // Importe o componente Header
+import Header from "@/components/Header_parapaginasdeadm/page.jsx";
 
 const API_URL = "http://localhost:3000";
 
-// Helper function for consistent date formatting
 const formatDateForMySQL = (dateString) => {
   if (!dateString) return null;
-  return dateString.split('T')[0]; // YYYY-MM-DD
+  return dateString.split('T')[0];
 };
 
-// Helper function for display formatting
 const formatarData = (dataISO) => {
   if (!dataISO) return "--/--/----";
   const data = new Date(dataISO);
@@ -35,7 +33,6 @@ export default function AgendaMedico() {
       setCarregando(true);
       
       try {
-        // Verifica se o usuário está logado
         const userData = localStorage.getItem("usuario");
         if (!userData) {
           alert('Erro: Login ou cadastro necessário para funcionamento');
@@ -45,26 +42,21 @@ export default function AgendaMedico() {
         
         const usuario = JSON.parse(userData);
         
-        // Verifica se é médico
         if (!usuario.crm) {
           alert('Acesso permitido apenas para médicos');
           window.location.href = "/";
           return;
         }
 
-        // Carrega todos os dados necessários
         const [consultasRes, pacientesRes] = await Promise.all([
           axios.get(`${API_URL}/agendamentos`),
           axios.get(`${API_URL}/pacientes`)
         ]);
 
         setPacientes(pacientesRes.data);
-
-        // Filtra agendamentos pelo médico logado
         const consultasFiltradas = consultasRes.data.filter(consulta => 
           consulta.id_medico === usuario.id
         );
-
         setConsultas(consultasFiltradas);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
@@ -90,7 +82,6 @@ export default function AgendaMedico() {
       const response = await axios.get(`${API_URL}/agendamentos/${idConsulta}`);
       const agendamentoDados = response.data;
       
-      // Format the date properly before sending to the backend
       const formattedData = {
         ...agendamentoDados,
         status: novoStatus,
@@ -99,7 +90,6 @@ export default function AgendaMedico() {
 
       await axios.put(`${API_URL}/agendamentos/${idConsulta}`, formattedData);
       
-      // Update the local state
       setConsultas(consultas.map(consulta => 
         consulta.id === idConsulta ? {...consulta, status: novoStatus} : consulta
       ));
@@ -140,13 +130,12 @@ export default function AgendaMedico() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Adicione o Header aqui */}
       <Header />
       
       <div className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold titulo-cor-padrao-medgo">Minha Agenda</h1>
+            <h1 className="text-3xl font-bold text-blue-900">Minha Agenda</h1>
             <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
             <div className="flex justify-center mt-4 space-x-2">
@@ -154,39 +143,20 @@ export default function AgendaMedico() {
                 <button
                   key={status}
                   onClick={() => setFiltroStatus(status)}
-                  className={`px-3 py-1 text-sm rounded-full cursor-pointer ${
+                  className={`px-3 py-1 text-sm rounded-full ${
                     filtroStatus === status
                       ? "bg-blue-900 text-white"
                       : "bg-white text-blue-800 border border-blue-200"
                   }`}
                 >
-<<<<<<< HEAD
-                  <div className="p-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h2 className="text-lg font-semibold text-gray-800">{paciente.nome}</h2>
-                      </div>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
-                        consulta.status === "cancelado" ? "bg-red-100 text-red-800" :
-                        consulta.status === "remarcando" ? "bg-yellow-100 text-yellow-800":  
-                        "bg-green-100 text-green-800"
-                      }`}>
-                        {consulta.status === "marcado" ? "Agendado" : 
-                         consulta.status === "cancelado" ? "Cancelado" : 
-                         consulta.status === "remarcando" ? "Solicitação para remarcar": "Realizado"}
-                      </span>
-                    </div>
-=======
                   {status === "todos" ? "Todos" : 
-                   status === "marcado" ? "Agendados" :
+                   status === "marcado" ? "Agendados" : 
                    status === "cancelado" ? "Cancelados" : 
-                   status === "remarcando" ? "Pedidos para remarcar" : "Realizado"}
+                   status === "remarcando" ? "Remarcação" : "Realizados"}
                 </button>
               ))}
             </div>
           </div>
->>>>>>> 7a76a9ff46f04e8004bca6b152270b73ed1d1fa8
 
           {consultasFiltradas.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-lg shadow">
@@ -265,7 +235,7 @@ export default function AgendaMedico() {
                               onClick={() => atualizarStatusConsulta(consulta.id, "realizado")}
                               className="flex-2 py-1 text-sm bg-green-100 text-green-900 rounded hover:bg-green-200"
                             >
-                              Marcar como realizado
+                              Realizado
                             </button>
                              
                             <button
@@ -355,7 +325,7 @@ export default function AgendaMedico() {
                       }}
                       className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                     >
-                      Marcar como Realizado
+                      Realizado
                     </button>
                   </>
                 )}
