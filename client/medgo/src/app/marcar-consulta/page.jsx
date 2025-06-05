@@ -151,7 +151,7 @@ export default function MarcarConsulta() {
       
       if(!conflito){
         await axios.post(`${API_URL}/agendamentos`, consulta);
-        setMensagemErro("✅ Agendamento realizado com sucesso! Você será redirecionado para a agenda.");
+        setMensagemErro(" Agendamento realizado com sucesso! Você será redirecionado para a agenda.");
         setMostrarModal(true);
         setTimeout(() => {
           window.location.href = "/agenda";

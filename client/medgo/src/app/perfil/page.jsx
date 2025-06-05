@@ -18,47 +18,85 @@ export default function Perfil() {
   const deletarConta = async (idUser) => {
     if (!confirm('Tem certeza que deseja deletar esta conta?')) return;
     try {
-      await axios.delete(`${API_URL}/pacientes/${idUser}`)
+      const endpoint = tipoUsuario === 'medico' ? 'medicos' : 'pacientes';
+      await axios.delete(`${API_URL}/${endpoint}/${idUser}`)
       window.location = "/"
     } catch (err) {
       console.error("Erro", err)
     }
   }
+
   const userData = localStorage.getItem("usuario");
   const usuarioLogado = JSON.parse(userData);
   const data = new Date()
   const anoAtual = data.getFullYear()
+  if(!usuarioLogado.crm){
   const dataNasc = usuarioLogado.dataNascimento.split(" ") 
-  const idade = anoAtual - dataNasc[3]
+  var idade = anoAtual - dataNasc[3]
 
+} else {
+  var idade = 0
+}
+ 
   
   
+  
+  // Função para calcular idade com segurança
+  const calcularIdade = (dataNascimento) => {
+    if (!dataNascimento) return null;
+    
+    try {
+      const data = new Date();
+      const anoAtual = data.getFullYear();
+      
+      // Tenta diferentes formatos de data
+      let dataNasc;
+      if (typeof dataNascimento === 'string') {
+        if (dataNascimento.includes(' ')) {
+          // Formato: "Wed Oct 25 1995 00:00:00 GMT-0300"
+          dataNasc = dataNascimento.split(" ");
+          return anoAtual - parseInt(dataNasc[3]);
+        } else if (dataNascimento.includes('-')) {
+          // Formato: "1995-10-25"
+          dataNasc = new Date(dataNascimento);
+          return anoAtual - dataNasc.getFullYear();
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Erro ao calcular idade:", error);
+      return null;
+    }
+  }
+
+  const idade = calcularIdade(usuarioLogado.dataNascimento);
+
   const atualizarSenha = async (idUser) => {
     try{
-     const response = await axios.get(`${API_URL}/pacientes/${idUser}`)
-     const data = response.data
-     const postResponse = await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
-     console.log(data)
+      const endpoint = tipoUsuario === 'medico' ? 'medicos' : 'pacientes';
+      const response = await axios.get(`${API_URL}/${endpoint}/${idUser}`)
+      const data = response.data
+      const postResponse = await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
+      console.log(data)
 
-      await axios.put(`${API_URL}/pacientes/${idUser}`, {
-      ...data,
-      senha: newSenha
-     })
+      await axios.put(`${API_URL}/${endpoint}/${idUser}`, {
+        ...data,
+        senha: newSenha
+      })
      
-     alert('Senha alterada com sucesso')
-
-     setAltSenha(null)
-
+      alert('Senha alterada com sucesso')
+      setAltSenha(null)
 
     } catch (err) {
-     if (err.response && err.response.status === 401) {
+      if (err.response && err.response.status === 401) {
         alert("Senha incorreta");
         console.error('Erro:', err)
         return; 
       }
-
     }
   }
+
   const userId = localStorage.getItem("usuario");
   if (!userId) {
     alert('Erro: Login ou cadastro necessário para funcionamento')
@@ -68,11 +106,7 @@ export default function Perfil() {
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
-      
         if (!userData) return;
-
-       
-
         // Verifica se é médico (tem CRM) ou paciente
         if (usuarioLogado.crm) {
           setTipoUsuario('medico');
@@ -164,18 +198,29 @@ export default function Perfil() {
                 <div className="mt-4 space-y-4">
                   {tipoUsuario === 'paciente' ? (
                     <>
-                      <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-black">Idade</p>
-                        <p className="mt-1 text-lg font-light text-gray-800">
-                          {idade} anos
-                        </p>
-                      </div>
+                      {idade && (
+                        <div className="pb-4 border-b border-gray-100">
+                          <p className="text-sm text-black">Idade</p>
+                          <p className="mt-1 text-lg font-light text-gray-800">
+                            {idade} anos
+                          </p>
+                        </div>
+                      )}
                       <div className="pb-4 border-b border-gray-100">
                         <p className="text-sm text-black">Telefone</p>
                         <p className="mt-1 text-lg font-light text-gray-800">
                           {usuario.telefone}
                         </p>
                       </div>
+                      
+              <div className="flex justify-center">
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
+                  Excluir conta
+                </button>
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
+                  Alterar senha
+                </button>
+              </div>
                     </>
                   ) : (
                     <>
@@ -191,6 +236,14 @@ export default function Perfil() {
                           {usuario.especialidade}
                         </p>
                       </div>
+                      {usuario.telefone && (
+                        <div className="pb-4 border-b border-gray-100">
+                          <p className="text-sm text-gray-500">Telefone</p>
+                          <p className="mt-1 text-lg font-light text-gray-800">
+                            {usuario.telefone}
+                          </p>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
@@ -209,7 +262,7 @@ export default function Perfil() {
                       {usuario.email}
                     </p>
                   </div>
-                  {tipoUsuario === 'paciente' && (
+                  {tipoUsuario === 'paciente' && usuario.endereco && (
                     <div className="pb-4 border-b border-gray-100">
                       <p className="text-sm text-black">Endereço</p>
                       <p className="mt-1 text-lg font-light text-gray-800">
@@ -221,14 +274,6 @@ export default function Perfil() {
               </div>
             </div>
             
-              <div className="flex justify-center">
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
-                  Excluir conta
-                </button>
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
-                  Alterar senha
-                </button>
-              </div>
             
             {altSenha && (
               <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >

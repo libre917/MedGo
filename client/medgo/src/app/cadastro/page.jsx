@@ -168,7 +168,7 @@ export default function Cadastro() {
           <div className="text-black ">
             <input type="checkbox" required /> Li e entendi os termos da{" "}
             <Link className="text-blue-500" href="/politicadeprivacdataNascimento">
-              Politica de PrivacdataNascimento
+              Politica de Privacidade
             </Link>{" "}
             de Medgo.
             <div className="text-black">

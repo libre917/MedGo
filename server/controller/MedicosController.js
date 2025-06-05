@@ -1,4 +1,5 @@
 import { listarMedicos, listarMedicosPorId, adicionarMedicos, atualizarMedicos, deletarMedico } from '../models/Medicos.js'
+import bcrypt from "bcrypt"
 
 
 const listarMedicosController = async (req,res) => {
@@ -37,7 +38,7 @@ const adicionarMedicosController = async (req, res) => {
     const medicoData = {
         nome: nome,
         email: email,
-        senha: senha, 
+        senha: senhaHash, 
         crm: crm,
         especialidade: especialidade,
         id_clinica: id_clinica
