@@ -138,7 +138,7 @@ export default function Cadastro() {
             className="w-80 md:w-100 sm:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
           />
           <input
-            placeholder="dataNascimento:"
+            placeholder="data de nascimento:"
             type="text"
             name="dataNascimento"
             pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"

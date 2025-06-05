@@ -35,18 +35,18 @@ const adicionarPacientesController = async (req, res) => {
         const dataAtual = new Date()
         const anoAtual = dataAtual.getFullYear()
         const idade = anoAtual - ano
-        if(dia > 30){
-            return res.status(400).json({mensagem: "Dia inválido"})
+        if (dia > 30) {
+            return res.status(400).json({ mensagem: "Dia inválido" })
         }
         if (idade < 18) {
             return res.status(400).json({ mensagem: "Maioridade necessária" })
         }
-        if(idade > 120){
-            return res.status(400).json({mensagem: "Idade inválida"})
+        if (idade > 120) {
+            return res.status(400).json({ mensagem: "Idade inválida" })
         }
 
         const senhaHash = await bcrypt.hash(senha, 10)
-     
+
 
         const pacienteData = {
             nome: nome,
@@ -71,7 +71,11 @@ const atualizarPacienteController = async (req, res) => {
         if (senha.length < 6) {
             return res.status(400).json({ mensagem: "A senha deve ter mais de 6 caracteres" })
         }
-        const [dia, mes, ano] = dataNascimento.split("/")
+        const formatarData = (dataISO) => {
+            return new Date(dataISO).toISOString().split('T')[0]; // Retorna "2007-01-09"
+        };
+
+        const dataNascimentoFormatada = formatarData(dataNascimento);
 
         const senhaHash = await bcrypt.hash(senha, 10)
 
@@ -81,7 +85,7 @@ const atualizarPacienteController = async (req, res) => {
             senha: senhaHash,
             endereco: endereco,
             telefone: telefone,
-            dataNascimento: `${ano}-${mes}-${dia}`
+            dataNascimento: dataNascimentoFormatada
         }
         await atualizarPaciente(pacienteId, pacienteData);
         res.status(201).json({ mensagem: 'Informações atualizadas com sucesso' })

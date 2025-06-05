@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 const API_URL = "http://localhost:3000";
 
@@ -10,13 +11,15 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const userData = localStorage.getItem("usuario");
-    if (userData) {
-      const user = JSON.parse(userData);
-      setUserName(user.nome);
+    const permissao = JSON.parse(userData)
+    if (permissao.status !== "Permitido")  {
+     router.push('/')
+     
     }
 
     const handleClickOutside = (event) => {

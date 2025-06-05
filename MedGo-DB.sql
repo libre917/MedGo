@@ -1,73 +1,78 @@
 create database MedGoDB;
 
-
 use MedGoDB;
 
+-- Tabela de Clínicas
 CREATE TABLE Clinicas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
-  endereco VARCHAR(255) not null,
-  telefone VARCHAR(20) unique
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20) UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
 );
 
+-- Tabela de Médicos
 CREATE TABLE Medicos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
-  email varchar(100) not null unique,
-  senha varchar(255) not null,
-  crm VARCHAR(20) NOT NULL UNIQUE,
-  especialidade VARCHAR(100) NOT NULL, 
-  id_clinica INT,
-  FOREIGN KEY (id_clinica) REFERENCES Clinicas(id) on delete Cascade
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    crm VARCHAR(20) NOT NULL UNIQUE,
+    especialidade VARCHAR(100) NOT NULL,
+    id_clinica INT,
+    FOREIGN KEY (id_clinica) REFERENCES Clinicas(id) ON DELETE CASCADE
 );
 
+-- Tabela de Pacientes
 CREATE TABLE Pacientes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
-   email varchar(100) not null unique,
-  senha varchar(255) not null,
-  endereco varchar(100),
-  telefone VARCHAR(20) not null,
- dataNascimento DATE NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    endereco VARCHAR(100),
+    telefone VARCHAR(20) NOT NULL,
+    dataNascimento DATE NOT NULL
 );
 
+-- Tabela de Agendamentos
 CREATE TABLE Agendamentos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  id_clinica INT not null,
-  id_medico INT not null,
-  id_paciente INT not null,
-  data DATE NOT NULL,
-  hora TIME NOT NULL,
-  status ENUM('marcado', 'remarcando','cancelado', 'realizado') DEFAULT 'marcado',
-  FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
-  FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade,
-  foreign key (id_clinica) references Clinicas(id) on delete cascade
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_clinica INT NOT NULL,
+    id_medico INT NOT NULL,
+    id_paciente INT NOT NULL,
+    data DATE NOT NULL,
+    hora TIME NOT NULL,
+    status ENUM('marcado', 'remarcando', 'cancelado', 'realizado') DEFAULT 'marcado',
+    FOREIGN KEY (id_medico) REFERENCES Medicos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_clinica) REFERENCES Clinicas(id) ON DELETE CASCADE
 );
 
-create table PacientesAntigos (
-  id_medico int not null,
-  id_paciente int not null,
-  FOREIGN KEY (id_medico) REFERENCES Medicos(id) on delete Cascade,
-  FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) on delete cascade
+-- Tabela de Pacientes Antigos
+CREATE TABLE PacientesAntigos (
+    id_medico INT NOT NULL,
+    id_paciente INT NOT NULL,
+    FOREIGN KEY (id_medico) REFERENCES Medicos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) ON DELETE CASCADE
 );
 
-create table Horarios (
-id int auto_increment primary key,
-hora time not null,
-status enum('ocupado','aberto') default 'aberto'
+-- Tabela de Horários
+CREATE TABLE Horarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    hora TIME NOT NULL
 );
-
-INSERT INTO Clinicas (nome, endereco, telefone) VALUES
-('Clínica Vida Saudável', 'Rua das Flores, 100', '1112345678'),
-('Centro Médico Esperança', 'Av. Brasil, 200', '1123456789'),
-('Clínica Santa Luzia', 'Rua A, 300', '2134567890'),
-('Clínica Bem Estar', 'Rua B, 400', '3145678901'),
-('Instituto Médico Popular', 'Av. Central, 500', '4156789012'),
-('Clínica do Povo', 'Rua C, 600', '5167890123'),
-('Centro de Saúde São João', 'Av. D, 700', '6178901234'),
-('Clínica Vida Plena', 'Parque esperança, 800', '7189012345'),
-('Hospital Popular', 'Rua F, 900', '819012-3456'),
-('Unidade Médica Comunitária', 'Av. G, 1000', '9101234567');
+INSERT INTO Clinicas (nome, endereco, telefone, email, senha) VALUES
+('Clínica Vida Saudável', 'Rua das Flores, 100', '1112345678', 'vida.saudavel@email.com', 'senha123'),
+('Centro Médico Esperança', 'Av. Brasil, 200', '1123456789', 'centro.esperanca@email.com', 'senha123'),
+('Clínica Santa Luzia', 'Rua A, 300', '2134567890', 'santa.luzia@email.com', 'senha123'),
+('Clínica Bem Estar', 'Rua B, 400', '3145678901', 'bem.estar@email.com', 'senha123'),
+('Instituto Médico Popular', 'Av. Central, 500', '4156789012', 'instituto.popular@email.com', 'senha123'),
+('Clínica do Povo', 'Rua C, 600', '5167890123', 'clinica.povo@email.com', 'senha123'),
+('Centro de Saúde São João', 'Av. D, 700', '6178901234', 'saude.saojoao@email.com', 'senha123'),
+('Clínica Vida Plena', 'Parque Esperança, 800', '7189012345', 'vida.plena@email.com', 'senha123'),
+('Hospital Popular', 'Rua F, 900', '8190123456', 'hospital.popular@email.com', 'senha123'),
+('Unidade Médica Comunitária', 'Av. G, 1000', '9101234567', 'medica.comunitaria@email.com', 'senha123');
 
 INSERT INTO Medicos (nome, email, senha, crm, especialidade, id_clinica) VALUES
 ('Ana Souza', 'ana.souza@med.com', '$2b$10$kT5gC202dSWyGWFXGZ5fKOktbadv5SknlWYc.L8iyyspGlpb.Vv/u', '123456-SP', 'Clínico Geral', 1),
@@ -81,13 +86,13 @@ INSERT INTO Medicos (nome, email, senha, crm, especialidade, id_clinica) VALUES
 ('Juliana Alves', 'juliana.alves@med.com', '$2b$10$MyoSk447UaIblwdj43Z9rOQu4HJnBSV.CyfKyIMVMprPb3kgxXw5K', '778899-PE', 'Endocrinologia', 9),
 ('Tiago Martins', 'tiago.martins@med.com', '$2b$10$u.G6tuobulcJAxqvzikX5.8FckQhxD0rAPhLL6EAkBUZJR7zEGrRu', '889900-PA', 'Urologia', 10);
 
-INSERT INTO Horarios (hora, status) VALUES 
-('08:00', 'aberto'), ('08:30', 'aberto'), ('09:00', 'aberto'), ('09:30', 'aberto'),
-('10:00', 'aberto'), ('10:30', 'aberto'), ('11:00', 'aberto'), ('11:30', 'aberto'),
-('12:00', 'aberto'), ('12:30', 'aberto'), ('13:00', 'aberto'), ('13:30', 'aberto'),
-('14:00', 'aberto'), ('14:30', 'aberto'), ('15:00', 'aberto'), ('15:30', 'aberto'),
-('16:00', 'aberto'), ('16:30', 'aberto'), ('17:00', 'aberto'), ('17:30', 'aberto'),
-('18:00', 'aberto');
+INSERT INTO Horarios (hora) VALUES 
+('08:00'), ('08:30'), ('09:00'), ('09:30'),
+('10:00'), ('10:30'), ('11:00'), ('11:30'),
+('12:00'), ('12:30'), ('13:00'), ('13:30'),
+('14:00'), ('14:30'), ('15:00'), ('15:30'),
+('16:00'), ('16:30'), ('17:00'), ('17:30'),
+('18:00');
 
 
 

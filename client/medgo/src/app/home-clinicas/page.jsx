@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function GerenciamentoMedicos() {
   const [medicos, setMedicos] = useState([]);
@@ -8,52 +9,21 @@ export default function GerenciamentoMedicos() {
   const [modalAberto, setModalAberto] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
 
-  // Simulação de dados da clínica logada
-  const clinicaLogada = {
-    id: 1,
-    nome: "Clínica Saúde Total",
-    cnpj: "12.345.678/0001-99"
-  };
+  const clinicaDados = localStorage.getItem("usuario")
+  const clinicaLogada = JSON.parse(clinicaDados)
+ 
 
   // Simulação de carregamento dos médicos
   useEffect(() => {
     const carregarMedicos = async () => {
       try {
         // Simulando uma requisição à API
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const medicos = await axios.get("http://localhost:3000/medicos")
         
         // Dados mockados de médicos
-        const dadosMockados = [
-          {
-            id: 1,
-            nome: "Dr. Carlos Silva",
-            email: "carlos.silva@email.com",
-            senha: "hashedpassword123",
-            crm: "CRM/SP 123456",
-            especialidade: "Cardiologia",
-            telefone: "(11) 98765-4321"
-          },
-          {
-            id: 2,
-            nome: "Dra. Ana Oliveira",
-            email: "ana.oliveira@email.com",
-            senha: "hashedpassword456",
-            crm: "CRM/SP 654321",
-            especialidade: "Pediatria",
-            telefone: "(11) 91234-5678"
-          },
-          {
-            id: 3,
-            nome: "Dr. Marcos Souza",
-            email: "marcos.souza@email.com",
-            senha: "hashedpassword789",
-            crm: "CRM/SP 789012",
-            especialidade: "Ortopedia",
-            telefone: "(11) 99876-5432"
-          }
-        ];
+        const medicoClinica = medicos.data.filter(medico => medico.id_clinica === clinicaLogada.id)
         
-        setMedicos(dadosMockados);
+        setMedicos(medicoClinica);
       } catch (err) {
         console.error("Erro ao buscar médicos:", err);
       } finally {

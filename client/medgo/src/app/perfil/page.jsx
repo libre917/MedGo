@@ -7,10 +7,18 @@ const API_URL = "http://localhost:3000"
 
 export default function Perfil() {
 
+  const [paciente, setPaciente] = useState(null);
+  const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [tipoUsuario, setTipoUsuario] = useState('');
+  const [altSenha, setAltSenha] = useState(null)
+  const [senha, setSenha] = useState("")
+  const [newSenha, setNewSenha] = useState("");
+
   const deletarConta = async (idUser) => {
     if (!confirm('Tem certeza que deseja deletar esta conta?')) return;
     try {
-      axios.delete(`${API_URL}/pacientes/${idUser}`)
+      await axios.delete(`${API_URL}/pacientes/${idUser}`)
       window.location = "/"
     } catch (err) {
       console.error("Erro", err)
@@ -22,25 +30,33 @@ export default function Perfil() {
   const anoAtual = data.getFullYear()
   const dataNasc = usuarioLogado.dataNascimento.split(" ") 
   const idade = anoAtual - dataNasc[3]
+
+  
   
   const atualizarSenha = async (idUser) => {
     try{
      const response = await axios.get(`${API_URL}/pacientes/${idUser}`)
      const data = response.data
-     await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
+     const postResponse = await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
+     console.log(data)
 
-     await axios.put(`${API_URL}/pacientes/${idUser}`, {
+      await axios.put(`${API_URL}/pacientes/${idUser}`, {
       ...data,
       senha: newSenha
-     }
-     )
+     })
+     
      alert('Senha alterada com sucesso')
 
      setAltSenha(null)
 
 
     } catch (err) {
-      console.error("Erro", err)
+     if (err.response && err.response.status === 401) {
+        alert("Senha incorreta");
+        console.error('Erro:', err)
+        return; 
+      }
+
     }
   }
   const userId = localStorage.getItem("usuario");
@@ -48,13 +64,6 @@ export default function Perfil() {
     alert('Erro: Login ou cadastro necessário para funcionamento')
     window.location.href = "/";
   }
-  const [paciente, setPaciente] = useState(null);
-  const [usuario, setUsuario] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [tipoUsuario, setTipoUsuario] = useState('');
-  const [altSenha, setAltSenha] = useState(null)
-  const [senha, setSenha] = useState("")
-  const [newSenha, setNewSenha] = useState("");
 
   useEffect(() => {
     const fetchPerfil = async () => {

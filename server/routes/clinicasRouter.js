@@ -1,10 +1,13 @@
-import { listarClinicasController, listarClinicasPorIdController } from '../controller/ClinicasController.js';
+import { listarClinicasController, listarClinicasPorIdController, adicionarClinicasController, atualizarClinicasController, deletarClinicaController } from '../controller/ClinicasController.js';
 import express from 'express'
 
 const router = express.Router();
 
 router.get('/', listarClinicasController);
 router.get('/:id', listarClinicasPorIdController);
+router.post('/', adicionarClinicasController);
+router.put('/:id', atualizarClinicasController);
+router.delete('/:id', deletarClinicaController);
 
 
 router.options("/", (req, res) => {
