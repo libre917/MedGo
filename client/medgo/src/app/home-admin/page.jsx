@@ -39,6 +39,7 @@ function Header() {
     window.location.href = "/";
   };
 
+
   return (
     <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-50">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 lg:h-20">
@@ -54,7 +55,7 @@ function Header() {
         </button>
 
         {/* Logo */}
-        <Link href="/home-adimin" className="flex items-center h-full mx-auto lg:mx-0">
+        <Link href="/" className="flex items-center h-full mx-auto lg:mx-0">
           <img
             src="MEDGO_logo.png"
             alt="Logo MEDGO"
@@ -244,6 +245,25 @@ export default function GerenciamentoClinicas() {
     setModoEdicao(false);
   };
 
+  const handleAdicionarClinica = async (e) => {
+    e.preventDefault();
+    try{
+      await axios.post("http://localhost:3000/clinicas",{
+        nome: clinicaSelecionada.nome,
+        endereco: clinicaSelecionada.endereco,
+        telefone: clinicaSelecionada.telefone,
+        email: clinicaSelecionada.email,
+        senha: clinicaSelecionada.senha
+      }
+      )
+      alert("Clinica adicionada!")
+      fecharModal()
+    } catch(err) {
+      console.error("Erro ao adicionar clinica:", err)
+      alert("Erro ao adicionar clinica")
+    }
+  }
+
   const handleExcluirClinica = async (id) => {
     if (confirm("Tem certeza que deseja excluir esta clínica? Esta ação não pode ser desfeita.")) {
       try {
@@ -393,7 +413,7 @@ export default function GerenciamentoClinicas() {
               </div>
 
               {modoEdicao ? (
-                <div className="space-y-4">
+                <form className="space-y-4" onSubmit={handleAdicionarClinica}>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nome da Clínica*</label>
                     <input
@@ -466,42 +486,13 @@ export default function GerenciamentoClinicas() {
                       Cancelar
                     </button>
                     <button
-                      type="button"
-                      onClick={async () => {
-                        // Validação básica
-                        if (!clinicaSelecionada.nome || !clinicaSelecionada.endereco || 
-                            !clinicaSelecionada.telefone || !clinicaSelecionada.email ||
-                            (!clinicaSelecionada.id && !clinicaSelecionada.senha)) {
-                          alert("Por favor, preencha todos os campos obrigatórios!");
-                          return;
-                        }
-
-                        try {
-                          if (!clinicaSelecionada.id) {
-                            // Nova clínica
-                            const response = await axios.post(`${API_URL}/Clinicas`, clinicaSelecionada);
-                            setClinicas([...clinicas, response.data]);
-                            alert("Clínica cadastrada com sucesso!");
-                          } else {
-                            // Edição
-                            await axios.put(`${API_URL}/Clinicas/${clinicaSelecionada.id}`, clinicaSelecionada);
-                            setClinicas(clinicas.map(c => 
-                              c.id === clinicaSelecionada.id ? clinicaSelecionada : c
-                            ));
-                            alert("Dados da clínica atualizados com sucesso!");
-                          }
-                          fecharModal();
-                        } catch (err) {
-                          console.error("Erro ao salvar clínica:", err);
-                          alert("Erro ao salvar clínica");
-                        }
-                      }}
+                      type="submit"
                       className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       {clinicaSelecionada.id ? "Atualizar" : "Cadastrar"}
                     </button>
                   </div>
-                </div>
+                </form>
               ) : (
                 <div className="space-y-6">
                   <div>

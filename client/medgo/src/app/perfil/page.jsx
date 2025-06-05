@@ -28,9 +28,14 @@ export default function Perfil() {
   const usuarioLogado = JSON.parse(userData);
   const data = new Date()
   const anoAtual = data.getFullYear()
+  if(!usuarioLogado.crm){
   const dataNasc = usuarioLogado.dataNascimento.split(" ") 
-  const idade = anoAtual - dataNasc[3]
+  var idade = anoAtual - dataNasc[3]
 
+} else {
+  var idade = 0
+}
+ 
   
   
   const atualizarSenha = async (idUser) => {
@@ -68,11 +73,7 @@ export default function Perfil() {
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
-      
         if (!userData) return;
-
-       
-
         // Verifica se é médico (tem CRM) ou paciente
         if (usuarioLogado.crm) {
           setTipoUsuario('medico');
@@ -176,6 +177,15 @@ export default function Perfil() {
                           {usuario.telefone}
                         </p>
                       </div>
+                      
+              <div className="flex justify-center">
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
+                  Excluir conta
+                </button>
+                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
+                  Alterar senha
+                </button>
+              </div>
                     </>
                   ) : (
                     <>
@@ -221,14 +231,6 @@ export default function Perfil() {
               </div>
             </div>
             
-              <div className="flex justify-center">
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
-                  Excluir conta
-                </button>
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
-                  Alterar senha
-                </button>
-              </div>
             
             {altSenha && (
               <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >
