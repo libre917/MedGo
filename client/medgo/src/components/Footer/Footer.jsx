@@ -30,9 +30,9 @@ export default function Footer() {
           <div>
             <h4 className="text-slate-700 font-semibold mb-4">Contato</h4>
             <ul className="space-y-2 text-sm">
-              <li>Email: medgo@gmail.com</li>
-              <li>Suporte: medgosuporte@gmail.com</li>
-              <li>Telefone: (11) 94877-1754</li>
+              <li><strong>Email:</strong>  medgo@gmail.com</li>
+              <li><strong>Suporte:</strong> medgosuporte@gmail.com</li>
+              <li><strong>Telefone:</strong> (11) 99887-1356</li>
             </ul>
           </div>
 
@@ -40,9 +40,9 @@ export default function Footer() {
           <div>
             <h4 className="text-slate-700 font-semibold mb-4">Siga-nos</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-[#004aad]">Instagram</a></li>
-              <li><a href="#" className="hover:text-[#004aad]">LinkedIn</a></li>
-              <li><a href="#" className="hover:text-[#004aad]">Facebook</a></li>
+              <li><a href="https://www.instagram.com/" className="hover:text-[#004aad]">Instagram</a></li>
+              <li><a href="https://br.linkedin.com/" className="hover:text-[#004aad]">LinkedIn</a></li>
+              <li><a href="https://www.facebook.com/" className="hover:text-[#004aad]">Facebook</a></li>
             </ul>
           </div>
         </div>

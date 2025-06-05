@@ -201,7 +201,7 @@ export default function SobreNos() {
                   <div>
                     <h4 className="font-bold text-gray-900">Contato</h4>
                     <p className="text-gray-600"><strong>Telefone:</strong> (11) 1234-5678</p>
-                    <p className="text-gray-600"><strong>WhatsApp:</strong> (11) 98765-4321</p>
+                    <p className="text-gray-600"><strong>WhatsApp:</strong> (11) 91234-8764</p>
                     <p className="text-gray-600"><strong>Fax:</strong> (11) 1234-5679</p>
                     <p className="text-gray-600"><strong>Email:</strong> contato@medgo.org.br</p>
                     <p className="text-gray-600"><strong>Documentos:</strong> documentos@medgo.org.br</p>
