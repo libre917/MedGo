@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Header from "@/components/Header_parapaginasdeadm/page.jsx";
+import Header from "@/components/Header-adm/page.jsx";
 
 const API_URL = "http://localhost:3001";
 

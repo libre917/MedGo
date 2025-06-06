@@ -1,207 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import Header from "@/components/Header-adm/page.jsx";
 
 const API_URL = "http://localhost:3001";
-
-function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const router = useRouter();
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const userData = localStorage.getItem("usuario");
-    const permissao = JSON.parse(userData)
-    if (permissao.status !== "Permitido")  {
-     router.push('/')
-     
-    }
-
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("usuario");
-    window.location.href = "/";
-  };
-
-
-  return (
-    <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-50">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 lg:h-20">
-        {/* Botão Mobile */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden flex flex-col items-center justify-center p-2 rounded-md hover:bg-[#004aad]/10 transition-colors"
-          aria-label="Abrir menu"
-        >
-          <span className="w-6 h-0.5 bg-[#004aad] rounded-full" />
-          <span className="w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5" />
-          <span className="w-6 h-0.5 bg-[#004aad] rounded-full mt-1.5" />
-        </button>
-
-        {/* Logo */}
-        <Link href="/" className="flex items-center h-full mx-auto lg:mx-0">
-          <img
-            src="MEDGO_logo.png"
-            alt="Logo MEDGO"
-            className="h-25 lg:h-25 w-auto object-contain"
-          />
-        </Link>
-
-        {/* Menu Desktop */}
-        <div className="hidden lg:flex items-center justify-center flex-1">
-          <nav>
-            <ul className="flex gap-6 text-base font-medium items-center">
-              {[
-                
-                
-          
-              ].map(([label, href]) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="relative group block px-2 py-2 text-[#004aad] hover:text-[#003a8c] transition-colors"
-                  >
-                    {label}
-                    <span className="absolute left-1/2 -bottom-1 w-0 h-[2px] bg-[#004aad] transition-all duration-300 group-hover:w-full group-hover:left-0" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-
-        {/* Área do usuário */}
-        <div className="flex items-center gap-4">
-          {userName && (
-            <>
-              {/* Versão Desktop */}
-              <div className="hidden lg:block relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 text-[#004aad] font-medium hover:text-[#003a8c] transition-colors"
-                >
-                  <span>Olá, {userName}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isDropdownOpen ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                    <Link
-                      href="/perfil"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#004aad]/10 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Meu Perfil
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#004aad]/10 transition-colors"
-                    >
-                      Sair
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Versão Mobile - Ícone de perfil */}
-              <Link
-                href="/perfil"
-                className="lg:hidden flex items-center justify-center p-2 rounded-full hover:bg-[#004aad]/10"
-                aria-label="Meu perfil"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-[#004aad]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Menu Mobile Expandido */}
-      <nav
-        className={`lg:hidden transition-all duration-500 overflow-hidden bg-white border-t border-gray-200 ${
-          isOpen ? "max-h-screen py-4" : "max-h-0 py-0"
-        }`}
-      >
-        <ul className="flex flex-col gap-4 text-base font-medium px-5">
-          {[
-          
-            ["Meu Perfil", "/perfil"],
-          ].map(([label, href]) => (
-            <li key={label}>
-              <Link
-                href={href}
-                className="block py-3 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors border-b border-gray-100"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-          {userName && (
-            <li>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setIsOpen(false);
-                }}
-                className="w-full text-left py-3 px-2 text-[#004aad] hover:text-[#003a8c] transition-colors border-b border-gray-100"
-              >
-                Sair
-              </button>
-            </li>
-          )}
-        </ul>
-      </nav>
-    </header>
-  );
-}
-
-
-// --------------------------------------------------------------------  header para a página de adiministracao para nao ficar igual do layout -------------------------------------------
 
 export default function GerenciamentoClinicas() {
   const [clinicas, setClinicas] = useState([]);
@@ -210,7 +13,6 @@ export default function GerenciamentoClinicas() {
   const [modalAberto, setModalAberto] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
 
-  // Carrega as clínicas da API
   useEffect(() => {
     const carregarClinicas = async () => {
       try {
@@ -223,7 +25,6 @@ export default function GerenciamentoClinicas() {
         setCarregando(false);
       }
     };
-
     carregarClinicas();
   }, []);
 
@@ -247,22 +48,21 @@ export default function GerenciamentoClinicas() {
 
   const handleAdicionarClinica = async (e) => {
     e.preventDefault();
-    try{
-      await axios.post(`${API_URL}/clinicas`,{
+    try {
+      await axios.post(`${API_URL}/clinicas`, {
         nome: clinicaSelecionada.nome,
         endereco: clinicaSelecionada.endereco,
         telefone: clinicaSelecionada.telefone,
         email: clinicaSelecionada.email,
         senha: clinicaSelecionada.senha
-      }
-      )
-      alert("Clinica adicionada!")
-      fecharModal()
-    } catch(err) {
-      console.error("Erro ao adicionar clinica:", err)
-      alert("Erro ao adicionar clinica")
+      });
+      alert("Clínica adicionada!");
+      fecharModal();
+    } catch (err) {
+      console.error("Erro ao adicionar clínica:", err);
+      alert("Erro ao adicionar clínica");
     }
-  }
+  };
 
   const handleExcluirClinica = async (id) => {
     if (confirm("Tem certeza que deseja excluir esta clínica? Esta ação não pode ser desfeita.")) {
@@ -280,7 +80,6 @@ export default function GerenciamentoClinicas() {
   if (carregando) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -293,17 +92,17 @@ export default function GerenciamentoClinicas() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header />
-      <main className="flex-1 py-8 px-4">
+        <Header />
+      <main className="flex-1 py-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-blue-900">Painel Administrativo</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-900">Painel Administrativo</h1>
             <p className="mt-2 text-gray-600">Gerenciamento de Clínicas do Sistema</p>
             
-            <div className="mt-6 flex justify-between items-center">
-              <div className="text-left">
+            <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="text-center sm:text-left">
                 <p className="text-sm text-gray-600">
-                  Total de clínicas cadastradas: <span className="font-semibold text-blue-600">{clinicas.length}</span>
+                  Total de clínicas: <span className="font-semibold text-blue-600">{clinicas.length}</span>
                 </p>
               </div>
               <button
@@ -319,7 +118,7 @@ export default function GerenciamentoClinicas() {
                   setModoEdicao(true);
                   setModalAberto(true);
                 }}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap"
               >
                 + Adicionar Nova Clínica
               </button>
@@ -348,55 +147,56 @@ export default function GerenciamentoClinicas() {
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Nome</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Endereço</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Telefone</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">E-mail</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium text-gray-700">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clinicas.map((clinica) => (
-                    <tr key={clinica.id} className="border-t">
-                      <td className="px-4 py-3 text-sm text-gray-900">{clinica.nome}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{clinica.endereco}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{clinica.telefone}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{clinica.email}</td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex justify-center space-x-2">
-                          <button
-                            onClick={() => abrirModalDetalhes(clinica)}
-                            className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
-                          >
-                            Ver
-                          </button>
-                          <button
-                            onClick={() => abrirModalEdicao(clinica)}
-                            className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
-                          >
-                            Editar
-                          </button>
-                          <button
-                            onClick={() => handleExcluirClinica(clinica.id)}
-                            className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200"
-                          >
-                            Excluir
-                          </button>
-                        </div>
-                      </td>
+            <div className="bg-white rounded-lg shadow">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-3 text-left text-sm font-medium text-gray-700">Nome</th>
+                      <th className="px-3 py-3 text-left text-sm font-medium text-gray-700 hidden sm:table-cell">Endereço</th>
+                      <th className="px-3 py-3 text-left text-sm font-medium text-gray-700 hidden md:table-cell">Telefone</th>
+                      <th className="px-3 py-3 text-left text-sm font-medium text-gray-700 hidden lg:table-cell">E-mail</th>
+                      <th className="px-3 py-3 text-center text-sm font-medium text-gray-700">Ações</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {clinicas.map((clinica) => (
+                      <tr key={clinica.id} className="border-t hover:bg-gray-50">
+                        <td className="px-3 py-3 text-sm text-gray-900">{clinica.nome}</td>
+                        <td className="px-3 py-3 text-sm text-gray-900 hidden sm:table-cell">{clinica.endereco}</td>
+                        <td className="px-3 py-3 text-sm text-gray-900 hidden md:table-cell">{clinica.telefone}</td>
+                        <td className="px-3 py-3 text-sm text-gray-900 hidden lg:table-cell">{clinica.email}</td>
+                        <td className="px-3 py-3 text-center">
+                          <div className="flex justify-center space-x-2">
+                            <button
+                              onClick={() => abrirModalDetalhes(clinica)}
+                              className="px-2 py-1 text-xs sm:text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
+                            >
+                              Ver
+                            </button>
+                            <button
+                              onClick={() => abrirModalEdicao(clinica)}
+                              className="px-2 py-1 text-xs sm:text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              onClick={() => handleExcluirClinica(clinica.id)}
+                              className="px-2 py-1 text-xs sm:text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
+                            >
+                              Excluir
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Modal de Detalhes/Edição */}
         {modalAberto && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
@@ -411,7 +211,6 @@ export default function GerenciamentoClinicas() {
                   ×
                 </button>
               </div>
-
               {modoEdicao ? (
                 <form className="space-y-4" onSubmit={handleAdicionarClinica}>
                   <div>
@@ -425,7 +224,6 @@ export default function GerenciamentoClinicas() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Endereço Completo*</label>
                     <textarea
@@ -437,7 +235,6 @@ export default function GerenciamentoClinicas() {
                       required
                     />
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Telefone*</label>
@@ -462,7 +259,6 @@ export default function GerenciamentoClinicas() {
                       />
                     </div>
                   </div>
-
                   {!clinicaSelecionada.id && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Senha de Acesso*</label>
@@ -476,7 +272,6 @@ export default function GerenciamentoClinicas() {
                       />
                     </div>
                   )}
-
                   <div className="mt-8 flex justify-end space-x-3">
                     <button
                       type="button"
@@ -499,12 +294,10 @@ export default function GerenciamentoClinicas() {
                     <h3 className="font-medium text-gray-500 mb-2">Nome da Clínica</h3>
                     <p className="text-lg text-gray-800 font-semibold">{clinicaSelecionada.nome}</p>
                   </div>
-
                   <div>
                     <h3 className="font-medium text-gray-500 mb-2">Endereço</h3>
                     <p className="text-gray-800">{clinicaSelecionada.endereco}</p>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h3 className="font-medium text-gray-500 mb-2">Telefone</h3>
@@ -515,7 +308,6 @@ export default function GerenciamentoClinicas() {
                       <p className="text-gray-800">{clinicaSelecionada.email}</p>
                     </div>
                   </div>
-
                   <div className="mt-8 flex justify-end space-x-3">
                     <button
                       onClick={() => abrirModalEdicao(clinicaSelecionada)}
