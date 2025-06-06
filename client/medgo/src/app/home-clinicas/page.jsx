@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 const API_URL = "http://localhost:3001"
+import Header from "@/components/Header-adm/page.jsx";
 
 export default function GerenciamentoMedicos() {
   const [medicos, setMedicos] = useState([]);
@@ -115,7 +116,10 @@ export default function GerenciamentoMedicos() {
   }
 
   return (
+    
     <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <Header />
+   
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-900">Gerenciamento de Médicos</h1>
