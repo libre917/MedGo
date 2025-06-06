@@ -43,18 +43,10 @@ CREATE TABLE Agendamentos (
     id_paciente INT NOT NULL,
     data DATE NOT NULL,
     hora TIME NOT NULL,
-    status ENUM('marcado', 'remarcando', 'cancelado', 'realizado') DEFAULT 'marcado',
+    status ENUM('marcado','a marcar', 'remarcando', 'cancelado', 'realizado') DEFAULT 'marcado',
     FOREIGN KEY (id_medico) REFERENCES Medicos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_clinica) REFERENCES Clinicas(id) ON DELETE CASCADE
-);
-
--- Tabela de Pacientes Antigos
-CREATE TABLE PacientesAntigos (
-    id_medico INT NOT NULL,
-    id_paciente INT NOT NULL,
-    FOREIGN KEY (id_medico) REFERENCES Medicos(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_paciente) REFERENCES Pacientes(id) ON DELETE CASCADE
 );
 
 -- Tabela de Horários

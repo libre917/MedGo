@@ -73,7 +73,6 @@ export default function GerenciamentoMedicos() {
         senha: medicoSelecionado.senha,
         crm: medicoSelecionado.crm,
         especialidade: medicoSelecionado.especialidade,
-        telefone: medicoSelecionado.telefone,
         id_clinica: clinicaLogada.id,
       };
 
@@ -132,8 +131,7 @@ export default function GerenciamentoMedicos() {
                   email: "",
                   senha: "",
                   crm: "",
-                  especialidade: "",
-                  telefone: "",
+                  especialidade: ""
                 });
                 setModoEdicao(true);
                 setModalAberto(true);
@@ -170,10 +168,6 @@ export default function GerenciamentoMedicos() {
                       <span className="font-medium text-gray-800">
                         {medico.especialidade}
                       </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Telefone:</span>
-                      <span className="font-medium text-gray-800">{medico.telefone}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">E-mail:</span>
@@ -308,20 +302,6 @@ export default function GerenciamentoMedicos() {
                       required
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Telefone
-                  </label>
-                  <input
-                    type="tel"
-                    value={medicoSelecionado.telefone}
-                    onChange={(e) =>
-                      setMedicoSelecionado({ ...medicoSelecionado, telefone: e.target.value })
-                    }
-                    className="text-black w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
                 </div>
 
                 <div className="mt-6 flex justify-end space-x-3">
