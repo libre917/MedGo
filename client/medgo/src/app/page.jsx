@@ -77,6 +77,11 @@ export default function Login() {
         setMostrarModal(true);
         return;
       }
+      if (err.response && err.response.status === 404) {
+        setMensagemErro("Usuário não cadastrado");
+        setMostrarModal(true);
+        return;
+      }
       console.error("Erro ao conectar-se ao servidor", err);
       setMensagemErro("Erro ao conectar-se ao servidor.");
       setMostrarModal(true);

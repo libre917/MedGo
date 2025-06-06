@@ -103,25 +103,42 @@ export default function Home() {
 
         {/* Especialidades*/}
         <section className=" grid justify-center mb-20 mt-10 md:mx-45 md:justify-center  md:text-start  lg:text-center xl:mx-45 2xl:mx-10  relative">
-          <div className="container mx-auto px-4 grid gap-10 ">
-            <h2 className="xl:text-3xl text-2xl font-playfair font-bold text-black mb-4">
-             Áreas de atendimento das clínicas parceiras{" "}
-             <span className="titulo-cor-padrao-medgo  ">MedGo</span>
-            </h2>
-            <div className="grid grid-cols-2 justify-center gap-3 md:grid-cols-2 md:gap-10 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6 ">
-              {especialidades.map((especialidade, index) => (
-                <div
-                  key={index}
-                  className="w-full h-40px  rounded-4xl grid place-items-center text-center bg-blue-50 hover:bg-blue-200 px-3   py-4 lg:px-4 "
-                >
-                  <img className="w-10 h-10" src={especialidade.icon} alt="" />
-                  <h3 className="text-lg text-black font-semi-bold mb-2">
-                    {especialidade.nome}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="container mx-auto px-4 grid gap-10 ">
+  <h2 className="xl:text-3xl text-2xl font-playfair font-bold text-black mb-4">
+    Agendamento Online de Consultas na{" "}
+    <span className="titulo-cor-padrao-medgo">MedGo</span>
+  </h2>
+  <p className="text-lg text-black mb-4">
+    Encontre horários disponíveis e garanta sua consulta com praticidade.
+  </p>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+    <div className="w-full h-auto rounded-4xl text-center bg-blue-50 hover:bg-blue-200 transition duration-150 ease-in-out px-4 py-6">
+      <h3 className="text-xl font-bold text-black mb-2">
+        Fácil e rápido
+      </h3>
+      <p className="text-md text-black">
+        Com MedGo, você agenda consultas diretamente do celular ou computador, sem complicações.
+      </p>
+    </div>
+    <div className="w-full h-auto rounded-4xl text-center bg-blue-50 hover:bg-blue-200 transition duration-150 ease-in-out px-4 py-6">
+      <h3 className="text-xl font-bold text-black mb-2">
+        Organização para clínicas
+      </h3>
+      <p className="text-md text-black">
+        Profissionais de saúde gerenciam seus horários em tempo real, reduzindo conflitos e otimizando o atendimento.
+      </p>
+    </div>
+    <div className="w-full h-auto rounded-4xl text-center bg-blue-50 hover:bg-blue-200 transition duration-150 ease-in-out px-4 py-6">
+      <h3 className="text-xl font-bold text-black mb-2">
+        Inclusão e acessibilidade
+      </h3>
+      <p className="text-md text-black">
+        O MedGo facilita o atendimento em clínicas comunitárias, promovendo mais inclusão e agilidade.
+      </p>
+    </div>
+  </div>
+</div>
+
         </section>
 
       </main>
