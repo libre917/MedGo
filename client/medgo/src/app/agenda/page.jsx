@@ -35,6 +35,14 @@ export default function AgendamentosUsuario() {
   const [usuarioLogado, setUsuarioLogado] = useState(null);
   const [isRemarcando, setIsRemarcando] = useState(false);
 
+  // Notification system
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
   // Load available time slots
   useEffect(() => {
     async function fetchHorarios() {
@@ -51,7 +59,7 @@ export default function AgendamentosUsuario() {
       try {
         const userData = localStorage.getItem("usuario");
         if (!userData) {
-          alert('Erro: Login ou cadastro necessário para funcionamento');
+          showNotification('Erro: Login ou cadastro necessário para funcionamento', 'error');
           window.location.href = "/";
           return;
         }
@@ -86,6 +94,7 @@ export default function AgendamentosUsuario() {
         setAgendamentos(agendamentosFiltrados);
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
+        showNotification('Erro ao carregar dados', 'error');
       } finally {
         setCarregando(false);
       }
@@ -152,10 +161,10 @@ export default function AgendamentosUsuario() {
         });
       }
 
-      alert('Agendamento cancelado com sucesso!');
+      showNotification('Agendamento cancelado com sucesso!', 'success');
     } catch (err) {
       console.error("Erro ao cancelar agendamento:", err);
-      alert("Erro ao cancelar agendamento");
+      showNotification("Erro ao cancelar agendamento", 'error');
     }
   };
 
@@ -163,17 +172,17 @@ export default function AgendamentosUsuario() {
     setIsRemarcando(true);
     try {
       if (horarioSelecionado === "00:00") {
-        alert('Horário inválido');
+        showNotification('Horário inválido', 'error');
         return;
       }
 
       if (!horarioSelecionado) {
-        alert("Selecione um horário")
+        showNotification("Selecione um horário", 'error');
         return
       }
 
       if (!dataSelecionada) {
-        alert('Selecione uma data');
+        showNotification('Selecione uma data', 'error');
         return;
       }
       const ano = new Date().getFullYear()
@@ -188,7 +197,7 @@ export default function AgendamentosUsuario() {
       }
 
       if (!verificarData(dia, mes, ano)) {
-        alert('Data inválida');
+        showNotification('Data inválida', 'error');
        
         return;
       }
@@ -196,7 +205,7 @@ export default function AgendamentosUsuario() {
       // Cria a data da consulta e verifica se ela é futura
       const consultaDate = new Date(ano, mes - 1, dia);
       if (consultaDate <= new Date()) {
-        alert('A data da consulta deve ser futura');
+        showNotification('A data da consulta deve ser futura', 'error');
         return;
       }
 
@@ -220,7 +229,7 @@ export default function AgendamentosUsuario() {
       );
 
       if (conflito) {
-        alert('Data ou horário indisponíveis');
+        showNotification('Data ou horário indisponíveis', 'error');
         return;
       }
 
@@ -246,10 +255,10 @@ export default function AgendamentosUsuario() {
       setDataSelecionada("");
       setHorarioSelecionado("");
 
-      alert('Agendamento remarcado com sucesso!');
+      showNotification('Agendamento remarcado com sucesso!', 'success');
     } catch (err) {
       console.error("Erro ao remarcar agendamento:", err);
-      alert("Erro ao remarcar agendamento");
+      showNotification("Erro ao remarcar agendamento", 'error');
     } finally {
       setIsRemarcando(false);
     }
@@ -262,10 +271,10 @@ export default function AgendamentosUsuario() {
     try {
       axios.delete(`${API_URL}/agendamentos/${idAgendamento}`);
       setAgendamentos(agendamentos.filter(ag => ag.id !== idAgendamento));
-      alert('Agendamento deletado com sucesso!');
+      showNotification('Agendamento deletado com sucesso!', 'success');
     } catch (err) {
       console.error("Erro ao deletar agendamento:", err);
-      alert("Erro ao deletar agendamento");
+      showNotification("Erro ao deletar agendamento", 'error');
     }
   };
 
@@ -281,6 +290,60 @@ export default function AgendamentosUsuario() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
+      {/* Notification System */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 max-w-sm w-full">
+          <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
+            notification.type === 'success' 
+              ? 'bg-green-50 border-green-400 text-green-800' 
+              : notification.type === 'error' 
+              ? 'bg-red-50 border-red-400 text-red-800' 
+              : 'bg-blue-50 border-blue-400 text-blue-800'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className={`flex-shrink-0 w-5 h-5 mr-3 ${
+                  notification.type === 'success' 
+                    ? 'text-green-400' 
+                    : notification.type === 'error' 
+                    ? 'text-red-400' 
+                    : 'text-blue-400'
+                }`}>
+                  {notification.type === 'success' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'error' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'info' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <p className="text-sm font-medium">{notification.message}</p>
+              </div>
+              <button
+                onClick={() => setNotification(null)}
+                className={`ml-4 text-sm font-medium ${
+                  notification.type === 'success' 
+                    ? 'text-green-600 hover:text-green-500' 
+                    : notification.type === 'error' 
+                    ? 'text-red-600 hover:text-red-500' 
+                    : 'text-blue-600 hover:text-blue-500'
+                }`}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
