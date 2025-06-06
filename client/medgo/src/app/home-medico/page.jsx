@@ -139,7 +139,7 @@ export default function AgendaMedico() {
             <p className="mt-2 text-gray-600">Consultas agendadas pelos pacientes</p>
 
             <div className="flex justify-center mt-4 space-x-2">
-              {["todos", "marcado", "cancelado", "remarcando", "realizado"].map((status) => (
+              {["todos", "a marcar", "marcado", "cancelado", "remarcando", "realizado"].map((status) => (
                 <button
                   key={status}
                   onClick={() => setFiltroStatus(status)}
@@ -150,6 +150,7 @@ export default function AgendaMedico() {
                   }`}
                 >
                   {status === "todos" ? "Todos" : 
+                   status === "a marcar" ? "A confirmar" : 
                    status === "marcado" ? "Agendados" : 
                    status === "cancelado" ? "Cancelados" : 
                    status === "remarcando" ? "Remarcação" : "Realizados"}
@@ -171,6 +172,7 @@ export default function AgendaMedico() {
                   <div
                     key={consulta.id}
                     className={`bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${
+                      consulta.status === "a marcar" ? "border-gray-900" :
                       consulta.status === "marcado" ? "border-blue-900" :
                       consulta.status === "cancelado" ? "border-red-500" :
                       consulta.status === "remarcando" ? "border-yellow-500" :
@@ -183,12 +185,14 @@ export default function AgendaMedico() {
                           <h2 className="text-lg font-semibold text-gray-800">{paciente.nome}</h2>
                         </div>
                         <span className={`px-2 py-1 rounded-full text-xs ${
+                          consulta.status === "a marcar" ? "bg-gray-100 text-gray-800" :
                           consulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
                           consulta.status === "cancelado" ? "bg-red-100 text-red-800" :
                           consulta.status === "remarcando" ? "bg-yellow-100 text-yellow-800":  
                           "bg-green-100 text-green-800"
                         }`}>
-                          {consulta.status === "marcado" ? "Agendado" : 
+                          {consulta.status === "a marcar" ? "A marcar" : 
+                           consulta.status === "marcado" ? "Agendado" : 
                            consulta.status === "cancelado" ? "Cancelado" : 
                            consulta.status === "remarcando" ? "Solicitação para remarcar": "Realizado"}
                         </span>
@@ -217,7 +221,7 @@ export default function AgendaMedico() {
                               onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
                               className="flex-1 py-1 text-sm bg-blue-100 text-green-900 rounded hover:bg-blue-200"
                             >
-                              Confirmar
+                              Confirmar consulta
                             </button>
                              
                             <button
@@ -244,6 +248,22 @@ export default function AgendaMedico() {
                               Cancelar
                             </button>
                           </>
+                        )} {consulta.status === "a marcar" && (
+                          <>
+                          <button
+                              onClick={() => atualizarStatusConsulta(consulta.id, "marcado")}
+                              className="flex-1 py-1 text-sm bg-blue-100 text-green-900 rounded hover:bg-blue-200"
+                            >
+                              Confirmar consulta
+                            </button>
+                           
+                          <button
+                            onClick={() => atualizarStatusConsulta(consulta.id, "cancelado")}
+                            className="flex-1 py-1 text-sm bg-red-100 text-red-900 rounded hover:bg-red-200"
+                          >
+                            Cancelar
+                          </button>
+                        </>
                         )}
                       </div>
                     </div>
@@ -293,12 +313,14 @@ export default function AgendaMedico() {
                 <div>
                   <h3 className="font-medium text-gray-500">Status</h3>
                   <span className={`px-3 py-1 rounded-full text-sm inline-block ${
+                    detalhesConsulta.status === "a marcar" ? "bg-gray-100 text-gray-800" :
                     detalhesConsulta.status === "marcado" ? "bg-blue-100 text-blue-800" :
                     detalhesConsulta.status === "cancelado" ? "bg-red-100 text-red-800" :
                     detalhesConsulta.status === "remarcando" ? "bg-yellow-100 text-yellow-800": 
                     "bg-green-100 text-green-800"
                   }`}>
-                    {detalhesConsulta.status === "marcado" ? "Agendado" : 
+                    {detalhesConsulta.status === "a marcar" ? "A confirmar" :
+                     detalhesConsulta.status === "marcado" ? "Agendado" : 
                      detalhesConsulta.status === "cancelado" ? "Cancelado" : 
                      detalhesConsulta.status === "remarcando" ? "Remarcando" : "Realizado"}
                   </span>

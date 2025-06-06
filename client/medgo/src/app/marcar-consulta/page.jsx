@@ -120,7 +120,7 @@ export default function MarcarConsulta() {
       const id = JSON.parse(localStorage.getItem('usuario'));
       const [dia, mes] = dataSelecionada.split("/");
       const ano = new Date().getFullYear()
-      const status = "marcado";
+      const status = "a marcar";
       function verificarData(dia, mes, ano) {
         const data = new Date(ano, mes - 1, dia);
         return data.getFullYear() == ano &&
