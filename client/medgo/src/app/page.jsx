@@ -7,6 +7,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
+const API_URL = "http://localhost:3001"
 
 
 
@@ -32,14 +33,9 @@ export default function Login() {
 
   const compararDados = async () => {
     try {
-
-      // Ajuste o endpoint conforme sua API, se necessário
-
-
-
       // Redireciona de acordo com o tipo de usuário
       if (userType === "ADM") {
-         const response = await axios.post("http://localhost:3000/auth/admLogin", {
+         const response = await axios.post(`${API_URL}/auth/admLogin`, {
           email: email,
           senha: senha,
           codigo: chaveAdmin
@@ -48,7 +44,7 @@ export default function Login() {
         localStorage.setItem("usuario", JSON.stringify(adm));
         router.push('/home-admin');
       } else if (userType === "Medico") {
-        const response = await axios.post("http://localhost:3000/auth/medLogin", {
+        const response = await axios.post(`${API_URL}/auth/medLogin`, {
           email: email,
           senha: senha,
           crm: crm
@@ -58,7 +54,7 @@ export default function Login() {
         router.push('/home-medico')
       } else if (userType === "Clinica") {
 
-          const response = await axios.post("http://localhost:3000/auth/clinicaLogin", {
+          const response = await axios.post(`${API_URL}/auth/clinicaLogin`, {
           email: email,
           senha: senha
         });
@@ -67,7 +63,7 @@ export default function Login() {
         router.push('/home-clinicas');
 
       } else if (userType === "Paciente") {
-        const response = await axios.post("http://localhost:3000/auth/login", {
+        const response = await axios.post(`${API_URL}/auth/login`, {
           email: email,
           senha: senha
         });

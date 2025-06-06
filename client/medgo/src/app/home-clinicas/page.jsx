@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+const API_URL = "http://localhost:3001"
 
 export default function GerenciamentoMedicos() {
   const [medicos, setMedicos] = useState([]);
@@ -16,7 +17,7 @@ export default function GerenciamentoMedicos() {
   useEffect(() => {
     const carregarMedicos = async () => {
       try {
-        const resposta = await axios.get("http://localhost:3000/medicos");
+        const resposta = await axios.get(`${API_URL}/medicos`);
         const listaFiltrada = resposta.data.filter(
           (medico) => medico.id_clinica === clinicaLogada.id
         );
@@ -52,7 +53,7 @@ export default function GerenciamentoMedicos() {
   const handleExcluirMedico = async (id) => {
     try {
       if (confirm("Tem certeza que deseja excluir este médico?")) {
-        await axios.delete(`http://localhost:3000/medicos/${id}`);
+        await axios.delete(`${API_URL}/medicos/${id}`);
         setMedicos((prev) => prev.filter((m) => m.id !== id));
         alert("Médico excluído com sucesso!");
       }
@@ -78,7 +79,7 @@ export default function GerenciamentoMedicos() {
 
       if (medicoSelecionado.id) {
         // Atualização (PUT)
-        await axios.put(`http://localhost:3000/medicos/${medicoSelecionado.id}`, dadosMedico);
+        await axios.put(`${API_URL}/medicos/${medicoSelecionado.id}`, dadosMedico);
         
         // Atualiza a lista local
         setMedicos(medicos.map(m => 
@@ -88,7 +89,7 @@ export default function GerenciamentoMedicos() {
         alert("Médico atualizado com sucesso!");
       } else {
         // Criação (POST)
-        const response = await axios.post("http://localhost:3000/medicos", dadosMedico);
+        const response = await axios.post(`${API_URL}/medicos`, dadosMedico);
         
         // Adiciona o novo médico à lista
         setMedicos([...medicos, response.data]);

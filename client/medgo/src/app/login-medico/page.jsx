@@ -5,6 +5,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+const API_URL = "http://localhost:3001"
 
 export default function LoginMedico() {
   localStorage.clear();
@@ -16,7 +17,7 @@ export default function LoginMedico() {
 
   const compararDados = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/medLogin",{
+      const response = await axios.post(`${API_URL}/auth/medLogin`,{
         email: email,
         senha: senha,
         crm: crm

@@ -33,7 +33,6 @@ const adicionarMedicosController = async (req, res) => {
         return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
     }
       const senhaHash = await bcrypt.hash(senha, 10)
-            console.log(senhaHash)
     
     const medicoData = {
         nome: nome,
@@ -60,7 +59,6 @@ const atualizarMedicosController = async (req, res) => {
         return res.status(400).json({mensagem: "A senha deve ter mais de 6 caracteres"})
     }
           const senhaHash = await bcrypt.hash(senha, 10)
-                console.log(senhaHash) 
 
         const medicoData = {
             nome: nome,

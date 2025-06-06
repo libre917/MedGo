@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:3001";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -248,7 +248,7 @@ export default function GerenciamentoClinicas() {
   const handleAdicionarClinica = async (e) => {
     e.preventDefault();
     try{
-      await axios.post("http://localhost:3000/clinicas",{
+      await axios.post(`${API_URL}/clinicas`,{
         nome: clinicaSelecionada.nome,
         endereco: clinicaSelecionada.endereco,
         telefone: clinicaSelecionada.telefone,

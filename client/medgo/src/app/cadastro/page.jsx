@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
+const API_URL = "http://localhost:3001"
 
 export default function Cadastro() {
   console.log(new Date())
@@ -19,7 +20,7 @@ export default function Cadastro() {
     try {
 
 
-      const response = await axios.get("http://localhost:3000/pacientes");
+      const response = await axios.get(`${API_URL}/pacientes`);
       const paciente = response.data;
 
       const [dia, mes, ano] = dataNascimento.split("/")
@@ -56,7 +57,7 @@ export default function Cadastro() {
           alert('Email já cadastrado')
           return
         } else {
-          await axios.post("http://localhost:3000/pacientes", {
+          await axios.post(`${API_URL}/pacientes`, {
             nome: nome,
             email: email,
             senha: senha,
@@ -65,7 +66,7 @@ export default function Cadastro() {
             dataNascimento: dataNascimento
           });
         }
-        const response = await axios.post("http://localhost:3000/auth/login", { email: email, senha: senha });
+        const response = await axios.post(`${API_URL}/auth/login`, { email: email, senha: senha });
         const paciente = response.data;
 
         localStorage.setItem("usuario", JSON.stringify(paciente));
@@ -167,7 +168,7 @@ export default function Cadastro() {
 
           <div className="text-black ">
             <input type="checkbox" required /> Li e entendi os termos da{" "}
-            <Link className="text-blue-500" href="/politicadeprivacdataNascimento">
+            <Link className="text-blue-500" href="/politicadeprivacidade">
               Politica de Privacidade
             </Link>{" "}
             de Medgo.

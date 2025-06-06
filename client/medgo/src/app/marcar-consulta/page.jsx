@@ -2,7 +2,7 @@
 import axios from "axios"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation, faXmark, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-const API_URL = "http://localhost:3000"
+const API_URL = "http://localhost:3001"
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -31,7 +31,7 @@ async function listarHorarios() {
   try {
     const response = await axios.get(`${API_URL}/horarios`)
     return response.data
-  } catch ( err) {
+  } catch (err) {
     console.error('Erro ao exibir horarios');
     return []
   }
@@ -115,19 +115,34 @@ export default function MarcarConsulta() {
       setMostrarModal(true);
       return;
     }
-    
+
     try {
       const id = JSON.parse(localStorage.getItem('usuario'));
       const [dia, mes] = dataSelecionada.split("/");
+      const ano = new Date().getFullYear()
       const status = "marcado";
-      
-      if(horarioSelecionado == "00:00"){
-        setMensagemErro('Horário inválido');
-        setMostrarModal(true);
-        return
+      function verificarData(dia, mes, ano) {
+        const data = new Date(ano, mes - 1, dia);
+        return data.getFullYear() == ano &&
+          data.getMonth() + 1 == mes &&
+          data.getDate() == dia;
       }
-      if(dia == "00" || mes == "00" || dia > 30 || mes > 12){
+
+      if (!verificarData(dia, mes, ano)) {
         setMensagemErro('Data inválida');
+        setMostrarModal(true);
+        return;
+      }
+
+      const consultaDate = new Date(ano, mes - 1, dia);
+      if (consultaDate <= new Date()) {
+        setMensagemErro('A data da consulta deve ser futura');
+        setMostrarModal(true);
+        return;
+      }
+
+      if (horarioSelecionado == "00:00") {
+        setMensagemErro('Horário inválido');
         setMostrarModal(true);
         return
       }
@@ -136,7 +151,7 @@ export default function MarcarConsulta() {
         id_clinica: clinicaSelecionada.id,
         id_medico: medicoSelecionado.id,
         id_paciente: id.id,
-        data: `2025-${mes}-${dia}`,
+        data: `${ano}-${mes}-${dia}`,
         hora: `${horarioSelecionado}`,
         status: status
       };
@@ -145,11 +160,11 @@ export default function MarcarConsulta() {
       const compare = responseCompare.data
       const conflito = compare.some(agenda =>
         agenda.id_medico === medicoSelecionado.id &&
-        agenda.data === `2025-${mes}-${dia}T03:00:00.000Z` &&
+        agenda.data === `${ano}-${mes}-${dia}T03:00:00.000Z` &&
         agenda.hora === horarioSelecionado
       );
-      
-      if(!conflito){
+
+      if (!conflito) {
         await axios.post(`${API_URL}/agendamentos`, consulta);
         setMensagemErro(" Agendamento realizado com sucesso! Você será redirecionado para a agenda.");
         setMostrarModal(true);
@@ -161,7 +176,7 @@ export default function MarcarConsulta() {
         setMostrarModal(true);
       }
     } catch (err) {
-      console.error('Erro ao agendar:', err.response?.data || err.message);
+      console.error('Erro ao agendar:', err);
       setMensagemErro("Erro ao realizar o agendamento. Tente novamente.");
       setMostrarModal(true);
     }
@@ -206,11 +221,10 @@ export default function MarcarConsulta() {
             <div className="flex justify-center">
               <button
                 onClick={fecharModal}
-                className={`px-6 py-2.5 text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  mensagemErro.includes('sucesso') 
-                    ? 'bg-green-600 hover:bg-green-700 focus:ring-green-400' 
-                    : 'bg-red-600 hover:bg-red-700 focus:ring-red-400'
-                }`}
+                className={`px-6 py-2.5 text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 ${mensagemErro.includes('sucesso')
+                  ? 'bg-green-600 hover:bg-green-700 focus:ring-green-400'
+                  : 'bg-red-600 hover:bg-red-700 focus:ring-red-400'
+                  }`}
               >
                 Entendi
               </button>
@@ -258,12 +272,13 @@ export default function MarcarConsulta() {
                 {clinicas.map((clinica) => (
                   <div
                     key={clinica.id}
-                    onClick={() => {setClinicaSelecionada(clinica)
+                    onClick={() => {
+                      setClinicaSelecionada(clinica)
                       setPasso(2)
                     }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${clinicaSelecionada?.id === clinica.id
-                        ? "border-indigo-500 bg-indigo-50"
-                        : "border-gray-200 hover:border-indigo-300"
+                      ? "border-indigo-500 bg-indigo-50"
+                      : "border-gray-200 hover:border-indigo-300"
                       }`}
                   >
                     <h3 className="font-semibold text-gray-800">{clinica.nome}</h3>
@@ -286,12 +301,13 @@ export default function MarcarConsulta() {
                 {medicosDaClinica.map((medico) => (
                   <div
                     key={medico.id}
-                    onClick={() => {setMedicoSelecionado(medico)
+                    onClick={() => {
+                      setMedicoSelecionado(medico)
                       setPasso(3)
-                    } }
+                    }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${medicoSelecionado?.id === medico.id
-                        ? "border-indigo-500 bg-indigo-50"
-                        : "border-gray-200 hover:border-indigo-300"
+                      ? "border-indigo-500 bg-indigo-50"
+                      : "border-gray-200 hover:border-indigo-300"
                       }`}
                   >
                     <h3 className="font-semibold text-gray-800">{medico.nome}</h3>
@@ -316,7 +332,7 @@ export default function MarcarConsulta() {
                 <input
                   type="text"
                   placeholder="dd/mm"
-                  onChange={(e) => setDataSelecionada(e.target.value )}
+                  onChange={(e) => setDataSelecionada(e.target.value)}
                   maxLength="5"
                   pattern="\d{2}/\d{2}"
                   required
@@ -324,17 +340,16 @@ export default function MarcarConsulta() {
                 />
               </div>
 
-              {dataSelecionada && (
-                <div>
-                  <label className="block text-gray-700 font-medium mb-2 text-sm">Horário</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" onChange={(e) => setHorarioSelecionado(e.target.value)}>
-                    <option value="00:00">00:00</option>
-                    {horarios.map((horario) => (
-                      <option key={horario.id} value={horario.hora}>{horario.hora.slice(0,5)}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-2 text-sm">Horário</label>
+                <select className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" onChange={(e) => setHorarioSelecionado(e.target.value)}>
+                  {horarios.map((horario) => (
+                    <option key={horario.id} value={horario.hora}>{horario.hora.slice(0, 5)}</option>
+                  ))}
+                </select>
+              </div>
+
             </div>
           )}
 
@@ -358,7 +373,7 @@ export default function MarcarConsulta() {
 
                 <div className="p-3 border border-gray-200 rounded-md">
                   <p className="text-sm text-gray-500 font-medium">Data e Horário</p>
-                  <p className=" text-black font-semibold">{dataSelecionada} às {horarioSelecionado.slice(0,5)}</p>
+                  <p className=" text-black font-semibold">{dataSelecionada} às {horarioSelecionado.slice(0, 5)}</p>
                 </div>
               </div>
             </div>

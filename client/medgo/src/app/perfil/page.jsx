@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
-const API_URL = "http://localhost:3000"
+const API_URL = "http://localhost:3001"
 
 export default function Perfil() {
 
@@ -70,7 +70,6 @@ export default function Perfil() {
     }
   }
 
-  const idade = calcularIdade(usuarioLogado.dataNascimento);
 
   const atualizarSenha = async (idUser) => {
     try{
