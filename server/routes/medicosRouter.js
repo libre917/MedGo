@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', listarMedicosController);
 router.get('/:id', listarMedicosPorIdController)
 router.post('/', adicionarMedicosController)
-router.put('/:id', atualizarMedicosController)
+router.patch('/:id', atualizarMedicosController)
 router.delete('/:id', deletarMedicoController)
 
 router.options("/", (req, res) => {
@@ -15,7 +15,7 @@ router.options("/", (req, res) => {
   });
   
   router.options("/:id", (req, res) => {
-    res.setHeader("Allow", "GET, DELETE, PUT, OPTIONS");
+    res.setHeader("Allow", "GET, DELETE, PATCH, OPTIONS");
     res.status(204).send();
   });
 

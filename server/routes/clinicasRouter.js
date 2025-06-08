@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', listarClinicasController);
 router.get('/:id', listarClinicasPorIdController);
 router.post('/', adicionarClinicasController);
-router.put('/:id', atualizarClinicasController);
+router.patch('/:id', atualizarClinicasController);
 router.delete('/:id', deletarClinicaController);
 
 

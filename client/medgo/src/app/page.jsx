@@ -45,7 +45,6 @@ export default function Login() {
         router.push('/home-admin');
       } else if (userType === "Medico") {
         const response = await axios.post(`${API_URL}/auth/medLogin`, {
-          email: email,
           senha: senha,
           crm: crm
         });

@@ -6,11 +6,13 @@ const senhas = [
 ];
 
 const saltRounds = 10;
+let i = 1
 
 const gerarHashes = async () => {
   for (let senha of senhas) {
     const hash = await bcrypt.hash(senha, saltRounds);
-    console.log(`Senha original: ${senha} => Hash: ${hash}`);
+    console.log(`${i}: Senha original: ${senha} => Hash: ${hash}`);
+    i++
   }
 };
 

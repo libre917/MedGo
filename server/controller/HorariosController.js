@@ -1,7 +1,6 @@
-import { read } from "../config/database.js";
 import { listarHorarios, listarHorariosPorId } from "../models/Horarios.js";
 
-
+// Controller para listar Horários
 const listarHorariosController = async (req, res) => {
     try {
         const horarios = await listarHorarios();
@@ -12,6 +11,7 @@ const listarHorariosController = async (req, res) => {
     }
 }
 
+// Controller para mostrar um Horario
 const listarHorariosPorIdController = async (req, res) => {
     try{
         const horario = await listarHorariosPorId(req.params.id);
@@ -26,4 +26,5 @@ const listarHorariosPorIdController = async (req, res) => {
     }
 }
 
+// Exporta para horariosRouter
 export { listarHorariosController, listarHorariosPorIdController}

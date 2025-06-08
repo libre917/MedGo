@@ -71,15 +71,14 @@ export default function GerenciamentoMedicos() {
       const dadosMedico = {
         nome: medicoSelecionado.nome,
         email: medicoSelecionado.email,
-        senha: medicoSelecionado.senha,
         crm: medicoSelecionado.crm,
         especialidade: medicoSelecionado.especialidade,
         id_clinica: clinicaLogada.id,
       };
 
       if (medicoSelecionado.id) {
-        // Atualização (PUT)
-        await axios.put(`${API_URL}/medicos/${medicoSelecionado.id}`, dadosMedico);
+        // Atualização (PACTH)
+        await axios.patch(`${API_URL}/medicos/${medicoSelecionado.id}`, dadosMedico);
         
         // Atualiza a lista local
         setMedicos(medicos.map(m => 
@@ -326,7 +325,40 @@ export default function GerenciamentoMedicos() {
               </form>
             ) : (
               <div className="space-y-4">
-                {/* ... (código do modal de detalhes permanece o mesmo) ... */}
+                   <div>
+                  <h3 className="font-medium text-gray-500">Nome</h3>
+                  <p className="text-lg text-gray-800 font-semibold">{medicoSelecionado.nome}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-medium text-gray-500">CRM</h3>
+                    <p className="text-gray-800">{medicoSelecionado.crm}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-500">Especialidade</h3>
+                    <p className="text-gray-800">{medicoSelecionado.especialidade}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-medium text-gray-500">E-mail</h3>
+                  <p className="text-gray-800">{medicoSelecionado.email}</p>
+                </div>
+
+                <div>
+                  <h3 className="font-medium text-gray-500">Telefone</h3>
+                  <p className="text-gray-800">{medicoSelecionado.telefone || "--"}</p>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={fecharModal}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Fechar
+                  </button>
+                </div>
               </div>
             )}
           </div>

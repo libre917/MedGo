@@ -13,18 +13,19 @@ export default function GerenciamentoClinicas() {
   const [modalAberto, setModalAberto] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
 
+  const carregarClinicas = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/Clinicas`);
+      setClinicas(response.data);
+    } catch (err) {
+      console.error("Erro ao buscar clínicas:", err);
+      alert("Erro ao carregar clínicas");
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   useEffect(() => {
-    const carregarClinicas = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/Clinicas`);
-        setClinicas(response.data);
-      } catch (err) {
-        console.error("Erro ao buscar clínicas:", err);
-        alert("Erro ao carregar clínicas");
-      } finally {
-        setCarregando(false);
-      }
-    };
     carregarClinicas();
   }, []);
 
@@ -49,7 +50,7 @@ export default function GerenciamentoClinicas() {
   const handleAdicionarClinica = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/clinicas`, {
+      await axios.post(`${API_URL}/Clinicas`, {
         nome: clinicaSelecionada.nome,
         endereco: clinicaSelecionada.endereco,
         telefone: clinicaSelecionada.telefone,
@@ -58,9 +59,33 @@ export default function GerenciamentoClinicas() {
       });
       alert("Clínica adicionada!");
       fecharModal();
+      carregarClinicas();
     } catch (err) {
       console.error("Erro ao adicionar clínica:", err);
       alert("Erro ao adicionar clínica");
+    }
+  };
+
+  const handleAtualizarClinica = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(`${API_URL}/Clinicas/${clinicaSelecionada.id}`, {
+        nome: clinicaSelecionada.nome,
+        endereco: clinicaSelecionada.endereco,
+        telefone: clinicaSelecionada.telefone,
+        email: clinicaSelecionada.email
+      });
+      
+      // Atualiza a lista local
+      setClinicas(clinicas.map(clinica => 
+        clinica.id === clinicaSelecionada.id ? clinicaSelecionada : clinica
+      ));
+      
+      alert("Clínica atualizada com sucesso!");
+      fecharModal();
+    } catch (err) {
+      console.error("Erro ao atualizar clínica:", err);
+      alert("Erro ao atualizar clínica");
     }
   };
 
@@ -212,14 +237,17 @@ export default function GerenciamentoClinicas() {
                 </button>
               </div>
               {modoEdicao ? (
-                <form className="space-y-4" onSubmit={handleAdicionarClinica}>
+                <form 
+                  className="space-y-4" 
+                  onSubmit={clinicaSelecionada.id ? handleAtualizarClinica : handleAdicionarClinica}
+                >
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nome da Clínica*</label>
                     <input
                       type="text"
                       value={clinicaSelecionada.nome}
                       onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, nome: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex: Clínica Saúde Total"
                       required
                     />
@@ -229,7 +257,7 @@ export default function GerenciamentoClinicas() {
                     <textarea
                       value={clinicaSelecionada.endereco}
                       onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, endereco: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows="3"
                       placeholder="Rua, número, bairro, cidade - UF"
                       required
@@ -242,7 +270,7 @@ export default function GerenciamentoClinicas() {
                         type="tel"
                         value={clinicaSelecionada.telefone}
                         onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, telefone: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="(11) 1234-5678"
                         required
                       />
@@ -253,7 +281,7 @@ export default function GerenciamentoClinicas() {
                         type="email"
                         value={clinicaSelecionada.email}
                         onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, email: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="contato@clinica.com"
                         required
                       />
@@ -266,7 +294,7 @@ export default function GerenciamentoClinicas() {
                         type="password"
                         value={clinicaSelecionada.senha}
                         onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, senha: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Senha para acesso da clínica"
                         required
                       />

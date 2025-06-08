@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "1234",
   database: "MedGoDB",
   waitForConnections: true,
   connectionLimit: 10,
@@ -15,7 +15,7 @@ async function getConnection() {
   return pool.getConnection();
 }
 
-//Função para ler todos medicos registrados
+//Função para ler todos os registros
 async function readAll(table, where = null) {
   const connection = await getConnection();
   try {
@@ -34,7 +34,7 @@ async function readAll(table, where = null) {
   }
 }
 
-// Função para ler um medico por ID 
+// Função para ler um registro por ID 
 async function read(table, where) {
   const connection = await getConnection();
   try {
