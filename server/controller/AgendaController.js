@@ -80,6 +80,8 @@ const atualizarAgendamentoController = async (req, res) => {
     // Recebe dados enviados do Front-end
     const { id_clinica, id_medico, id_paciente, data, hora, status } = req.body
     try {
+        const [ano, mes, diaHora] = data.split("-")
+        const [dia, hora] = diaHora.split("T")
         // Função para verificar se data á válida
         function verificarData(dia, mes, ano) {
             const data = new Date(ano, mes - 1, dia);

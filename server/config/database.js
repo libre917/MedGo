@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "",
   database: "MedGoDB",
   waitForConnections: true,
   connectionLimit: 10,
