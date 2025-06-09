@@ -89,7 +89,7 @@ export default function MarcarConsulta() {
   const [clinicaSelecionada, setClinicaSelecionada] = useState(null);
   const [medicoSelecionado, setMedicoSelecionado] = useState(null);
   const [dataSelecionada, setDataSelecionada] = useState("");
-  const [horarioSelecionado, setHorarioSelecionado] = useState("");
+  const [horarioSelecionado, setHorarioSelecionado] = useState("08:00:00");
 
   // Filtrar médicos pela clínica selecionada
   const medicosDaClinica = clinicaSelecionada

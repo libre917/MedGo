@@ -289,7 +289,7 @@ export default function GerenciamentoClinicas() {
                         value={clinicaSelecionada.telefone}
                         onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, telefone: e.target.value })}
                         className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="(11) 1234-5678"
+                        placeholder="1112345678"
                         required
                       />
                     </div>
