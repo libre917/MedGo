@@ -8,6 +8,7 @@ export default function GerenciamentoMedicos() {
   const [medicos, setMedicos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [medicoSelecionado, setMedicoSelecionado] = useState(null);
+  const [especialidade, setEspecilidade] = useState("clinico geral");
   const [modalAberto, setModalAberto] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
 
@@ -27,14 +28,16 @@ useEffect(() => {
     } catch (err) {
       if (!err.response) {
         alert("Falha na conexão com o servidor. Verifique sua internet.");
-      } else if (err.response.status === 404) {
+      } else if(err.response.status === 400){
+        alert(err.response.data.mensagem || "Dados inseridos incorretos");
+      }else if (err.response.status === 404) {
         alert(err.response.data.mensagem || "Nenhum médico encontrado.");
       } else {
         alert(err.response.data.mensagem || "Erro ao listar médicos.");
       }
       console.error("Erro ao listar médicos:", err);
     } finally {
-      setCarregando(false);
+      setCarregando(false); 
     }
   };
 
@@ -92,7 +95,7 @@ const handleSalvarMedico = async (e) => {
       nome: medicoSelecionado.nome,
       email: medicoSelecionado.email,
       crm: medicoSelecionado.crm,
-      especialidade: medicoSelecionado.especialidade,
+      especialidade: especialidade,
       id_clinica: clinicaLogada.id,
     };
       // Atualização (PATCH)
@@ -111,7 +114,7 @@ const handleSalvarMedico = async (e) => {
       email: medicoSelecionado.email,
       senha: medicoSelecionado.senha,
       crm: medicoSelecionado.crm,
-      especialidade: medicoSelecionado.especialidade,
+      especialidade: especialidade,
       id_clinica: clinicaLogada.id,
     };
       // Criação (POST)
@@ -271,7 +274,7 @@ const handleSalvarMedico = async (e) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label on className="block text-sm font-medium text-gray-700 mb-1">
                     E-mail*
                   </label>
                   <input
@@ -321,18 +324,24 @@ const handleSalvarMedico = async (e) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Especialidade*
                     </label>
-                    <input
-                      type="text"
-                      value={medicoSelecionado.especialidade}
-                      onChange={(e) =>
-                        setMedicoSelecionado({
-                          ...medicoSelecionado,
-                          especialidade: e.target.value,
-                        })
-                      }
-                      className="text-black w-full px-3 py-2 border border-gray-300 rounded-md"
-                      required
-                    />
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" required onChange={(e) => setEspecilidade(e.target.value)}>
+                      <option value="clinico geral">clinico geral </option>
+                      <option value="cardiologista">cardiologista </option>
+                      <option value="dermatologista">dermatologista </option>
+                      <option value="gastroenterologista">gastroenterologista </option>
+                      <option value="neurologista">neurologista </option>
+                      <option value="ortopedia">ortopedia </option>
+                      <option value="pediatria">pediatria </option>
+                      <option value="psiquiatria">psiquiatria </option>
+                      <option value="ginecologista">ginecologista </option>
+                      <option value="urologista">urologista </option>
+                      <option value="endocrinologista">endocrinologista </option>
+                      <option value="oftalmologista">oftalmologista </option>
+                      <option value="otorrinolaringologista">otorrinolaringologista </option>
+                      <option value="fisioterapeuta">fisioterapeuta </option>
+                      <option value="nutrição">nutrição </option>
+                      <option value="odontologia">odontologia </option>
+                    </select>
                   </div>
                 </div>
 
@@ -375,10 +384,6 @@ const handleSalvarMedico = async (e) => {
                   <p className="text-gray-800">{medicoSelecionado.email}</p>
                 </div>
 
-                <div>
-                  <h3 className="font-medium text-gray-500">Telefone</h3>
-                  <p className="text-gray-800">{medicoSelecionado.telefone || "--"}</p>
-                </div>
 
                 <div className="mt-6 flex justify-end">
                   <button

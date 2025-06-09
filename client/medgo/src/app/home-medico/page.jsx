@@ -85,7 +85,7 @@ export default function AgendaMedico() {
       const formattedData = {
         ...agendamentoDados,
         status: novoStatus,
-        data: formatDateForMySQL(agendamentoDados.data)
+        data: agendamentoDados.data
       };
 
       await axios.put(`${API_URL}/agendamentos/${idConsulta}`, formattedData);

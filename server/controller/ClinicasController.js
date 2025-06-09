@@ -56,10 +56,11 @@ const adicionarClinicasController = async (req, res) => {
         }
         // Faz o hash da senha digitada 
         const senhaHash = await bcrypt.hash(senha, 10)
+         
         // Dados a serem enviados
         const clinicaData = {
             nome: nome,
-            email: email,
+            email: email.toLowerCase(),
             endereco: endereco,
             telefone: telefone,
             senha: senhaHash
