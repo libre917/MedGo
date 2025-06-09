@@ -35,7 +35,7 @@ export default function Login() {
     try {
       // Redireciona de acordo com o tipo de usuário
       if (userType === "ADM") {
-         const response = await axios.post(`${API_URL}/auth/admLogin`, {
+        const response = await axios.post(`${API_URL}/auth/admLogin`, {
           email: email,
           senha: senha,
           codigo: chaveAdmin
@@ -46,6 +46,7 @@ export default function Login() {
       } else if (userType === "Medico") {
         const response = await axios.post(`${API_URL}/auth/medLogin`, {
           senha: senha,
+          email: email,
           crm: crm
         });
         const medicos = response.data;
@@ -53,7 +54,7 @@ export default function Login() {
         router.push('/home-medico')
       } else if (userType === "Clinica") {
 
-          const response = await axios.post(`${API_URL}/auth/clinicaLogin`, {
+        const response = await axios.post(`${API_URL}/auth/clinicaLogin`, {
           email: email,
           senha: senha
         });
@@ -71,18 +72,28 @@ export default function Login() {
         router.push('/home')
       }
     } catch (err) {
+      if(!err.response){
+        setMensagemErro("Falha na conexão");
+        setMostrarModal(true)
+        return
+      }
       if (err.response && err.response.status === 401) {
-        setMensagemErro("Senha incorreta");
+        setMensagemErro("Dados inseridos incorretos");
         setMostrarModal(true);
         return;
       }
       if (err.response && err.response.status === 404) {
-        setMensagemErro("Usuário não cadastrado");
+        setMensagemErro(userType + " sem cadastro");
         setMostrarModal(true);
         return;
       }
-      console.error("Erro ao conectar-se ao servidor", err);
-      setMensagemErro("Erro ao conectar-se ao servidor.");
+      if (err.response && err.response.status === 500) {
+        setMensagemErro("Erro interno do servidor, tente novamente mais tarde");
+        setMostrarModal(true);
+        return;
+      }
+      console.error("Erro desconhecido", err);
+      setMensagemErro("Erro desconhecido, tente novamente.");
       setMostrarModal(true);
     }
   };

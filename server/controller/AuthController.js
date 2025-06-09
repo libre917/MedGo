@@ -37,12 +37,14 @@ const loginUserController = async (req, res) => {
 // Verificação de login do Médico
 const loginMedController = async (req, res) => {
     // Recebe dados enviados do Front-end
-    const { senha, crm } = req.body
+    const { senha, email, crm } = req.body
     try {
         // Procura Medico pelo crm
         const medico = await read('Medicos', `crm = '${crm}'`)
+        const medicoEmail = await read('Medicos', `email = '${email}'`)
+        
         // Se não encontrar Medico, retorna status 404 (Not found)
-        if (!medico) {
+        if (!medico || !medicoEmail) {
             return res.status(404).json({ mensagem: "Erro: Medico não encontrado" })
         }
         // Compara senha digitada com senha hasheada

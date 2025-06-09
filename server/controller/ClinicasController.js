@@ -117,7 +117,7 @@ const atualizarClinicasController = async (req, res) => {
         }
         console.log(clinicaData)
         // Faz a atualização dos dados
-        await atualizarClinica(clinicaId,clinicaData);
+        await atualizarClinica(clinicaId, clinicaData);
         res.status(200).json({ mensagem: "Clinica atualizada com sucesso" })
     } catch (err) {
         console.error("Erro ao atualizar clinica:", err)
@@ -132,8 +132,8 @@ const deletarClinicaController = async (req, res) => {
     try {
         // Faz a remoção da clinica
         await deletarClinica(clinicaId)
-        // Retorna status 204 (No Content)
-        res.status(204)
+        // Retorna status 200 (Ok)
+        res.status(200).json({ mensagem: "Clinica deletada" })
     } catch (err) {
         console.error('Erro ao deletar ')
         // Se ocorrer erro, retorna status 500 (Internal Server Error)

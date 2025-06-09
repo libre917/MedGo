@@ -117,12 +117,12 @@ const atualizarAgendamentoController = async (req, res) => {
 
 const deletarAgendamentoController = async (req, res) => {
     // Recebe id do agendamento
-     const agendaId = req.params.id;
+    const agendaId = req.params.id;
     try {
         // Deleta o agendamento
         await deletarAgendamento(agendaId)
-        // Retorna status 204 (No Content)
-        res.status(204)
+        // Retorna status 200 (Ok)
+        res.status(200).json({ mensagem: "Agendamento deletado" })
     } catch (err) {
         console.error("Erro ao cancelar agendamento:", err);
         // Se ocorrer erro, retorna status 500 (Internal Server Error)

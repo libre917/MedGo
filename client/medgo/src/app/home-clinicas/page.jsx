@@ -14,95 +14,124 @@ export default function GerenciamentoMedicos() {
   const clinicaDados = localStorage.getItem("usuario");
   const clinicaLogada = JSON.parse(clinicaDados);
 
-  // Carrega lista de médicos ao montar o componente
-  useEffect(() => {
-    const carregarMedicos = async () => {
-      try {
-        const resposta = await axios.get(`${API_URL}/medicos`);
-        const listaFiltrada = resposta.data.filter(
-          (medico) => medico.id_clinica === clinicaLogada.id
-        );
-        setMedicos(listaFiltrada);
-      } catch (err) {
-        console.error("Erro ao buscar médicos:", err);
-      } finally {
-        setCarregando(false);
-      }
-    };
-
-    carregarMedicos();
-  }, [clinicaLogada.id]);
-
-  const abrirModalDetalhes = (medico) => {
-    setMedicoSelecionado(medico);
-    setModalAberto(true);
-    setModoEdicao(false);
-  };
-
-  const abrirModalEdicao = (medico) => {
-    setMedicoSelecionado(medico);
-    setModalAberto(true);
-    setModoEdicao(true);
-  };
-
-  const fecharModal = () => {
-    setModalAberto(false);
-    setMedicoSelecionado(null);
-    setModoEdicao(false);
-  };
-
-  const handleExcluirMedico = async (id) => {
+// Carrega lista de médicos ao montar o componente
+useEffect(() => {
+  const carregarMedicos = async () => {
     try {
-      if (confirm("Tem certeza que deseja excluir este médico?")) {
-        await axios.delete(`${API_URL}/medicos/${id}`);
-        setMedicos((prev) => prev.filter((m) => m.id !== id));
-        alert("Médico excluído com sucesso!");
-      }
+      const resposta = await axios.get(`${API_URL}/medicos`);
+      // Filtra os médicos que pertencem à clínica logada
+      const listaFiltrada = resposta.data.filter(
+        (medico) => medico.id_clinica === clinicaLogada.id
+      );
+      setMedicos(listaFiltrada);
     } catch (err) {
-      console.error('Erro ao deletar:', err);
-      alert("Erro ao deletar médico do banco de dados");
-    }
-  };
-
-  const handleSalvarMedico = async (e) => {
-    e.preventDefault();
-
-    try {
-      const dadosMedico = {
-        nome: medicoSelecionado.nome,
-        email: medicoSelecionado.email,
-        crm: medicoSelecionado.crm,
-        especialidade: medicoSelecionado.especialidade,
-        id_clinica: clinicaLogada.id,
-      };
-
-      if (medicoSelecionado.id) {
-        // Atualização (PACTH)
-        await axios.patch(`${API_URL}/medicos/${medicoSelecionado.id}`, dadosMedico);
-        
-        // Atualiza a lista local
-        setMedicos(medicos.map(m => 
-          m.id === medicoSelecionado.id ? { ...m, ...dadosMedico } : m
-        ));
-        
-        alert("Médico atualizado com sucesso!");
+      if (!err.response) {
+        alert("Falha na conexão com o servidor. Verifique sua internet.");
+      } else if (err.response.status === 404) {
+        alert(err.response.data.mensagem || "Nenhum médico encontrado.");
       } else {
-        // Criação (POST)
-        const response = await axios.post(`${API_URL}/medicos`, dadosMedico);
-        
-        // Adiciona o novo médico à lista
-        setMedicos([...medicos, response.data]);
-        
-        alert("Médico cadastrado com sucesso!");
+        alert(err.response.data.mensagem || "Erro ao listar médicos.");
       }
-
-      fecharModal();
-    } catch (err) {
-      console.error("Erro ao salvar médico:", err);
-      alert("Ocorreu um erro ao salvar o médico. Por favor, tente novamente.");
+      console.error("Erro ao listar médicos:", err);
+    } finally {
+      setCarregando(false);
     }
   };
 
+  carregarMedicos();
+}, [clinicaLogada.id]);
+
+// Abre modal com detalhes (visualização)
+const abrirModalDetalhes = (medico) => {
+  setMedicoSelecionado(medico);
+  setModalAberto(true);
+  setModoEdicao(false);
+};
+
+// Abre modal para edição
+const abrirModalEdicao = (medico) => {
+  setMedicoSelecionado(medico);
+  setModalAberto(true);
+  setModoEdicao(true);
+};
+
+// Fecha o modal e reseta os estados
+const fecharModal = () => {
+  setModalAberto(false);
+  setMedicoSelecionado(null);
+  setModoEdicao(false);
+};
+
+// Exclui um médico
+const handleExcluirMedico = async (id) => {
+  if (confirm("Tem certeza que deseja excluir este médico?")) {
+    try {
+      const response = await axios.delete(`${API_URL}/medicos/${id}`);
+      setMedicos((prev) => prev.filter((m) => m.id !== id));
+      // O controller retorna { mensagem: "Medico deletado" }
+      alert(response.data.mensagem || "Médico excluído com sucesso!");
+    } catch (err) {
+      if (err.response?.status === 404) {
+        alert(err.response.data.mensagem || "Médico não encontrado.");
+      } else {
+        alert(err.response.data.mensagem || "Erro ao deletar médico.");
+      }
+      console.error("Erro ao deletar médico:", err);
+    }
+  }
+};
+
+// Salva (cria ou atualiza) um médico
+const handleSalvarMedico = async (e) => {
+  e.preventDefault();
+
+  try {
+
+    if (medicoSelecionado.id) {
+         const dadosMedico = {
+      nome: medicoSelecionado.nome,
+      email: medicoSelecionado.email,
+      crm: medicoSelecionado.crm,
+      especialidade: medicoSelecionado.especialidade,
+      id_clinica: clinicaLogada.id,
+    };
+      // Atualização (PATCH)
+      const response = await axios.patch(`${API_URL}/medicos/${medicoSelecionado.id}`, dadosMedico);
+      // Atualiza a lista local substituindo os dados do médico atualizado
+      setMedicos((prevMedicos) =>
+        prevMedicos.map((m) =>
+          m.id === medicoSelecionado.id ? { ...m, ...dadosMedico } : m
+        )
+      );
+      // O controller retorna { mensagem: 'Informações atualizadas com sucesso' }
+      alert(response.data.mensagem || "Informações atualizadas com sucesso!");
+    } else {
+         const dadosMedico = {
+      nome: medicoSelecionado.nome,
+      email: medicoSelecionado.email,
+      senha: medicoSelecionado.senha,
+      crm: medicoSelecionado.crm,
+      especialidade: medicoSelecionado.especialidade,
+      id_clinica: clinicaLogada.id,
+    };
+      // Criação (POST)
+      const response = await axios.post(`${API_URL}/medicos`, dadosMedico);
+      // Adiciona o novo médico à lista
+      setMedicos([...medicos, response.data.MedicoInfo]);
+      alert(response.data.mensagem || "Médico adicionado com sucesso!");
+    }
+
+    fecharModal();
+  } catch (err) {
+    if (err.response && err.response.status === 400) {
+      // Exibe a mensagem de erro de validação enviada pelo back-end
+      alert(err.response.data.mensagem || "Erro: Dados inválidos.");
+    } else {
+      alert(err.response?.data.mensagem || "Erro ao salvar médico. Por favor, tente novamente.");
+    }
+    console.error("Erro ao salvar médico:", err);
+  }
+};
   if (carregando) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -115,9 +144,9 @@ export default function GerenciamentoMedicos() {
 
   return (
     
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
-   
+      <main className="flex-1 py-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-900">Gerenciamento de Médicos</h1>
@@ -364,6 +393,8 @@ export default function GerenciamentoMedicos() {
           </div>
         </div>
       )}
+      </main>
     </div>
+    
   );
 }

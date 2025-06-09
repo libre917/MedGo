@@ -18,13 +18,18 @@ export default function GerenciamentoClinicas() {
       const response = await axios.get(`${API_URL}/Clinicas`);
       setClinicas(response.data);
     } catch (err) {
+      if (!err.response) {
+        alert("Falha na conexão com o servidor. Verifique sua internet.");
+      } else if (err.response.status === 404) {
+        alert("Nenhuma clínica encontrada.");
+      } else {
+        alert("Erro ao consultar clínicas.");
+      }
       console.error("Erro ao buscar clínicas:", err);
-      alert("Erro ao carregar clínicas");
     } finally {
       setCarregando(false);
     }
   };
-
   useEffect(() => {
     carregarClinicas();
   }, []);
@@ -57,12 +62,17 @@ export default function GerenciamentoClinicas() {
         email: clinicaSelecionada.email,
         senha: clinicaSelecionada.senha
       });
-      alert("Clínica adicionada!");
+
+      alert("Clínica adicionada com sucesso!");
       fecharModal();
       carregarClinicas();
     } catch (err) {
+      if (err.response?.status === 400) {
+        alert(err.response.data.mensagem); // Erro de validação vindo do backend
+      } else {
+        alert("Erro ao adicionar clínica.");
+      }
       console.error("Erro ao adicionar clínica:", err);
-      alert("Erro ao adicionar clínica");
     }
   };
 
@@ -75,33 +85,41 @@ export default function GerenciamentoClinicas() {
         telefone: clinicaSelecionada.telefone,
         email: clinicaSelecionada.email
       });
-      
-      // Atualiza a lista local
-      setClinicas(clinicas.map(clinica => 
-        clinica.id === clinicaSelecionada.id ? clinicaSelecionada : clinica
-      ));
-      
+
+      setClinicas(prevClinicas =>
+        prevClinicas.map(clinica =>
+          clinica.id === clinicaSelecionada.id ? clinicaSelecionada : clinica
+        )
+      );
+
       alert("Clínica atualizada com sucesso!");
       fecharModal();
     } catch (err) {
+      if (err.response?.status === 400) {
+        alert(err.response.data.mensagem); // Mensagem de erro detalhada do backend
+      } else {
+        alert("Erro ao atualizar clínica.");
+      }
       console.error("Erro ao atualizar clínica:", err);
-      alert("Erro ao atualizar clínica");
     }
   };
-
   const handleExcluirClinica = async (id) => {
     if (confirm("Tem certeza que deseja excluir esta clínica? Esta ação não pode ser desfeita.")) {
       try {
         await axios.delete(`${API_URL}/Clinicas/${id}`);
-        setClinicas(clinicas.filter(clinica => clinica.id !== id));
+        setClinicas(prevClinicas => prevClinicas.filter(clinica => clinica.id !== id));
+
         alert("Clínica excluída com sucesso!");
       } catch (err) {
+        if (err.response?.status === 404) {
+          alert("Clínica não encontrada.");
+        } else {
+          alert("Erro ao excluir clínica.");
+        }
         console.error("Erro ao excluir clínica:", err);
-        alert("Erro ao excluir clínica");
       }
     }
   };
-
   if (carregando) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -117,13 +135,13 @@ export default function GerenciamentoClinicas() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-        <Header />
+      <Header />
       <main className="flex-1 py-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-900">Painel Administrativo</h1>
             <p className="mt-2 text-gray-600">Gerenciamento de Clínicas do Sistema</p>
-            
+
             <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="text-center sm:text-left">
                 <p className="text-sm text-gray-600">
@@ -237,8 +255,8 @@ export default function GerenciamentoClinicas() {
                 </button>
               </div>
               {modoEdicao ? (
-                <form 
-                  className="space-y-4" 
+                <form
+                  className="space-y-4"
                   onSubmit={clinicaSelecionada.id ? handleAtualizarClinica : handleAdicionarClinica}
                 >
                   <div>
@@ -246,7 +264,7 @@ export default function GerenciamentoClinicas() {
                     <input
                       type="text"
                       value={clinicaSelecionada.nome}
-                      onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, nome: e.target.value})}
+                      onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, nome: e.target.value })}
                       className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex: Clínica Saúde Total"
                       required
@@ -256,7 +274,7 @@ export default function GerenciamentoClinicas() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Endereço Completo*</label>
                     <textarea
                       value={clinicaSelecionada.endereco}
-                      onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, endereco: e.target.value})}
+                      onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, endereco: e.target.value })}
                       className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows="3"
                       placeholder="Rua, número, bairro, cidade - UF"
@@ -269,7 +287,7 @@ export default function GerenciamentoClinicas() {
                       <input
                         type="tel"
                         value={clinicaSelecionada.telefone}
-                        onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, telefone: e.target.value})}
+                        onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, telefone: e.target.value })}
                         className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="(11) 1234-5678"
                         required
@@ -280,7 +298,7 @@ export default function GerenciamentoClinicas() {
                       <input
                         type="email"
                         value={clinicaSelecionada.email}
-                        onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, email: e.target.value})}
+                        onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, email: e.target.value })}
                         className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="contato@clinica.com"
                         required
@@ -293,7 +311,7 @@ export default function GerenciamentoClinicas() {
                       <input
                         type="password"
                         value={clinicaSelecionada.senha}
-                        onChange={(e) => setClinicaSelecionada({...clinicaSelecionada, senha: e.target.value})}
+                        onChange={(e) => setClinicaSelecionada({ ...clinicaSelecionada, senha: e.target.value })}
                         className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Senha para acesso da clínica"
                         required

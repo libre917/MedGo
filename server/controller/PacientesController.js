@@ -151,8 +151,8 @@ const deletarPacienteController = async (req, res) => {
     try {
         // Faz a remoção do Usuario/Paciente
         await deletarPaciente(pacienteId)
-        // Retorna status 204 (No Content)
-        res.status(204)
+        // Retorna status 200 (Ok)
+        res.status(200).json({ mensagem: "Usuario/Paciente deletado" })
     } catch (err) {
         console.error('Erro ao deletar paciente: ', err)
         // Se ocorrer erro, retorna status 500 (Internal Server Error)

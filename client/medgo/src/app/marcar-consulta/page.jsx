@@ -274,7 +274,7 @@ export default function MarcarConsulta() {
                     key={clinica.id}
                     onClick={() => {
                       setClinicaSelecionada(clinica)
-                      setPasso(2)
+                  
                     }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${clinicaSelecionada?.id === clinica.id
                       ? "border-indigo-500 bg-indigo-50"
@@ -303,7 +303,7 @@ export default function MarcarConsulta() {
                     key={medico.id}
                     onClick={() => {
                       setMedicoSelecionado(medico)
-                      setPasso(3)
+                    
                     }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${medicoSelecionado?.id === medico.id
                       ? "border-indigo-500 bg-indigo-50"

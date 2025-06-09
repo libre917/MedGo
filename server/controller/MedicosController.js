@@ -45,6 +45,7 @@ const adicionarMedicosController = async (req, res) => {
         function validarCrm(crm) {
             return crm.length === 9 && crm.includes("/SP")
         }
+   
         // Validação do email
         function validarEmail(email) {
             return email.includes('@') && (email.includes('.com') || email.includes('.com.br'))
@@ -150,8 +151,8 @@ const deletarMedicoController = async (req, res) => {
     try {
         // Faz a remoção do Medico
         await deletarMedico(medicoId);
-        // Retorna status 204 (No Content)
-        res.status(204)
+        // Retorna status 200 (Ok)
+        res.status(200).json({ mensagem: "Medico deletado" })
     } catch (err) {
         console.error("Erro ao deletar dados do medico:", err)
         // Se ocorrer erro, retorna status 500 (Internal Server Error)

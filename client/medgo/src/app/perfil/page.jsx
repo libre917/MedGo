@@ -3,45 +3,32 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import axios from "axios";
-const API_URL = "http://localhost:3001"
+const API_URL = "http://localhost:3001";
 
 export default function Perfil() {
-
-  const [paciente, setPaciente] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tipoUsuario, setTipoUsuario] = useState('');
-  const [altSenha, setAltSenha] = useState(null)
-  const [senha, setSenha] = useState("")
+  const [altSenha, setAltSenha] = useState(null);
+  const [senha, setSenha] = useState("");
   const [newSenha, setNewSenha] = useState("");
 
   const deletarConta = async (idUser) => {
-    if (!confirm('Tem certeza que deseja deletar esta conta?')) return;
+    if (!confirm('Tem certeza que deseja deletar sua conta? Todos os seus dados serão permanentemente removidos.')) return;
     try {
-      const endpoint = tipoUsuario === 'medico' ? 'medicos' : 'pacientes';
-      await axios.delete(`${API_URL}/${endpoint}/${idUser}`)
-      window.location = "/"
+      await axios.delete(`${API_URL}/pacientes/${idUser}`);
+      localStorage.removeItem("usuario");
+      window.location = "/";
     } catch (err) {
-      console.error("Erro", err)
+      console.error("Erro ao excluir conta:", err);
+      alert("Ocorreu um erro ao tentar excluir sua conta");
     }
   }
 
+  // Obter dados do usuário logado
   const userData = localStorage.getItem("usuario");
-  const usuarioLogado = JSON.parse(userData);
-  const data = new Date()
-  const anoAtual = data.getFullYear()
-  if(!usuarioLogado.crm){
-  const dataNasc = usuarioLogado.dataNascimento.split(" ") 
-  var idade = anoAtual - dataNasc[3]
+  const usuarioLogado = userData ? JSON.parse(userData) : null;
 
-} else {
-  var idade = 0
-}
- 
-  
-  
-  
-  // Função para calcular idade com segurança
+  // Calcular idade
   const calcularIdade = (dataNascimento) => {
     if (!dataNascimento) return null;
     
@@ -50,96 +37,75 @@ export default function Perfil() {
       const anoAtual = data.getFullYear();
       
       // Tenta diferentes formatos de data
-      let dataNasc;
       if (typeof dataNascimento === 'string') {
         if (dataNascimento.includes(' ')) {
           // Formato: "Wed Oct 25 1995 00:00:00 GMT-0300"
-          dataNasc = dataNascimento.split(" ");
+          const dataNasc = dataNascimento.split(" ");
           return anoAtual - parseInt(dataNasc[3]);
         } else if (dataNascimento.includes('-')) {
           // Formato: "1995-10-25"
-          dataNasc = new Date(dataNascimento);
+          const dataNasc = new Date(dataNascimento);
           return anoAtual - dataNasc.getFullYear();
         }
       }
       
       return null;
-    } catch (error) {
-      console.error("Erro ao calcular idade:", error);
+    } catch (err) {
+      console.err("Erro ao calcular idade:", err);
       return null;
     }
   }
 
-
   const atualizarSenha = async (idUser) => {
-    try{
-      const endpoint = tipoUsuario === 'medico' ? 'medicos' : 'pacientes';
-      const response = await axios.get(`${API_URL}/${endpoint}/${idUser}`)
-      const data = response.data
-      const postResponse = await axios.post("http://localhost:3000/auth/login", {email: usuarioLogado.email, senha: senha});
-      console.log(data)
-
-      await axios.put(`${API_URL}/${endpoint}/${idUser}`, {
-        ...data,
+    try {
+      // Verificar senha atual
+      await axios.post(`${API_URL}/auth/login`, {
+        email: usuarioLogado.email, 
+        senha: senha
+      });
+      
+      // Atualizar senha
+      await axios.put(`${API_URL}/pacientes/${idUser}`, {
+        ...usuario,
         senha: newSenha
-      })
+      });
      
-      alert('Senha alterada com sucesso')
-      setAltSenha(null)
-
+      alert('Senha alterada com sucesso!');
+      setAltSenha(null);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        alert("Senha incorreta");
-        console.error('Erro:', err)
-        return; 
+        alert("Senha atual incorreta");
+      } else {
+        console.err('Erro ao atualizar senha:', err);
+        alert("Ocorreu um erro ao atualizar sua senha");
       }
     }
   }
 
-  const userId = localStorage.getItem("usuario");
-  if (!userId) {
-    alert('Erro: Login ou cadastro necessário para funcionamento')
-    window.location.href = "/";
-  }
-
   useEffect(() => {
+    // Redirecionar se não estiver logado
+    if (!userData) {
+      alert('Faça login para acessar seu perfil');
+      window.location.href = "/login";
+      return;
+    }
+
     const fetchPerfil = async () => {
       try {
-        if (!userData) return;
-        // Verifica se é médico (tem CRM) ou paciente
-        if (usuarioLogado.crm) {
-          setTipoUsuario('medico');
-          const { data } = await axios.get(`${API_URL}/medicos/${usuarioLogado.id}`);
-          setUsuario(data);
-        } else {
-          setTipoUsuario('paciente');
-          const { data } = await axios.get(`${API_URL}/pacientes/${usuarioLogado.id}`);
+        const { data } = await axios.get(`${API_URL}/pacientes/${usuarioLogado.id}`);
 
-          // Se já tiver idade no objeto, usa ela diretamente
-          if (data.idade) {
-            setUsuario(data);
-          } else if (data.data_nascimento) {
-            // Se tiver data_nascimento, calcula a idade
-            const birthDate = new Date(data.data_nascimento);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-              age--;
-            }
-
-            setUsuario({
-              ...data,
-              idade: age
-            });
-          } else {
-            // Se não tiver nem idade nem data_nascimento, mantém os dados sem idade
-            setUsuario(data);
-          }
+        // Calcular idade se necessário
+        let idadeCalculada = null;
+        if (!data.idade && data.data_nascimento) {
+          idadeCalculada = calcularIdade(data.data_nascimento);
         }
-      } catch (error) {
-        console.error("Erro ao carregar perfil:", error);
+
+        setUsuario({
+          ...data,
+          idade: data.idade || idadeCalculada
+        });
+      } catch (err) {
+        console.err("Erro ao carregar perfil:", err);
       } finally {
         setLoading(false);
       }
@@ -162,6 +128,12 @@ export default function Perfil() {
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-light text-gray-800">Perfil não disponível</h1>
           <p className="text-gray-500">Não foi possível carregar suas informações</p>
+          <button 
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+            onClick={() => window.location.reload()}
+          >
+            Tentar novamente
+          </button>
         </div>
       </div>
     );
@@ -183,87 +155,48 @@ export default function Perfil() {
             <h1 className="mt-6 text-4xl font-light text-gray-900">
               {usuario.nome}
             </h1>
-            {tipoUsuario === 'medico' && (
-              <p className="mt-2 text-lg text-gray-600">{usuario.especialidade}</p>
-            )}
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-8">
               <div>
-                <h2 className="text-xs  titulo-cor-padrao-medgo font-bold uppercase tracking-wider">
-                  Informações {tipoUsuario === 'medico' ? 'Profissionais' : 'Pessoais'}
+                <h2 className="text-xs text-blue-600 font-bold uppercase tracking-wider">
+                  Informações Pessoais
                 </h2>
                 <div className="mt-4 space-y-4">
-                  {tipoUsuario === 'paciente' ? (
-                    <>
-                      {idade && (
-                        <div className="pb-4 border-b border-gray-100">
-                          <p className="text-sm text-black">Idade</p>
-                          <p className="mt-1 text-lg font-light text-gray-800">
-                            {idade} anos
-                          </p>
-                        </div>
-                      )}
-                      <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-black">Telefone</p>
-                        <p className="mt-1 text-lg font-light text-gray-800">
-                          {usuario.telefone}
-                        </p>
-                      </div>
-                      
-              <div className="flex justify-center">
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-red-800 bg-red-100" onClick={() => deletarConta(usuario.id)}>
-                  Excluir conta
-                </button>
-                <button className="m-2 rounded-4xl px-3 py-2.5 cursor-pointer text-yellow-800 bg-yellow-100" onClick={() => setAltSenha(usuario)}>
-                  Alterar senha
-                </button>
-              </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-gray-500">CRM</p>
-                        <p className="mt-1 text-lg font-light text-gray-800">
-                          {usuario.crm}
-                        </p>
-                      </div>
-                      <div className="pb-4 border-b border-gray-100">
-                        <p className="text-sm text-gray-500">Especialidade</p>
-                        <p className="mt-1 text-lg font-light text-gray-800">
-                          {usuario.especialidade}
-                        </p>
-                      </div>
-                      {usuario.telefone && (
-                        <div className="pb-4 border-b border-gray-100">
-                          <p className="text-sm text-gray-500">Telefone</p>
-                          <p className="mt-1 text-lg font-light text-gray-800">
-                            {usuario.telefone}
-                          </p>
-                        </div>
-                      )}
-                    </>
+                  {usuario.idade && (
+                    <div className="pb-4 border-b border-gray-100">
+                      <p className="text-sm text-gray-500">Idade</p>
+                      <p className="mt-1 text-lg font-light text-gray-800">
+                        {usuario.idade} anos
+                      </p>
+                    </div>
                   )}
-                </div>
-              </div>
-            </div>
+                  {usuario.telefone && (
+                    <div className="pb-4 border-b border-gray-100">
+                      <p className="text-sm text-gray-500">Telefone</p>
+                      <p className="mt-1 text-lg font-light text-gray-800">
+                        {usuario.telefone}
+                      </p>
+                    </div>
+                  )}
+              
 
             <div className="space-y-8">
               <div>
-                <h2 className="text-xs font-bold  titulo-cor-padrao-medgo uppercase tracking-wider">
+                <h2 className="text-xs text-blue-600 font-bold uppercase tracking-wider">
                   Contato
                 </h2>
                 <div className="mt-4 space-y-4">
                   <div className="pb-4 border-b border-gray-100">
-                    <p className="text-sm text-black">E-mail</p>
+                    <p className="text-sm text-gray-500">E-mail</p>
                     <p className="mt-1 text-lg font-light text-gray-800">
                       {usuario.email}
                     </p>
                   </div>
-                  {tipoUsuario === 'paciente' && usuario.endereco && (
+                  {usuario.endereco && (
                     <div className="pb-4 border-b border-gray-100">
-                      <p className="text-sm text-black">Endereço</p>
+                      <p className="text-sm text-gray-500">Endereço</p>
                       <p className="mt-1 text-lg font-light text-gray-800">
                         {usuario.endereco}
                       </p>
@@ -271,49 +204,81 @@ export default function Perfil() {
                   )}
                 </div>
               </div>
+                  <div className="flex justify-center pt-4">
+                    <button 
+                      className="m-2 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition-colors"
+                      onClick={() => setAltSenha(usuario)}
+                    >
+                      Alterar senha
+                    </button>
+                    <button 
+                      className="m-2 px-4 py-2 rounded-lg bg-red-100 text-red-800 hover:bg-red-200 transition-colors"
+                      onClick={() => deletarConta(usuario.id)}
+                    >
+                      Excluir conta
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
             
-            
             {altSenha && (
-              <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50" >
+              <div className="fixed inset-0 bg-gray-900/60 bg-opacity-50 flex items-center justify-center p-4 z-50">
                 <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-                   <form onSubmit={(e) => {
+                  <form onSubmit={(e) => {
                     e.preventDefault();
-                    atualizarSenha(usuario.id)
-                   }}>
+                    atualizarSenha(usuario.id);
+                  }}>
                     <div className="flex justify-between items-start mb-4">
-              
-                  <h2 className="text-2xl font-bold text-blue-800">Digite a nova senha</h2>
+                      <h2 className="text-2xl font-bold text-blue-800">Alterar Senha</h2>
                       <button
-                  type="button"
-                  onClick={() => setAltSenha(null)}
-                  className="text-gray-500 hover:text-gray-700 text-xl"
-                >
-                  ×
-                </button>
-                </div>
-                 <div className="space-y-4">
-                 
-                    <input required type="password" placeholder="Senha antiga" className="w-80 md:w-60 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"  onChange={(e) => setSenha(e.target.value)} />
-                    
-                  
-                 
-                    <input required type="password" placeholder="Nova senha" className="w-80 md:w-60 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"  onChange={(e) => setNewSenha(e.target.value)} />
-                    
-                  </div>
-                       <div className="mt-6 flex justify-end space-x-3">
-                        <button type="submit" className="text-green-800 bg-green-100">Alterar</button>
-                       </div>
+                        type="button"
+                        onClick={() => setAltSenha(null)}
+                        className="text-gray-500 hover:text-gray-700 text-xl"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Senha atual
+                        </label>
+                        <input 
+                          required 
+                          type="password" 
+                          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                          onChange={(e) => setSenha(e.target.value)} 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nova senha
+                        </label>
+                        <input 
+                          required 
+                          type="password" 
+                          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                          onChange={(e) => setNewSenha(e.target.value)} 
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-6 flex justify-end space-x-3">
+                      <button 
+                        type="submit" 
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                      >
+                        Salvar
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </div>
     </div>
-
   );
-
 }
