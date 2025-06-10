@@ -42,7 +42,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-50">
+    <header className="bg-white text-[#004aad] w-full border-b shadow-sm z-40 relative">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 h-16 lg:h-20">
         {/* Botão Mobile */}
         <button

@@ -9,14 +9,7 @@ import axios from "axios";
 import { useRouter } from 'next/navigation';
 const API_URL = "http://localhost:3001"
 
-
-
 export default function Login() {
-  // Limpa o localStorage ao carregar a página de login
-  const userData = localStorage.getItem("usuario");
-  if (userData) {
-    localStorage.clear();
-  }
 
 
   // Estados para email, senha e campos extras conforme o tipo selecionado
@@ -31,6 +24,14 @@ export default function Login() {
   const [mensagemErro, setMensagemErro] = useState("");
   const router = useRouter();
 
+  // Sistema de notificações
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
   const compararDados = async () => {
     try {
       // Redireciona de acordo com o tipo de usuário
@@ -42,7 +43,10 @@ export default function Login() {
         });
         const adm = response.data;
         localStorage.setItem("usuario", JSON.stringify(adm));
-        router.push('/home-admin');
+        showNotification('Login realizado com sucesso!', 'success');
+        setTimeout(() => {
+          router.push('/home-admin');
+        }, 1500);
       } else if (userType === "Medico") {
         const response = await axios.post(`${API_URL}/auth/medLogin`, {
           senha: senha,
@@ -51,17 +55,21 @@ export default function Login() {
         });
         const medicos = response.data;
         localStorage.setItem("usuario", JSON.stringify(medicos));
-        router.push('/home-medico')
+        showNotification('Login realizado com sucesso!', 'success');
+        setTimeout(() => {
+          router.push('/home-medico');
+        }, 1500);
       } else if (userType === "Clinica") {
-
         const response = await axios.post(`${API_URL}/auth/clinicaLogin`, {
           email: email,
           senha: senha
         });
         const clinica = response.data;
         localStorage.setItem("usuario", JSON.stringify(clinica));
-        router.push('/home-clinicas');
-
+        showNotification('Login realizado com sucesso!', 'success');
+        setTimeout(() => {
+          router.push('/home-clinicas');
+        }, 1500);
       } else if (userType === "Paciente") {
         const response = await axios.post(`${API_URL}/auth/login`, {
           email: email,
@@ -69,32 +77,30 @@ export default function Login() {
         });
         const paciente = response.data;
         localStorage.setItem("usuario", JSON.stringify(paciente));
-        router.push('/home')
+        showNotification('Login realizado com sucesso!', 'success');
+        setTimeout(() => {
+          router.push('/home');
+        }, 1500);
       }
     } catch (err) {
       if(!err.response){
-        setMensagemErro("Falha na conexão");
-        setMostrarModal(true)
-        return
+        showNotification("Falha na conexão com o servidor", 'error');
+        return;
       }
       if (err.response && err.response.status === 401) {
-        setMensagemErro("Dados inseridos incorretos");
-        setMostrarModal(true);
+        showNotification("Emai e/ou senha incorreto(s)", 'error');
         return;
       }
       if (err.response && err.response.status === 404) {
-        setMensagemErro(userType + " sem cadastro");
-        setMostrarModal(true);
+        showNotification(userType + " sem cadastro", 'error');
         return;
       }
       if (err.response && err.response.status === 500) {
-        setMensagemErro("Erro interno do servidor, tente novamente mais tarde");
-        setMostrarModal(true);
+        showNotification("Erro interno do servidor, tente novamente mais tarde", 'error');
         return;
       }
       console.error("Erro desconhecido", err);
-      setMensagemErro("Erro desconhecido, tente novamente.");
-      setMostrarModal(true);
+      showNotification("Erro desconhecido, tente novamente", 'error');
     }
   };
 
@@ -104,7 +110,61 @@ export default function Login() {
 
   return (
     <>
-      {/* Modal de erro */}
+      {/* Sistema de Notificações */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 max-w-sm w-full animate-slide-in">
+          <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
+            notification.type === 'success' 
+              ? 'bg-green-50 border-green-400 text-green-800' 
+              : notification.type === 'error' 
+              ? 'bg-red-50 border-red-400 text-red-800' 
+              : 'bg-blue-50 border-blue-400 text-blue-800'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className={`flex-shrink-0 w-5 h-5 mr-3 ${
+                  notification.type === 'success' 
+                    ? 'text-green-400' 
+                    : notification.type === 'error' 
+                    ? 'text-red-400' 
+                    : 'text-blue-400'
+                }`}>
+                  {notification.type === 'success' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'error' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'info' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <p className="text-sm font-medium">{notification.message}</p>
+              </div>
+              <button
+                onClick={() => setNotification(null)}
+                className={`ml-4 text-lg font-bold leading-none ${
+                  notification.type === 'success' 
+                    ? 'text-green-600 hover:text-green-500' 
+                    : notification.type === 'error' 
+                    ? 'text-red-600 hover:text-red-500' 
+                    : 'text-blue-600 hover:text-blue-500'
+                } cursor-pointer`}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de erro (mantido caso queira usar) */}
       {mostrarModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
           <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 relative border border-red-100">
@@ -248,6 +308,22 @@ export default function Login() {
           </div>
         </form>
       </section>
+
+      <style jsx>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+      `}</style>
     </>
   );
 }

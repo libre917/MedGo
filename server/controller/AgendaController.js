@@ -75,48 +75,50 @@ const adicionarAgendamentoController = async (req, res) => {
 }
 
 const atualizarAgendamentoController = async (req, res) => {
-    // Recebe o id do Agendamento
-    const agendaId = req.params.id
-    // Recebe dados enviados do Front-end
-    const { id_clinica, id_medico, id_paciente, data, hora, status } = req.body
+    const agendaId = req.params.id;
+    const { id_clinica, id_medico, id_paciente, data, hora, status } = req.body;
+
     try {
-        const [ano, mes, diaHora] = data.split("-")
-        const [dia, Thora] = diaHora.split("T")
-        // Função para verificar se data á válida
-        function verificarData(dia, mes, ano) {
-            const data = new Date(ano, mes - 1, dia);
-            return data.getFullYear() == ano &&
-                data.getMonth() + 1 == mes &&
-                data.getDate() == dia;
-        }
-        // Se data ou dados forem inválidos, retorna 400 (Bad Request)
-        if (!verificarData(dia, mes, ano)) {
-            return res.status(400).json({ mensagem: "Erro: data incorreta" })
-        }
+        // Verificar campos obrigatórios
         if (!id_clinica || !id_medico || !id_paciente || !data || !hora || !status) {
-            return res.status(400).json({ mensagem: "Erro: informações incompletas e/ou ausentes" })
+            return res.status(400).json({ mensagem: "Erro: informações incompletas e/ou ausentes" });
         }
 
-        // Dados a serem enviados
+        // Extrair APENAS a parte da data (YYYY-MM-DD) da string ISO
+        const [datePart] = data.split('T'); // Divide no 'T' e pega a primeira parte
+        const [ano, mes, dia] = datePart.split('-'); // Separa os componentes
+
+        // Validar a data
+        const isValidDate = (d, m, y) => {
+            const date = new Date(y, m - 1, d);
+            return (
+                date.getFullYear() == y &&
+                date.getMonth() + 1 == m &&
+                date.getDate() == d
+            );
+        };
+
+        if (!isValidDate(Number(dia), Number(mes), Number(ano))) {
+            return res.status(400).json({ mensagem: "Erro: data incorreta" });
+        }
+
+        // Montar objeto com a data formatada corretamente (YYYY-MM-DD)
         const agendaData = {
-            id_clinica: id_clinica,
-            id_medico: id_medico,
-            id_paciente: id_paciente,
-            data: data,
-            hora: hora,
-            status: status
-        }
-        // Faz a atualização dos dados
-        await atualizarAgendamento(agendaId, agendaData);
-        // Retorna status 200 (Ok)
-        res.status(200).json({ mensagem: "Agendamento atualizado" })
-    } catch (err) {
-        console.error("Erro ao atualizar agendamento:", err)
-        // Se ocorrer erro, retorna status 500 (Internal Server Error)
-        res.status(500).json({ mensagem: "Erro ao atualizar" })
-    }
-}
+            id_clinica,
+            id_medico,
+            id_paciente,
+            data: datePart, // Usa APENAS datePart (ex: "2025-09-12")
+            hora,
+            status
+        };
 
+        await atualizarAgendamento(agendaId, agendaData);
+        res.status(200).json({ mensagem: "Agendamento atualizado" });
+    } catch (err) {
+        console.error("Erro ao atualizar agendamento:", err);
+        res.status(500).json({ mensagem: "Erro ao atualizar" });
+    }
+};
 const deletarAgendamentoController = async (req, res) => {
     // Recebe id do agendamento
     const agendaId = req.params.id;
