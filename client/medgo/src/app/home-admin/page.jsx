@@ -13,6 +13,12 @@ export default function GerenciamentoClinicas() {
   const [modalAberto, setModalAberto] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
 
+  // Modal de confirmação de exclusão
+  const [modalConfirmacao, setModalConfirmacao] = useState({
+    aberto: false,
+    clinica: null
+  });
+
   // Sistema de notificações
   const [notification, setNotification] = useState(null);
 
@@ -59,6 +65,20 @@ export default function GerenciamentoClinicas() {
     setModalAberto(false);
     setClinicaSelecionada(null);
     setModoEdicao(false);
+  };
+
+  const abrirModalConfirmacao = (clinica) => {
+    setModalConfirmacao({
+      aberto: true,
+      clinica: clinica
+    });
+  };
+
+  const fecharModalConfirmacao = () => {
+    setModalConfirmacao({
+      aberto: false,
+      clinica: null
+    });
   };
 
   const handleAdicionarClinica = async (e) => {
@@ -113,21 +133,23 @@ export default function GerenciamentoClinicas() {
     }
   };
 
-  const handleExcluirClinica = async (id) => {
-    if (confirm("Tem certeza que deseja excluir esta clínica? Esta ação não pode ser desfeita.")) {
-      try {
-        await axios.delete(`${API_URL}/Clinicas/${id}`);
-        setClinicas(prevClinicas => prevClinicas.filter(clinica => clinica.id !== id));
+  const confirmarExclusaoClinica = async () => {
+    const clinica = modalConfirmacao.clinica;
+    if (!clinica) return;
 
-        showNotification("Clínica excluída com sucesso!", 'success');
-      } catch (err) {
-        if (err.response?.status === 404) {
-          showNotification("Clínica não encontrada.", 'error');
-        } else {
-          showNotification("Erro ao excluir clínica.", 'error');
-        }
-        console.error("Erro ao excluir clínica:", err);
+    try {
+      await axios.delete(`${API_URL}/Clinicas/${clinica.id}`);
+      setClinicas(prevClinicas => prevClinicas.filter(c => c.id !== clinica.id));
+      showNotification("Clínica excluída com sucesso!", 'success');
+      fecharModalConfirmacao();
+    } catch (err) {
+      if (err.response?.status === 404) {
+        showNotification("Clínica não encontrada.", 'error');
+      } else {
+        showNotification("Erro ao excluir clínica.", 'error');
       }
+      console.error("Erro ao excluir clínica:", err);
+      fecharModalConfirmacao();
     }
   };
 
@@ -148,7 +170,12 @@ export default function GerenciamentoClinicas() {
     <>
       {/* Sistema de Notificações */}
       {notification && (
-        <div className="fixed top-4 right-4 z-50 max-w-sm w-full animate-slide-in">
+        <div 
+          className="fixed top-4 right-4 z-50 max-w-sm w-full transition-all duration-300 ease-out transform translate-x-0 opacity-100 z-[999]"
+          style={{
+            animation: 'slideIn 0.3s ease-out'
+          }}
+        >
           <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
             notification.type === 'success' 
               ? 'bg-green-50 border-green-400 text-green-800' 
@@ -177,7 +204,7 @@ export default function GerenciamentoClinicas() {
                   )}
                   {notification.type === 'info' && (
                     <svg fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodar" />
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                   )}
                 </div>
@@ -290,7 +317,7 @@ export default function GerenciamentoClinicas() {
                                 Editar
                               </button>
                               <button
-                                onClick={() => handleExcluirClinica(clinica.id)}
+                                onClick={() => abrirModalConfirmacao(clinica)}
                                 className="px-2 py-1 text-xs sm:text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
                               >
                                 Excluir
@@ -306,6 +333,58 @@ export default function GerenciamentoClinicas() {
             )}
           </div>
 
+          {/* Modal de Confirmação de Exclusão */}
+          {modalConfirmacao.aberto && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                  <svg 
+                    className="w-6 h-6 text-red-600" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.382 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    />
+                  </svg>
+                </div>
+                
+                <h3 className="text-lg font-medium text-gray-900 text-center mb-2">
+                  Confirmar Exclusão
+                </h3>
+                
+                <p className="text-sm text-gray-500 text-center mb-4">
+                  Tem certeza que deseja excluir a clínica 
+                  <span className="font-semibold text-gray-900"> "{modalConfirmacao.clinica?.nome}"</span>?
+                </p>
+                
+                <p className="text-xs text-red-600 text-center mb-6">
+                  Esta ação não pode ser desfeita.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
+                  <button
+                    onClick={fecharModalConfirmacao}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={confirmarExclusaoClinica}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Principal */}
           {modalAberto && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40">
               <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
