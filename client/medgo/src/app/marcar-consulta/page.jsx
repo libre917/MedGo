@@ -38,27 +38,46 @@ async function listarHorarios() {
 }
 
 export default function MarcarConsulta() {
-  const userId = localStorage.getItem("usuario");
-  if (!userId) {
-    setMensagemErro('Erro: Login ou cadastro necessário para funcionamento');
-    setMostrarModal(true);
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 2000);
-  }
-
-  const user = JSON.parse(userId)
   const [clinicas, setClinicas] = useState([]);
   const [medicos, setMedicos] = useState([])
   const [horarios, setHorarios] = useState([])
 
-  // Estados para o modal de erro
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mensagemErro, setMensagemErro] = useState("");
+  // Sistema de notificações (igual ao código 1)
+  const [notification, setNotification] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState(null);
 
-  const fecharModal = () => {
-    setMostrarModal(false);
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 5000);
   };
+
+  const showConfirm = (message, onConfirm, onCancel = null) => {
+    setConfirmDialog({
+      message,
+      onConfirm: () => {
+        onConfirm();
+        setConfirmDialog(null);
+      },
+      onCancel: () => {
+        if (onCancel) onCancel();
+        setConfirmDialog(null);
+      }
+    });
+  };
+
+  // Verificação de login
+  useEffect(() => {
+    const userId = localStorage.getItem("usuario");
+    if (!userId) {
+      showNotification('Erro: Login ou cadastro necessário para funcionamento', 'error');
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    }
+  }, []);
+
+  const userId = localStorage.getItem("usuario");
+  const user = userId ? JSON.parse(userId) : null;
 
   useEffect(() => {
     async function fetchClinicas() {
@@ -104,15 +123,13 @@ export default function MarcarConsulta() {
     ) {
       setPasso(passo + 1);
     } else {
-      setMensagemErro("Por favor, selecione uma opção antes de continuar");
-      setMostrarModal(true);
+      showNotification("Por favor, selecione uma opção antes de continuar", 'error');
     }
   };
 
   const finalizarAgendamento = async () => {
     if (!clinicaSelecionada || !medicoSelecionado || !dataSelecionada || !horarioSelecionado) {
-      setMensagemErro("Preencha todos os campos antes de agendar.");
-      setMostrarModal(true);
+      showNotification("Preencha todos os campos antes de agendar.", 'error');
       return;
     }
 
@@ -121,6 +138,7 @@ export default function MarcarConsulta() {
       const [dia, mes] = dataSelecionada.split("/");
       const ano = new Date().getFullYear()
       const status = "a marcar";
+      
       function verificarData(dia, mes, ano) {
         const data = new Date(ano, mes - 1, dia);
         return data.getFullYear() == ano &&
@@ -129,21 +147,18 @@ export default function MarcarConsulta() {
       }
 
       if (!verificarData(dia, mes, ano)) {
-        setMensagemErro('Data inválida');
-        setMostrarModal(true);
+        showNotification('Data inválida', 'error');
         return;
       }
 
       const consultaDate = new Date(ano, mes - 1, dia);
       if (consultaDate <= new Date()) {
-        setMensagemErro('A data da consulta deve ser futura');
-        setMostrarModal(true);
+        showNotification('A data da consulta deve ser futura', 'error');
         return;
       }
 
       if (horarioSelecionado == "00:00") {
-        setMensagemErro('Horário inválido');
-        setMostrarModal(true);
+        showNotification('Horário inválido', 'error');
         return
       }
 
@@ -165,68 +180,112 @@ export default function MarcarConsulta() {
       );
 
       if (!conflito) {
-        await axios.post(`${API_URL}/agendamentos`, consulta);
-        setMensagemErro(" Agendamento realizado com sucesso! Você será redirecionado para a agenda.");
-        setMostrarModal(true);
-        setTimeout(() => {
-          window.location.href = "/agenda";
-        }, 2000);
+        // Usar confirmação antes de agendar
+        showConfirm(
+          'Confirma o agendamento desta consulta?',
+          async () => {
+            try {
+              await axios.post(`${API_URL}/agendamentos`, consulta);
+              showNotification('Agendamento realizado com sucesso! Você será redirecionado para a agenda.', 'success');
+              setTimeout(() => {
+                window.location.href = "/agenda";
+              }, 2000);
+            } catch (err) {
+              console.error('Erro ao agendar:', err);
+              showNotification("Erro ao realizar o agendamento. Tente novamente.", 'error');
+            }
+          }
+        );
       } else {
-        setMensagemErro('Horário indisponível');
-        setMostrarModal(true);
+        showNotification('Horário indisponível', 'error');
       }
     } catch (err) {
       console.error('Erro ao agendar:', err);
-      setMensagemErro("Erro ao realizar o agendamento. Tente novamente.");
-      setMostrarModal(true);
+      showNotification("Erro ao realizar o agendamento. Tente novamente.", 'error');
     }
   };
 
   return (
     <>
-      {/* Modal de erro - VERSÃO ALTAMENTE ESTILIZADA */}
-      {mostrarModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
-          {/* Container do modal com efeito de elevação e borda sutil */}
-          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 relative border border-red-100">
-
-            {/* Ícone de fechar (canto superior direito) */}
-            <button
-              onClick={fecharModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
-            >
-              <FontAwesomeIcon icon={faXmark} className="text-xl" />
-            </button>
-
-            {/* Cabeçalho com ícone de alerta */}
-            <div className="flex flex-col items-center mb-6">
-              <div className={`p-3 rounded-full mb-4 ${mensagemErro.includes('sucesso') ? 'bg-green-100/80' : 'bg-red-100/80'}`}>
-                <FontAwesomeIcon
-                  icon={mensagemErro.includes('sucesso') ? faCheckCircle : faTriangleExclamation}
-                  className={`text-3xl ${mensagemErro.includes('sucesso') ? 'text-green-600' : 'text-red-600'}`}
-                />
+      {/* Sistema de Notificações (igual ao código 1) */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 max-w-sm w-full animate-slide-in">
+          <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
+            notification.type === 'success' 
+              ? 'bg-green-50 border-green-400 text-green-800' 
+              : notification.type === 'error' 
+              ? 'bg-red-50 border-red-400 text-red-800' 
+              : 'bg-blue-50 border-blue-400 text-blue-800'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className={`flex-shrink-0 w-5 h-5 mr-3 ${
+                  notification.type === 'success' 
+                    ? 'text-green-400' 
+                    : notification.type === 'error' 
+                    ? 'text-red-400' 
+                    : 'text-blue-400'
+                }`}>
+                  {notification.type === 'success' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'error' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {notification.type === 'info' && (
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <p className="text-sm font-medium">{notification.message}</p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800">
-                {mensagemErro.includes('sucesso') ? 'Sucesso!' : 'Ops, algo deu errado!'}
-              </h3>
-            </div>
-
-            {/* Mensagem de erro */}
-            <div className="text-center mb-8">
-              <p className="text-gray-600 text-lg">{mensagemErro}</p>
-              <div className="mt-4 h-1 w-20 bg-red-100 mx-auto rounded-full"></div>
-            </div>
-
-            {/* Botão de ação */}
-            <div className="flex justify-center">
               <button
-                onClick={fecharModal}
-                className={`px-6 py-2.5 text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 ${mensagemErro.includes('sucesso')
-                  ? 'bg-green-600 hover:bg-green-700 focus:ring-green-400'
-                  : 'bg-red-600 hover:bg-red-700 focus:ring-red-400'
-                  }`}
+                onClick={() => setNotification(null)}
+                className={`ml-4 text-lg font-bold leading-none ${
+                  notification.type === 'success' 
+                    ? 'text-green-600 hover:text-green-500' 
+                    : notification.type === 'error' 
+                    ? 'text-red-600 hover:text-red-500' 
+                    : 'text-blue-600 hover:text-blue-500'
+                } cursor-pointer`}
               >
-                Entendi
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dialog de Confirmação (igual ao código 1) */}
+      {confirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-scale-in">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Confirmação</h3>
+            </div>
+            <p className="text-gray-600 mb-6">{confirmDialog.message}</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={confirmDialog.onCancel}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDialog.onConfirm}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Confirmar
               </button>
             </div>
           </div>
@@ -274,7 +333,6 @@ export default function MarcarConsulta() {
                     key={clinica.id}
                     onClick={() => {
                       setClinicaSelecionada(clinica)
-                  
                     }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${clinicaSelecionada?.id === clinica.id
                       ? "border-indigo-500 bg-indigo-50"
@@ -303,7 +361,6 @@ export default function MarcarConsulta() {
                     key={medico.id}
                     onClick={() => {
                       setMedicoSelecionado(medico)
-                    
                     }}
                     className={`p-3 border rounded-md cursor-pointer transition-all ${medicoSelecionado?.id === medico.id
                       ? "border-indigo-500 bg-indigo-50"
@@ -340,7 +397,6 @@ export default function MarcarConsulta() {
                 />
               </div>
 
-
               <div>
                 <label className="block text-gray-700 font-medium mb-2 text-sm">Horário</label>
                 <select className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" onChange={(e) => setHorarioSelecionado(e.target.value)}>
@@ -349,7 +405,6 @@ export default function MarcarConsulta() {
                   ))}
                 </select>
               </div>
-
             </div>
           )}
 
@@ -408,6 +463,36 @@ export default function MarcarConsulta() {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+        
+        @keyframes scale-in {
+          from {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        .animate-scale-in {
+          animation: scale-in 0.2s ease-out;
+        }
+      `}</style>
     </>
   );
 }
