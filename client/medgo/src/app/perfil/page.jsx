@@ -58,28 +58,31 @@ export default function Perfil() {
   const userData = localStorage.getItem("usuario");
   const usuarioLogado = userData ? JSON.parse(userData) : null;
 
-  // Calcular idade
+  // Calcular idade - CORRIGIDO
   const calcularIdade = (dataNascimento) => {
     if (!dataNascimento) return null;
     
     try {
-      const data = new Date();
-      const anoAtual = data.getFullYear();
+      const hoje = new Date();
+      let nascimento;
       
-      // Tenta diferentes formatos de data
+      // Se é uma string ISO (como no seu JSON)
       if (typeof dataNascimento === 'string') {
-        if (dataNascimento.includes(' ')) {
-          // Formato: "Wed Oct 25 1995 00:00:00 GMT-0300"
-          const dataNasc = dataNascimento.split(" ");
-          return anoAtual - parseInt(dataNasc[3]);
-        } else if (dataNascimento.includes('-')) {
-          // Formato: "1995-10-25"
-          const dataNasc = new Date(dataNascimento);
-          return anoAtual - dataNasc.getFullYear();
-        }
+        nascimento = new Date(dataNascimento);
+      } else {
+        nascimento = new Date(dataNascimento);
       }
       
-      return null;
+      let idade = hoje.getFullYear() - nascimento.getFullYear();
+      const mesAtual = hoje.getMonth();
+      const mesNascimento = nascimento.getMonth();
+      
+      // Ajustar se ainda não fez aniversário este ano
+      if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+      }
+      
+      return idade;
     } catch (err) {
       console.error("Erro ao calcular idade:", err);
       return null;
@@ -128,10 +131,10 @@ export default function Perfil() {
       try {
         const { data } = await axios.get(`${API_URL}/pacientes/${usuarioLogado.id}`);
 
-        // Calcular idade se necessário
+        // Calcular idade baseado na data de nascimento - CORRIGIDO
         let idadeCalculada = null;
-        if (!data.idade && data.data_nascimento) {
-          idadeCalculada = calcularIdade(data.data_nascimento);
+        if (data.dataNascimento) { // Note: 'dataNascimento' no camelCase conforme seu JSON
+          idadeCalculada = calcularIdade(data.dataNascimento);
         }
 
         setUsuario({
@@ -278,7 +281,7 @@ export default function Perfil() {
               </h1>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8 ">
               <div className="space-y-8">
                 <div>
                   <h2 className="text-xs text-blue-600 font-bold uppercase tracking-wider">

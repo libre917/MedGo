@@ -109,7 +109,7 @@ const loginAdmController = async (req, res) => {
     const { email, senha, codigo } = req.body;
     try {
         //Se algum dado estiver incorreto, retorna 401 (Unathorized)
-        if (email !== "admin@admin.com" || senha !== "senhaAdmin123" || codigo !== "123@321") {
+        if (email !== "admin@admin.com" || senha !== "senhaAdmin123") {
             return res.status(401).json({ mensagem: "Não autorizado" })
         }
         // Retorna status 200 (Ok) e dado para permitir entrada

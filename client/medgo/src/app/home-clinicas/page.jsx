@@ -418,9 +418,9 @@ export default function GerenciamentoMedicos() {
                         onChange={(e) => handleInputChange('crm', e.target.value)}
                         className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         required
-                        placeholder="12345678/SP"
+                        placeholder="123456/SP"
                       />
-                      <p className="text-xs text-gray-500 mt-1">Formato: 12345678/SP</p>
+                      <p className="text-xs text-gray-500 mt-1">Formato: 123456/SP</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">

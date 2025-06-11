@@ -3,6 +3,13 @@
 Sistema web para agendamento de consultas médicas, desenvolvido como Projeto Integrador do SENAI-SP. O MedGo oferece uma solução simples, prática e acessível para clínicas, médicos, pacientes e administradores, permitindo a marcação, gerenciamento e acompanhamento de consultas médicas de forma digital.
 
 ---
+## Integrantes
+Felipe Henry Severino Sacchi
+
+Gabriel de Lima Rossato
+
+Lucas Soalheiro Pereira (Líder de Projeto)
+---
 
 ## 📋 Índice
 
@@ -122,12 +129,6 @@ acesse http://localhost:3000
 > A estrutura completa do banco de dados pode ser consultada [MedGo/MedGo-DB.sql] , junto com o script SQL para criação das tabelas.
 
 
-## Integrantes
-Felipe Henry Severino Sacchi
-
-Gabriel de Lima Rossato
-
-Lucas Soalheiro Pereira (Líder de Projeto)
 
 ## Licença
 Este projeto é de uso acadêmico e está disponível sob a licença MIT. Consulte o arquivo LICENSE para mais detalhes.

@@ -161,69 +161,7 @@ export default function SobreNos() {
 
       
 
-      {/* Contato */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
-          <div className="flex flex-col lg:flex-row gap-12">
-            <div className="lg:w-1/2">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Venha nos <span className="text-[#004aad]">Visitar</span>
-              </h2>
-
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#004aad]/10 p-3 rounded-full flex-shrink-0">
-                    <img src="https://img.icons8.com/ios-filled/50/004aad/marker.png" alt="Endereço" className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">Endereço</h4>
-                    <p className="text-gray-600">Rua da Esperança, 123</p>
-                    <p className="text-gray-600">Parque Esperança - São Paulo/SP</p>
-                    <p className="text-gray-600">CEP: 12345-678</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#004aad]/10 p-3 rounded-full flex-shrink-0">
-                    <img src="https://img.icons8.com/ios-filled/50/004aad/clock.png" alt="Horário" className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">Horário de Atendimento</h4>
-                    <p className="text-gray-600">Segunda a Sexta: 7h às 19h</p>
-                    <p className="text-gray-600">Sábados: 8h às 12h</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#004aad]/10 p-3 rounded-full flex-shrink-0">
-                    <img src="https://img.icons8.com/ios-filled/50/004aad/phone.png" alt="Telefone" className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">Contato</h4>
-                    <p className="text-gray-600"><strong>Telefone:</strong> (11) 1234-5678</p>
-                    <p className="text-gray-600"><strong>WhatsApp:</strong> (11) 91234-8764</p>
-                    <p className="text-gray-600"><strong>Fax:</strong> (11) 1234-5679</p>
-                    <p className="text-gray-600"><strong>Email:</strong> contato@medgo.org.br</p>
-                    <p className="text-gray-600"><strong>Documentos:</strong> documentos@medgo.org.br</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:w-1/2 h-96 rounded-xl overflow-hidden shadow-md">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.0754267452926!2d-46.65342658440771!3d-23.565734367638793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1623868126984!5m2!1spt-BR!2sbr"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                title="Localização da Clínica Vida Plena"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      </section>
+     
     </div>
   );
 }

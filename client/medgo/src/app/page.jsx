@@ -39,7 +39,6 @@ export default function Login() {
         const response = await axios.post(`${API_URL}/auth/admLogin`, {
           email: email,
           senha: senha,
-          codigo: chaveAdmin
         });
         const adm = response.data;
         localStorage.setItem("usuario", JSON.stringify(adm));
@@ -276,23 +275,6 @@ export default function Login() {
                 name="crm"
                 required
                 onChange={(e) => setCrm(e.target.value)}
-                className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
-              />
-            </div>
-          )}
-
-          {/* Exibe input adicional para ADM */}
-          {userType === "ADM" && (
-            <div className="grid">
-              <label htmlFor="chaveAdmin" className="sr-only">
-                Chave de Acesso ADM
-              </label>
-              <input
-                placeholder="Chave de Acesso ADM:"
-                type="password"
-                name="chaveAdmin"
-                required
-                onChange={(e) => setChaveAdmin(e.target.value)}
                 className="w-80 md:w-100 border-b-2 border-black focus:outline-none focus:border-blue-500 text-black p-2"
               />
             </div>
