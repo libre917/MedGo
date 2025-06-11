@@ -79,15 +79,15 @@ Lucas Soalheiro Pereira (Líder de Projeto)
 ---
 
 ## 🚀 Instalação e Execução
-
+```bash
 ### 1. Clone o repositório
 
-```bash
+
 git clone https://github.com/libre917/MedGo.git
 
 ### 2. Inicie o back-end
 
-```bash
+
 
 cd MedGo
 npm install
