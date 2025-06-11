@@ -6,9 +6,9 @@ import { useState } from "react";
 const API_URL = "http://localhost:3001"
 
 export default function Cadastro() {
-  
+
   // Limpa apenas dados específicos ao invés de todo localStorage
-  
+
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
@@ -28,29 +28,29 @@ export default function Cadastro() {
   // Função para validar data de nascimento
   const validarDataNascimento = (dataString) => {
     const [dia, mes, ano] = dataString.split("/").map(Number);
-    
+
     // Validações básicas
     if (!dia || !mes || !ano) return { valido: false, erro: "Data inválida" };
     if (mes < 1 || mes > 12) return { valido: false, erro: "Mês inválido" };
     if (ano < 1900 || ano > dataAtual.getFullYear()) return { valido: false, erro: "Ano inválido" };
-    
+
     // Dias por mês (considerando ano bissexto)
     const diasPorMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    
+
     // Verifica ano bissexto
     if (mes === 2 && ((ano % 4 === 0 && ano % 100 !== 0) || (ano % 400 === 0))) {
       diasPorMes[1] = 29;
     }
-    
+
     if (dia < 1 || dia > diasPorMes[mes - 1]) {
       return { valido: false, erro: "Dia inválido para este mês" };
     }
-    
+
     // Verifica idade
     const idade = dataAtual.getFullYear() - ano;
     if (idade > 120) return { valido: false, erro: "Idade inválida" };
     if (idade < 18) return { valido: false, erro: "É necessário ser maior de idade" };
-    
+
     return { valido: true, idade };
   };
 
@@ -58,18 +58,18 @@ export default function Cadastro() {
   const validarTelefone = (telefone) => {
     // Remove caracteres não numéricos
     const numeroLimpo = telefone.replace(/\D/g, '');
-    
+
     // Verifica se tem 10 ou 11 dígitos (com DDD)
     if (numeroLimpo.length < 10 || numeroLimpo.length > 11) {
       return false;
     }
-    
+
     // Verifica se o DDD é válido (11-99)
     const ddd = parseInt(numeroLimpo.substring(0, 2));
     if (ddd < 11 || ddd > 99) {
       return false;
     }
-    
+
     return true;
   };
 
@@ -126,16 +126,16 @@ export default function Cadastro() {
       });
 
       // Faz login automático
-      const loginResponse = await axios.post(`${API_URL}/auth/login`, { 
-        email: email.toLowerCase(), 
-        senha: senha 
+      const loginResponse = await axios.post(`${API_URL}/auth/login`, {
+        email: email.toLowerCase(),
+        senha: senha
       });
-      
+
       const dadosUsuario = loginResponse.data;
       localStorage.setItem("usuario", JSON.stringify(dadosUsuario));
-      
+
       showNotification('Cadastro realizado com sucesso!', 'success');
-      
+
       // Redireciona após um delay para mostrar a notificação
       setTimeout(() => {
         window.location.href = "/home";
@@ -143,7 +143,7 @@ export default function Cadastro() {
 
     } catch (err) {
       console.error("Erro ao cadastrar:", err);
-      
+
       if (err.response?.status === 400) {
         showNotification("Dados inválidos. Verifique as informações.", 'error');
       } else if (err.response?.status === 409) {
@@ -159,22 +159,20 @@ export default function Cadastro() {
       {/* Sistema de Notificações */}
       {notification && (
         <div className="fixed top-4 right-4 z-50 max-w-sm w-full animate-slide-in">
-          <div className={`p-4 rounded-lg shadow-lg border-l-4 ${
-            notification.type === 'success' 
-              ? 'bg-green-50 border-green-400 text-green-800' 
-              : notification.type === 'error' 
-              ? 'bg-red-50 border-red-400 text-red-800' 
-              : 'bg-blue-50 border-blue-400 text-blue-800'
-          }`}>
+          <div className={`p-4 rounded-lg shadow-lg border-l-4 ${notification.type === 'success'
+              ? 'bg-green-50 border-green-400 text-green-800'
+              : notification.type === 'error'
+                ? 'bg-red-50 border-red-400 text-red-800'
+                : 'bg-blue-50 border-blue-400 text-blue-800'
+            }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className={`flex-shrink-0 w-5 h-5 mr-3 ${
-                  notification.type === 'success' 
-                    ? 'text-green-400' 
-                    : notification.type === 'error' 
-                    ? 'text-red-400' 
-                    : 'text-blue-400'
-                }`}>
+                <div className={`flex-shrink-0 w-5 h-5 mr-3 ${notification.type === 'success'
+                    ? 'text-green-400'
+                    : notification.type === 'error'
+                      ? 'text-red-400'
+                      : 'text-blue-400'
+                  }`}>
                   {notification.type === 'success' && (
                     <svg fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -195,13 +193,12 @@ export default function Cadastro() {
               </div>
               <button
                 onClick={() => setNotification(null)}
-                className={`ml-4 text-lg font-bold leading-none ${
-                  notification.type === 'success' 
-                    ? 'text-green-600 hover:text-green-500' 
-                    : notification.type === 'error' 
-                    ? 'text-red-600 hover:text-red-500' 
-                    : 'text-blue-600 hover:text-blue-500'
-                } cursor-pointer`}
+                className={`ml-4 text-lg font-bold leading-none ${notification.type === 'success'
+                    ? 'text-green-600 hover:text-green-500'
+                    : notification.type === 'error'
+                      ? 'text-red-600 hover:text-red-500'
+                      : 'text-blue-600 hover:text-blue-500'
+                  } cursor-pointer`}
               >
                 ×
               </button>
@@ -210,6 +207,7 @@ export default function Cadastro() {
         </div>
       )}
 
+      {/* form de cadastro */}
       <section className="flex flex-col md:flex-row justify-center items-center min-h-screen py-8">
         <div className="hidden md:flex">
           <img
@@ -308,8 +306,8 @@ export default function Cadastro() {
               <input type="checkbox" required className="cursor-pointer" />
               <span>
                 Li e entendi os termos da{" "}
-                <Link 
-                  className="text-blue-500 hover:text-blue-700 transition-colors" 
+                <Link
+                  className="text-blue-500 hover:text-blue-700 transition-colors"
                   href="/politicadeprivacidade"
                 >
                   Política de Privacidade
@@ -317,7 +315,7 @@ export default function Cadastro() {
                 de MedGo.
               </span>
             </label>
-            
+
             <button
               className="titulo-background-padrao-medgo hover-background-padrao-medgo text-white px-9 py-3 rounded-4xl transition-all hover:shadow-lg mt-5 w-full max-w-48"
               type="submit"
